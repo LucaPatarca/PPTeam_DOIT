@@ -1,0 +1,7 @@
+{
+  "name": "DOIT",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
