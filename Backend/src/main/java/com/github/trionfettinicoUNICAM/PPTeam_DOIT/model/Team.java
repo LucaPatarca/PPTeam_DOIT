@@ -43,6 +43,6 @@ public interface Team {
     /**
      * @return the project's ID which this team is working for
      */
-    int getProjectID();
+    Project getProject();
 
 }

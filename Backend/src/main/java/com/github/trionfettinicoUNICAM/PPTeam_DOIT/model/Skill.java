@@ -5,6 +5,5 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
  * Each {@link Project}s has a set of skills that are needed to complete the project.
  */
 public interface Skill {
-    int getID();
     String getName();
 }

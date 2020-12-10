@@ -12,7 +12,7 @@ public interface ProjectsManager {
      * @param projectID the ID of the wanted project
      * @return an instance of the project
      */
-    Project getProjectInstance(int projectID);
+    Project getProjectInstance(String projectName);
 
     /**
      * Creates a new empty (with an empty team and no experts) project. The new project is associated
@@ -20,52 +20,30 @@ public interface ProjectsManager {
      * @param organization the organization responsible for the project creation
      * @param title the title of the new project
      * @param description the text description of the new project
-     * @return the id of the newly created project
+     * @return the newly created Project
      */
-    int openNewEmptyProject(Organization organization, String title, String description);
+    Project openNewEmptyProject(Organization organization, String title, String description, User creator);
 
     /**
      * Closes the project identified by the given ID. The project is NOT deleted from the system,
      * it will only be marked as "closed" and some useless information might be deleted.
-     * @param projectID the ID of the project to close
+     * @param projectName the name of the project to close
      * @return true if the project has been deleted, false instead
-     * @see ProjectsManager#deleteProject(int)
+     * @see ProjectsManager#deleteProject(String)
      */
-    boolean closeProject(int projectID);
+    boolean closeProject(String projectName);
 
     /**
      * Deletes a project from the system.
      * @param projectID the ID of the project to delete
      * @return true if the project has been deleted, false instead
      */
-    boolean deleteProject(int projectID);
+    boolean deleteProject(String projectName);
 
     /**
-     * Adds a new member to a project's {@link Team}.
-     * @param projectID the project's ID
-     * @param user the new member
-     * @param skill the skill which the new member is needed for
+     * Updates the {@link Project} passed as parameter and saves it.
+     * @param project the project to be saved
+     * @return true if the project is stored successfully, false instead.
      */
-    void addToTeam(int projectID, User user, Skill skill);
-
-    /**
-     * Adds a new {@link Expert} to a project.
-     * @param projectID the project's ID
-     * @param expert the new expert
-     */
-    void addExpert(int projectID, Expert expert);
-
-    /**
-     * Removes a member from a project's {@link Team}.
-     * @param projectID the project's ID
-     * @param role the role of the member to be removed
-     */
-    void removeFromTeam(int projectID, Role role);
-
-    /**
-     * Removes an {@link Expert} from a project.
-     * @param projectID the project's ID
-     * @param expert the expert to be removed
-     */
-    void removeExpert(int projectID, Expert expert);
+    boolean updateProject(String projectName);
 }

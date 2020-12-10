@@ -47,4 +47,30 @@ public interface Project {
      * with it's count.
      */
     Map<Skill, Integer> getNeededSkills();
+
+    /**
+     * Adds the {@link User} to the list of candidates of this project. A user can submit
+     * to the same project more than once but only for different {@link Skill}s.
+     * @param user the user who wants to apply to this project
+     * @param skill the skill of the user
+     * @return true if the user was added to candidates, false instead.
+     * @throws IllegalArgumentException if the user does not have this {@link Skill} or if
+     * the skill is not needed for this project
+     */
+    boolean submit(User user, Skill skill);
+
+    /**
+     * Removes the {@link User} from the list of candidates of this project
+     * @param user the user who wants to be removed from the list of candidates
+     */
+    void removeSubmission(User user);
+
+    String getTitle();
+    String getDescription();
+    Organization getOrganization();
+    User getCreator();
+    Team getTeam();
+
+    void setTitle(String title);
+    void setDescription(String description);
 }

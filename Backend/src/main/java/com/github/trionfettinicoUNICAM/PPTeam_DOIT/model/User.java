@@ -54,4 +54,14 @@ public interface User {
      * is not needed for the project
      */
     void applyToProject(Project project, Skill skill);
+
+    /**
+     * @return the list of {@link Role}s this user had submitted for.
+     */
+    Set<Role> getSubmissions();
+
+    /**
+     * @return the set of {@link Role}s for which this user had been accepted.
+     */
+    Set<Role> getRoles();
 }

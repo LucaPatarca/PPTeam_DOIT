@@ -1,11 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Expert;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
-
-import java.util.Set;
 
 /**
  * This interface is responsible for managing all organizations of the application,
@@ -24,11 +20,11 @@ public interface OrganizationsManager {
     /**
      * Creates a new {@link Organization} with the given parameters
      * @param creator the {@link User} who wants to create the new organization
-     * @param title the organization's title
+     * @param name the organization's title
      * @param description the organization's description
-     * @return the ID of the newly created organization
+     * @return the newly created organization
      */
-    int createNewOrganization(User creator, String title, String description);
+    Organization createNewOrganization(User creator, String name, String description);
 
     /**
      * Removes an {@link Organization} from the system.
@@ -36,4 +32,11 @@ public interface OrganizationsManager {
      * @return true if the organization is successfully removed, false instead
      */
     boolean deleteOrganization(int organizationID);
+
+    /**
+     * Updates the {@link Organization} passed as parameter and saves it.
+     * @param organization the organization to be saved
+     * @return true if the organization is stored successfully, false instead.
+     */
+    boolean updateOrganization(Organization organization);
 }

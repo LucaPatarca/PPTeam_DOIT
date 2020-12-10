@@ -10,8 +10,12 @@ public interface Role {
 
     void setSkill(Skill skill);
 
-    int getUserId();
+    User getUser();
 
-    void setUserId();
+    void setUser(User user);
+
+    Project getProject();
+
+    void setProject(Project project);
 
 }

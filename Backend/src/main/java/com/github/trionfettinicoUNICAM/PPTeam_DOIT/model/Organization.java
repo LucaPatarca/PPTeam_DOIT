@@ -15,9 +15,9 @@ public interface Organization {
      * is done using an instance of {@link ProjectsManager}.
      * @param name the new project's name
      * @param description the new project's descriptions
-     * @return the ID of the newly created project
+     * @return the newly created project
      */
-    int createProject(String name, String description);
+    Project createProject(String name, String description);
 
     /**
      * Deletes a {@link Project} from the system. This is done using an
