@@ -1,6 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Expert;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Role;
 
