@@ -1,45 +1,57 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller.OrganizationsManager;
+
 import java.util.Set;
 
+/**
+ * Represents a registered user inside the application. It has the ability to join a project's team
+ * and to do so, it needs a list of {@link Skill}s.
+ */
 public interface User {
-
-    boolean checkSkill(Skill skill);
-
-    boolean isEmptySkills();
-
-    boolean checkCompletedProject(Project project);
-
-    boolean isEmptyCompletedProjects();
-
+    /**
+     * Adds a skill to the user's list.
+     * @param skill the skill to add
+     */
     void addSkill(Skill skill);
 
     void addSkills(Set<Skill> skills);
 
+    /**
+     * Removes a skill from the user's list.
+     * @param skill the skill to remove
+     */
     void removeSkill(Skill skill);
 
+    /**
+     * @return the set of skills this user has.
+     */
     Set<Skill> getSkills();
 
-    void addCompletedProject(Project project);
+    /**
+     * Creates a new empty {@link Organization}, this user will be part of that organization.
+     * This is done using a {@link OrganizationsManager} included in this user.
+     * @param title the new organization's title
+     * @param description the new organization's description
+     */
+    void createOrganization(String title, String description);
 
-    void addCompletedProjects(Set<Project> projects);
+    /**
+     * Deletes an {@link Organization} from the system, this is possible only if this user if part of
+     * that organization.
+     * This is done using a {@link OrganizationsManager} included in this user.
+     * @param organization the organization to be deleted
+     */
+    void deleteOrganization(Organization organization);
 
-    void removeCompletedProject(Project project);
-
-    void addProjectIsProjectManager(Project project);
-
-    void addProjectsIsProjectManager(Set<Project> projects);
-
-    void removeProjectIsProjectManager(Project project);
-
-    void addOrganizationIsOrganizationCreator(Organization organization);
-
-    void addOrganizationsIsOrganizationCreator(Set<Organization> organizations);
-
-    void removeOrganizationIsOrganizationCreator(Organization organization);
-
-    void addOrganization(Organization organization);
-
-    void removeOrganization(Organization organization);
-
+    /**
+     * When a {@link User} apply to a {@link Project} he is put on a list
+     * waiting to be accepted (or rejected) by the project's {@link Organization}.
+     * @param project the project to which the user wants to apply
+     * @param skill the skill for which the user propose itself
+     * @throws UnsupportedOperationException if this project is closed
+     * @throws IllegalArgumentException if the user doesn't have the skill or if the skill
+     * is not needed for the project
+     */
+    void applyToProject(Project project, Skill skill);
 }
