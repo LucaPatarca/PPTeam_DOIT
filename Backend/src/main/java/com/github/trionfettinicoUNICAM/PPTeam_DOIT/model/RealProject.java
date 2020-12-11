@@ -18,7 +18,11 @@ public class RealProject implements Project{
     private final String organizationName;
     private final String creatorMail;
 
-    public RealProject(Organization organization, User creator) {
+    public RealProject(Organization organization, User creator) throws IllegalArgumentException {
+
+        Objects.requireNonNull(creator, "Creator is Null");
+        Objects.requireNonNull(organization, "Organization is Null");
+
         if(!organization.getMembersMails().contains(creator.getMail()))
             throw new IllegalArgumentException("Creator user must be a member of the organization");
 
@@ -26,8 +30,8 @@ public class RealProject implements Project{
         this.team = new RealTeam(this.getName());
         this.isClosed = false;
         this.neededSkills = new HashMap<>();
-        this.organizationName=organization.getName();
-        this.creatorMail=creator.getMail();
+        setOrganizationName(organization.getName());
+        setCreatorMail(creator.getMail());
     }
 
     @Override
@@ -36,12 +40,14 @@ public class RealProject implements Project{
     }
 
     @Override
-    public void acceptCandidate(Role role) {
+    public void acceptCandidate(Role role) throws IllegalStateException, RuntimeException {
+        if(isClosed) throw new IllegalStateException("Project is closed");
         if(!team.addRole(role)) throw new RuntimeException("unable to add role to team");
     }
 
     @Override
-    public void rejectCandidate(Role role) {
+    public void rejectCandidate(Role role) throws IllegalStateException {
+        if(isClosed) throw new IllegalStcateException("Project is closed");
         candidates.remove(role);
     }
 
@@ -61,7 +67,8 @@ public class RealProject implements Project{
     }
 
     @Override
-    public boolean submit(User user, Skill skill) {
+    public boolean submit(User user, Skill skill) throws IllegalStateException {
+        if(isClosed) throw new IllegalStateException("Project is closed");
         RealRole role = new RealRole(skill, user.getMail(), this.getName());
         if(!candidates.contains(role)) {
             candidates.add(role);
@@ -70,7 +77,8 @@ public class RealProject implements Project{
     }
 
     @Override
-    public void removeSubmission(User user) {
+    public void removeSubmission(User user) throws IllegalStateException {
+        if(isClosed) throw new IllegalStateException("Project is closed");
         candidates.removeIf(role -> role.getUserMail().equals(user.getMail()));
     }
 
@@ -100,12 +108,40 @@ public class RealProject implements Project{
     }
 
     @Override
-    public void setName(String name) {
+    public void setName(String name) throws IllegalStateException, IllegalArgumentException {
+        if(isClosed) throw new IllegalStateException("Project is closed");
+        if(name.length() == 0) throw new IllegalArgumentException("Name is empty");
         this.name = name;
     }
 
     @Override
-    public void setDescription(String description) {
+    public void setDescription(String description) throws IllegalStateException, IllegalArgumentException {
+        if(isClosed) throw new IllegalStateException("Project is closed");
+        if(description.length() == 0) throw new IllegalArgumentException("Description is empty");
         this.description=description;
+    }
+
+    public void setCreatorMail(String creatorMail) throws IllegalStateException, IllegalArgumentException {
+        if(isClosed) throw new IllegalStateException("Project is closed");
+        if(creatorMail.length() == 0) throw new IllegalArgumentException("CreatorMail is empty");
+        this.creatorMail=creatorMail;
+    }
+
+    public void setOrganizationName(String organizationName) throws IllegalStateException, IllegalArgumentException {
+        if(isClosed) throw new IllegalStateException("Project is closed");
+        if(organizationName.length() == 0) throw new IllegalArgumentException("OrganizationName is empty");
+        this.organizationName=organizationName;
+    }
+
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+        RealProject that = (RealProject) object;
+        return name.equals(that.name) && description.equals(that.description) && organizationName.equals(that.organizationName) && creatorMail.equals(that.creatorMail);
+    }
+
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), name, description, organizationName, creatorMail);
     }
 }

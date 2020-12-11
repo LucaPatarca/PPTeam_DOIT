@@ -9,8 +9,8 @@ public class RealTeam implements Team{
     private final Set<Role> roles;
     private final String projectName;
 
-    public RealTeam(String projectName) {
-        this.projectName = projectName;
+    public RealTeam(String projectName) throws IllegalArgumentException {
+        setProjectName(projectName);
         this.roles=new HashSet<>();
     }
 
@@ -42,5 +42,23 @@ public class RealTeam implements Team{
     @Override
     public String getProjectName() {
         return projectName;
+    }
+
+    @Override
+    public void setProjectName(String projectName throws IllegalArgumentException {
+        if(projectName.length() == 0) throw new IllegalArgumentException("ProjectName is empty");
+        this.projectName = projectName;
+    }
+
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (object == null || getClass() != object.getClass()) return false;
+        if (!super.equals(object)) return false;
+        RealTeam realTeam = (RealTeam) object;
+        return projectName.equals(realTeam.projectName);
+    }
+
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), projectName);
     }
 }

@@ -45,4 +45,6 @@ public interface Team {
      */
     String getProjectName();
 
+    void setProjectName(String projectName);
+
 }
