@@ -38,7 +38,9 @@ public interface Team {
     /**
      * @return all the members ({@link Role}s) in this team.
      */
-    Set<Role> getTeamRoles();
+    Set<Role> getRoles();
+
+    void setRoles(Set<Role> roles);
 
     /**
      * @return the project's name which this team is working for

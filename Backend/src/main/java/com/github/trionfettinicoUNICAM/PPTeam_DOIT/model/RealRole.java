@@ -1,5 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
+import java.util.Objects;
+
 public class RealRole implements Role{
 
     private Skill skill;
@@ -19,7 +21,7 @@ public class RealRole implements Role{
 
     @Override
     public void setSkill(Skill skill) {
-        this.skill=Objects.requireNonNull(skill, "Skill is Null");;
+        this.skill= Objects.requireNonNull(skill, "Skill is Null");;
     }
 
     @Override

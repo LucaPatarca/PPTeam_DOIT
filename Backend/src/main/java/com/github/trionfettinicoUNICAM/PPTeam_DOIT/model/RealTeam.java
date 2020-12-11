@@ -2,12 +2,13 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class RealTeam implements Team{
 
-    private final Set<Role> roles;
-    private final String projectName;
+    private Set<Role> roles;
+    private String projectName;
 
     public RealTeam(String projectName) throws IllegalArgumentException {
         setProjectName(projectName);
@@ -35,30 +36,34 @@ public class RealTeam implements Team{
     }
 
     @Override
-    public Set<Role> getTeamRoles() {
-        return roles;
-    }
-
-    @Override
     public String getProjectName() {
         return projectName;
     }
 
     @Override
-    public void setProjectName(String projectName throws IllegalArgumentException {
+    public void setProjectName(String projectName) throws IllegalArgumentException {
         if(projectName.length() == 0) throw new IllegalArgumentException("ProjectName is empty");
         this.projectName = projectName;
     }
 
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        if (!super.equals(object)) return false;
-        RealTeam realTeam = (RealTeam) object;
-        return projectName.equals(realTeam.projectName);
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RealTeam realTeam = (RealTeam) o;
+        return roles.equals(realTeam.roles) && projectName.equals(realTeam.projectName);
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), projectName);
+        return Objects.hash(roles, projectName);
     }
 }

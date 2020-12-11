@@ -1,6 +1,9 @@
-package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
+package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * This interface is responsible for managing all projects of the application,
@@ -28,18 +31,18 @@ public interface ProjectsManager {
     /**
      * Closes the project identified by the given ID. The project is NOT deleted from the system,
      * it will only be marked as "closed" and some useless information might be deleted.
-     * @param projectName the unique name of the project to close
+     * @param project the unique name of the project to close
      * @return true if the project has been deleted, false instead
-     * @see ProjectsManager#deleteProject(String)
+     * @see ProjectsManager#deleteProject(Project)
      */
-    boolean closeProject(String projectName);
+    boolean closeProject(Project project);
 
     /**
      * Deletes a project from the system.
      * @param projectName the unique name of the project to delete
      * @return true if the project has been deleted, false instead
      */
-    boolean deleteProject(String projectName);
+    boolean deleteProject(Project project);
 
     /**
      * Updates the {@link Project} passed as parameter and saves it.
@@ -47,4 +50,6 @@ public interface ProjectsManager {
      * @return true if the project is stored successfully, false instead.
      */
     boolean updateProject(Project project);
+
+    Page<Project> getPage(int page, int size);
 }

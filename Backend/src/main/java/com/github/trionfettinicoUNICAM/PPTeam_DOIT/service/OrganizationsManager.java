@@ -1,4 +1,4 @@
-package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
+package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;

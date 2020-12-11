@@ -1,37 +1,36 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
+@Document(collection = "project")
 public class RealProject implements Project{
 
-    private final Set<Role> candidates;
-    private final Team team;
+    private Set<Role> candidates;
+    private Team team;
     private boolean isClosed;
-    private final Map<Skill, Integer> neededSkills;
-    @Id private String name;
+    private Map<Skill, Integer> neededSkills;
+    @Id
+    private String name;
     private String description;
-    private final String organizationName;
-    private final String creatorMail;
+    private String organizationName;
+    private String creatorMail;
 
-    public RealProject(Organization organization, User creator) throws IllegalArgumentException {
+    public RealProject(String organizationName, String creatorMail, String name, String description) throws IllegalArgumentException {
 
-        Objects.requireNonNull(creator, "Creator is Null");
-        Objects.requireNonNull(organization, "Organization is Null");
-
-        if(!organization.getMembersMails().contains(creator.getMail()))
-            throw new IllegalArgumentException("Creator user must be a member of the organization");
+        Objects.requireNonNull(creatorMail, "Creator is Null");
+        Objects.requireNonNull(organizationName, "Organization is Null");
 
         this.candidates = new HashSet<>();
+        this.name = name;
+        this.description = description;
         this.team = new RealTeam(this.getName());
         this.isClosed = false;
         this.neededSkills = new HashMap<>();
-        setOrganizationName(organization.getName());
-        setCreatorMail(creator.getMail());
+        setOrganizationName(organizationName);
+        setCreatorMail(creatorMail);
     }
 
     @Override
@@ -47,7 +46,7 @@ public class RealProject implements Project{
 
     @Override
     public void rejectCandidate(Role role) throws IllegalStateException {
-        if(isClosed) throw new IllegalStcateException("Project is closed");
+        if(isClosed) throw new IllegalStateException("Project is closed");
         candidates.remove(role);
     }
 
@@ -133,10 +132,25 @@ public class RealProject implements Project{
         this.organizationName=organizationName;
     }
 
+    public void setCandidates(Set<Role> candidates) {
+        this.candidates = candidates;
+    }
+
+    public void setNeededSkills(Map<Skill, Integer> neededSkills) {
+        this.neededSkills = neededSkills;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    public void setClosed(boolean closed) {
+        isClosed = closed;
+    }
+
     public boolean equals(Object object) {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
-        if (!super.equals(object)) return false;
         RealProject that = (RealProject) object;
         return name.equals(that.name) && description.equals(that.description) && organizationName.equals(that.organizationName) && creatorMail.equals(that.creatorMail);
     }

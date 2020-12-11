@@ -1,6 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller.OrganizationsManager;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.OrganizationsManager;
 
 import java.util.Set;
 
