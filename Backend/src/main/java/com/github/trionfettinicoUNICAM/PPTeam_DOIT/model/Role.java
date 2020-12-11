@@ -10,12 +10,12 @@ public interface Role {
 
     void setSkill(Skill skill);
 
-    User getUser();
+    String getUserMail();
 
-    void setUser(User user);
+    void setUserMail(String userMail);
 
-    Project getProject();
+    String getProjectName();
 
-    void setProject(Project project);
+    void setProjectName(String projectName);
 
 }

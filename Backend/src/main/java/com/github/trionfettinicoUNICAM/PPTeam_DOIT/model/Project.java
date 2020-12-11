@@ -65,12 +65,12 @@ public interface Project {
      */
     void removeSubmission(User user);
 
-    String getTitle();
+    String getName();
     String getDescription();
-    Organization getOrganization();
-    User getCreator();
+    String getOrganizationName();
+    String getCreatorMail();
     Team getTeam();
 
-    void setTitle(String title);
+    void setName(String name);
     void setDescription(String description);
 }

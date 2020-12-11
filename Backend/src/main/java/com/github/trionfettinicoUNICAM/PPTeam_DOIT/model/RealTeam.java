@@ -7,10 +7,10 @@ import java.util.Set;
 public class RealTeam implements Team{
 
     private final Set<Role> roles;
-    private final Project project;
+    private final String projectName;
 
-    public RealTeam(Project project) {
-        this.project = project;
+    public RealTeam(String projectName) {
+        this.projectName = projectName;
         this.roles=new HashSet<>();
     }
 
@@ -40,7 +40,7 @@ public class RealTeam implements Team{
     }
 
     @Override
-    public Project getProject() {
-        return project;
+    public String getProjectName() {
+        return projectName;
     }
 }

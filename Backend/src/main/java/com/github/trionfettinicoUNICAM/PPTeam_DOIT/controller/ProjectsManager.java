@@ -9,7 +9,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
 public interface ProjectsManager {
     /**
      * Retrieves the project associated with the given ID and returns an instance of it.
-     * @param projectID the ID of the wanted project
+     * @param projectName the unique name of the wanted project
      * @return an instance of the project
      */
     Project getProjectInstance(String projectName);
@@ -21,13 +21,14 @@ public interface ProjectsManager {
      * @param title the title of the new project
      * @param description the text description of the new project
      * @return the newly created Project
+     * @throws IllegalArgumentException if the {@link User} is not part of the organization
      */
     Project openNewEmptyProject(Organization organization, String title, String description, User creator);
 
     /**
      * Closes the project identified by the given ID. The project is NOT deleted from the system,
      * it will only be marked as "closed" and some useless information might be deleted.
-     * @param projectName the name of the project to close
+     * @param projectName the unique name of the project to close
      * @return true if the project has been deleted, false instead
      * @see ProjectsManager#deleteProject(String)
      */
@@ -35,7 +36,7 @@ public interface ProjectsManager {
 
     /**
      * Deletes a project from the system.
-     * @param projectID the ID of the project to delete
+     * @param projectName the unique name of the project to delete
      * @return true if the project has been deleted, false instead
      */
     boolean deleteProject(String projectName);
@@ -45,5 +46,5 @@ public interface ProjectsManager {
      * @param project the project to be saved
      * @return true if the project is stored successfully, false instead.
      */
-    boolean updateProject(String projectName);
+    boolean updateProject(Project project);
 }

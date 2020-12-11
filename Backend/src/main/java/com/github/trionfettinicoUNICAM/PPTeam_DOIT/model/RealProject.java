@@ -13,21 +13,21 @@ public class RealProject implements Project{
     private final Team team;
     private boolean isClosed;
     private final Map<Skill, Integer> neededSkills;
-    @Id private String title;
+    @Id private String name;
     private String description;
-    private final Organization organization;
-    private final User creator;
+    private final String organizationName;
+    private final String creatorMail;
 
     public RealProject(Organization organization, User creator) {
-        if(!organization.getMembers().contains(creator))
+        if(!organization.getMembersMails().contains(creator.getMail()))
             throw new IllegalArgumentException("Creator user must be a member of the organization");
 
         this.candidates = new HashSet<>();
-        this.team = new RealTeam(this);
+        this.team = new RealTeam(this.getName());
         this.isClosed = false;
         this.neededSkills = new HashMap<>();
-        this.organization=organization;
-        this.creator=creator;
+        this.organizationName=organization.getName();
+        this.creatorMail=creator.getMail();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class RealProject implements Project{
 
     @Override
     public boolean submit(User user, Skill skill) {
-        RealRole role = new RealRole(skill, user, this);
+        RealRole role = new RealRole(skill, user.getMail(), this.getName());
         if(!candidates.contains(role)) {
             candidates.add(role);
             return true;
@@ -71,12 +71,12 @@ public class RealProject implements Project{
 
     @Override
     public void removeSubmission(User user) {
-        candidates.removeIf(role -> role.getUser().equals(user));
+        candidates.removeIf(role -> role.getUserMail().equals(user.getMail()));
     }
 
     @Override
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -85,13 +85,13 @@ public class RealProject implements Project{
     }
 
     @Override
-    public Organization getOrganization() {
-        return organization;
+    public String getOrganizationName() {
+        return organizationName;
     }
 
     @Override
-    public User getCreator() {
-        return creator;
+    public String getCreatorMail() {
+        return creatorMail;
     }
 
     @Override
@@ -100,8 +100,8 @@ public class RealProject implements Project{
     }
 
     @Override
-    public void setTitle(String title) {
-        this.title=title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override

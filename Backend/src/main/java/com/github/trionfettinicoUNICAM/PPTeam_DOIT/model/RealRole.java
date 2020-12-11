@@ -3,13 +3,13 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 public class RealRole implements Role{
 
     private Skill skill;
-    private User user;
-    private Project project;
+    private String userMail;
+    private String projectName;
 
-    public RealRole(Skill skill, User user, Project project){
+    public RealRole(Skill skill, String userMail, String projectName){
         this.skill=skill;
-        this.user=user;
-        this.project=project;
+        this.userMail=userMail;
+        this.projectName=projectName;
     }
 
     @Override
@@ -23,22 +23,22 @@ public class RealRole implements Role{
     }
 
     @Override
-    public User getUser() {
-        return user;
+    public String getUserMail() {
+        return userMail;
     }
 
     @Override
-    public void setUser(User user) {
-        this.user=user;
+    public void setUserMail(String userMail) {
+        this.userMail=userMail;
     }
 
     @Override
-    public Project getProject() {
-        return project;
+    public String getProjectName() {
+        return projectName;
     }
 
     @Override
-    public void setProject(Project project) {
-        this.project=project;
+    public void setProjectName(String projectName) {
+        this.projectName=projectName;
     }
 }

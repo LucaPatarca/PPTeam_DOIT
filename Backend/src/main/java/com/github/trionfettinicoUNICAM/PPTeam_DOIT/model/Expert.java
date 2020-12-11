@@ -1,5 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,7 +20,7 @@ public interface Expert extends User{
      */
     void addExpertSKill(Skill skill);
 
-    void addExpertSkills(Set<Skill> skills);
+    void addExpertSkills(List<Skill> skills);
 
     /**
      * Same as {@link User#removeSkill(Skill)} except that this is for skills in which the user is expert.

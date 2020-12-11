@@ -64,4 +64,10 @@ public interface User {
      * @return the set of {@link Role}s for which this user had been accepted.
      */
     Set<Role> getRoles();
+
+    /**
+     * The {@link User} mail is unique for each user so a user can be identified by it's mail.
+     * @return the user's mail
+     */
+    String getMail();
 }

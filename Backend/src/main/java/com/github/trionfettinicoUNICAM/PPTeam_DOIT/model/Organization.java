@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Represents a group of {@link User}s who work together on a list of {@link Project}s. An organization
+ * Represents a group of {@link User}s who works together on a list of {@link Project}s. An organization
  * can be created by any {@link User}.
  */
 public interface Organization {
@@ -15,23 +15,26 @@ public interface Organization {
      * is done using an instance of {@link ProjectsManager}.
      * @param name the new project's name
      * @param description the new project's descriptions
+     * @param creator the {@link User} who wants to crate the project
      * @return the newly created project
      */
-    Project createProject(String name, String description);
+    Project createProject(String name, String description, User creator);
 
     /**
      * Deletes a {@link Project} from the system. This is done using an
      * instance of {@link ProjectsManager}.
-     * @param project the project to be deleted
+     * @param projectName the name of the project to be deleted
+     * @throws IllegalArgumentException if the project is not managed by this organization
      */
-    void deleteProject(Project project);
+    void deleteProject(String projectName);
 
     /**
      * Marks a {@link Project} as closed. This is done using an
      * instance of {@link ProjectsManager}.
-     * @param project the project to be marked as closed
+     * @param projectName the name of the project to be marked as closed
+     * @throws IllegalArgumentException if the project is not managed by this organization
      */
-    void closeProject(Project project);
+    void closeProject(String projectName);
 
     /**
      * When a {@link User} apply to a {@link Project} he is put on a list
@@ -44,17 +47,22 @@ public interface Organization {
 
     // TODO: 10/12/20 scrivere il javadoc di questi metodi (lasciati indietro perche comunque si spiegano gia bene da soli
     void addExpert(User user, Role role);
-    void removeExpert(Expert expert);
+    void removeExpert(User expert);
     void addMember(User user);
     void removeMember(User user);
+
+    /*  i metodi sotto ritornano un Project anche se la classe non avra al suo interno le istanze dei progetti
+        la classe pero avra un ProjectManager quindi puo chiamare il metodo getProjectInstance() per ottenere le istanze
+     */
     Set<Project> getOpenProjects();
     Set<Project> getCloseProjects();
     Set<Project> getProjects();
-    Set<User> getMembers();
-    Set<Expert> getExperts();
+
+    Set<String> getMembersMails();
+    Set<String> getExpertsMails();
     String getName();
     String getDescription();
-    User getCreator();
+    String getCreatorMail();
     void setName(String name);
     void setDescription(String description);
 }

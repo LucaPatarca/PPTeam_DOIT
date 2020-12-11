@@ -31,18 +31,18 @@ public interface Team {
     boolean removeRole(Role role);
 
     /**
-     * @return the number of member ({@link Role}s) this team has
+     * @return the number of member ({@link Role}s) in this team.
      */
     int size();
 
     /**
-     * @return all the members ({@link Role}s) this team has
+     * @return all the members ({@link Role}s) in this team.
      */
     Set<Role> getTeamRoles();
 
     /**
-     * @return the project's ID which this team is working for
+     * @return the project's name which this team is working for
      */
-    Project getProject();
+    String getProjectName();
 
 }

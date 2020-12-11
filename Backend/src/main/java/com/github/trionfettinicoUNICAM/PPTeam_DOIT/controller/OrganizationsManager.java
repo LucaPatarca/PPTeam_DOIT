@@ -12,15 +12,16 @@ public interface OrganizationsManager {
 
     /**
      * Retrieves the organization with the given ID and returns an instance of it.
-     * @param organizationID the organization's ID
+     * @param organizationName the organization's unique name
      * @return an instance of the organization
      */
-    Organization getOrganizationInstance(int organizationID);
+    Organization getOrganizationInstance(String organizationName);
 
     /**
-     * Creates a new {@link Organization} with the given parameters
+     * Creates a new {@link Organization} with the given parameters, the {@link User}
+     * will become a member of the new organization.
      * @param creator the {@link User} who wants to create the new organization
-     * @param name the organization's title
+     * @param name the organization's unique name
      * @param description the organization's description
      * @return the newly created organization
      */
@@ -28,10 +29,10 @@ public interface OrganizationsManager {
 
     /**
      * Removes an {@link Organization} from the system.
-     * @param organizationID the organization's ID
+     * @param organizationName the organization's unique name
      * @return true if the organization is successfully removed, false instead
      */
-    boolean deleteOrganization(int organizationID);
+    boolean deleteOrganization(String organizationName);
 
     /**
      * Updates the {@link Organization} passed as parameter and saves it.
