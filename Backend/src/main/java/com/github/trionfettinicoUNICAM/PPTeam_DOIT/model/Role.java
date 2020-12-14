@@ -5,10 +5,11 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
  * to the {@link Skill} for which it is needed in the {@link Project}.
  */
 public interface Role {
+    // TODO: 15/12/20 far diventare una classe come fatto con project
 
-    Skill getSkill();
+    RealSkill getSkill();
 
-    void setSkill(Skill skill);
+    void setSkill(RealSkill skill);
 
     String getUserMail();
 

@@ -1,6 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.OrganizationsManager;
+import org.springframework.data.annotation.Id;
 
 import java.util.Set;
 
@@ -9,6 +10,8 @@ import java.util.Set;
  * and to do so, it needs a list of {@link Skill}s.
  */
 public interface User {
+    // TODO: 15/12/20 far diventare una classe come fatto con project
+    // TODO: 14/12/20 togliere metodi di comportamento che andranno spostati in UserManager
     /**
      * Adds a skill to the user's list.
      * @param skill the skill to add
@@ -28,46 +31,34 @@ public interface User {
      */
     Set<Skill> getSkills();
 
-    /**
-     * Creates a new empty {@link Organization}, this user will be part of that organization.
-     * This is done using a {@link OrganizationsManager} included in this user.
-     * @param title the new organization's title
-     * @param description the new organization's description
-     */
-    void createOrganization(String title, String description);
-
-    /**
-     * Deletes an {@link Organization} from the system, this is possible only if this user if part of
-     * that organization.
-     * This is done using a {@link OrganizationsManager} included in this user.
-     * @param organization the organization to be deleted
-     */
-    void deleteOrganization(Organization organization);
-
-    /**
-     * When a {@link User} apply to a {@link Project} he is put on a list
-     * waiting to be accepted (or rejected) by the project's {@link Organization}.
-     * @param project the project to which the user wants to apply
-     * @param skill the skill for which the user propose itself
-     * @throws UnsupportedOperationException if this project is closed
-     * @throws IllegalArgumentException if the user doesn't have the skill or if the skill
-     * is not needed for the project
-     */
-    void applyToProject(Project project, Skill skill);
+    void setSkills(Set<Skill> skills);
 
     /**
      * @return the list of {@link Role}s this user had submitted for.
      */
     Set<Role> getSubmissions();
 
+    void setSubmissions(Set<Role> submissions);
+
     /**
      * @return the set of {@link Role}s for which this user had been accepted.
      */
     Set<Role> getRoles();
 
+    void setRoles(Set<Role> roles);
+
     /**
      * The {@link User} mail is unique for each user so a user can be identified by it's mail.
      * @return the user's mail
      */
+    @Id
     String getMail();
+
+    void setMail(String mail);
+
+    String getName();
+    void setName(String name);
+    int getAge();
+    void setAge(int age);
+
 }

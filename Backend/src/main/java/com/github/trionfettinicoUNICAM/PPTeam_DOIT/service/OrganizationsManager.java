@@ -2,6 +2,9 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
 
 /**
  * This interface is responsible for managing all organizations of the application,
@@ -25,7 +28,7 @@ public interface OrganizationsManager {
      * @param description the organization's description
      * @return the newly created organization
      */
-    Organization createNewOrganization(User creator, String name, String description);
+    Organization createNewOrganization(Organization organization);
 
     /**
      * Removes an {@link Organization} from the system.
@@ -40,4 +43,10 @@ public interface OrganizationsManager {
      * @return true if the organization is stored successfully, false instead.
      */
     boolean updateOrganization(Organization organization);
+
+    boolean exists(String organizationName);
+
+    List<Organization> findByUser(String userMail);
+
+    Page<Organization> getPage(int page, int i);
 }

@@ -4,19 +4,34 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.ProjectsManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("api/project")
+@RequestMapping("api/projects")
 public class ProjectsController {
 
     @Autowired
     private ProjectsManager projectsManager;
 
+
     @PreAuthorize("permitAll")
     @GetMapping("/list/{page}")
     public Page<Project> getPage(@PathVariable Integer page){
         return projectsManager.getPage(page, 10);
+    }
+
+    @PreAuthorize("permitAll")
+    @GetMapping("/{projectID}")
+    public Project getProject(@PathVariable String projectID){
+        return projectsManager.getProjectInstance(projectID);
+    }
+
+    @PreAuthorize("permitAll")
+    @PostMapping(value = "/createNew", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Project createNewProject(@RequestBody Project project){
+        project.setID(project.getOrganizationName()+"."+project.getName());
+        return projectsManager.createNewProject(project);
     }
 }

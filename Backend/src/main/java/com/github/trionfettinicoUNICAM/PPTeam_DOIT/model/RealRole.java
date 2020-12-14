@@ -4,23 +4,23 @@ import java.util.Objects;
 
 public class RealRole implements Role{
 
-    private Skill skill;
+    private RealSkill skill;
     private String userMail;
     private String projectName;
 
-    public RealRole(Skill skill, String userMail, String projectName) throws IllegalArgumentException {
+    public RealRole(RealSkill skill, String userMail, String projectName) throws IllegalArgumentException {
         setSkill(skill);
         setUserMail(userMail);
         setProjectName(projectName);
     }
 
     @Override
-    public Skill getSkill() {
+    public RealSkill getSkill() {
         return skill;
     }
 
     @Override
-    public void setSkill(Skill skill) {
+    public void setSkill(RealSkill skill) {
         this.skill= Objects.requireNonNull(skill, "Skill is Null");;
     }
 
