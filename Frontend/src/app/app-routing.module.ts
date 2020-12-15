@@ -18,8 +18,10 @@ const routes: Routes = [
   {
     path: 'view-project',
     loadChildren: () => import('./tabs/view-project/view-project.module').then( m => m.ViewProjectPageModule)
+  },  {
+    path: 'create-project',
+    loadChildren: () => import('./tabs/create-project/create-project.module').then( m => m.CreateProjectPageModule)
   },
-
 
 ];
 

@@ -1,9 +1,8 @@
-import { from } from 'rxjs';
-import { HttpClientModule } from '@angular/common/http';
-import { Component, ViewChild } from '@angular/core';
+import { ViewProjectPage } from './../view-project/view-project.page';
+import { Component } from '@angular/core';
 import {HttpClient} from "@angular/common/http"
 import { Title }     from '@angular/platform-browser';
-
+import{Router} from "@angular/router";
 
 @Component({
   selector: 'app-list-of-projects',
@@ -15,7 +14,12 @@ export class ListOfProjectsPage {
   page = 0;
   maximumPages=9;
 
-  constructor(private titleService: Title,private http: HttpClient) {
+  constructor(
+    private titleService: Title,
+    private http: HttpClient,
+    public router:Router,
+
+    ) {
     this.loadProjects();
     this.titleService.setTitle("listOfProjects");
   }
@@ -41,4 +45,7 @@ export class ListOfProjectsPage {
         }
   }
 
+  prova(project:String){
+    this.router.navigate(['/view-project',project]);
+  }
 }
