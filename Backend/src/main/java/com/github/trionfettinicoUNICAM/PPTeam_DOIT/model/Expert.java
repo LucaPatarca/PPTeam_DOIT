@@ -1,6 +1,8 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -13,24 +15,44 @@ import java.util.Set;
  *     in this case the quality of expert is valid throughout the application.</li>
  * </ul>
  */
-public interface Expert extends User{
-    // TODO: 15/12/20 far diventare una classe come fatto con project
+public class Expert extends User {
+
+    private Set<Skill> expertSKills;
+
+    public Expert(String mail, String name, Integer age) {
+        super(mail, name, age);
+        expertSKills = new HashSet<>();
+    }
+
     /**
      * Same as {@link User#addSkill(Skill)} except that this is for skills in which the user is expert.
      * @param skill the skill in which the user is expert
      */
-    void addExpertSKill(Skill skill);
+    void addExpertSKill(Skill skill){
+        //TODO aggiungere controllo se skill è gia presente
+        expertSKills.add(Objects.requireNonNull(skill, "skill is null"));
+    }
 
-    void addExpertSkills(List<Skill> skills);
+    void addExpertSkills(List<Skill> skills){
+        Objects.requireNonNull(skills, "Skills is Null");
+        for(Skill s: skills) Objects.requireNonNull(s, "Skills contain a null skill");
+        //TODO aggiungere controllo se una delle skill è già presente
+        expertSKills.addAll(skills);
+    }
 
     /**
      * Same as {@link User#removeSkill(Skill)} except that this is for skills in which the user is expert.
      * @param skill the skill in which the user is no more expert
      */
-    void removeExpertSkill(Skill skill);
+    void removeExpertSkill(Skill skill) throws IllegalArgumentException{
+        if(!expertSKills.contains(skill)) throw new IllegalArgumentException("skill not found");
+        expertSKills.remove(Objects.requireNonNull(skill, "Skill is Null"));
+    }
 
     /**
      * @return all the skills in which the user is expert.
      */
-    Set<Skill> getExpertSkills();
+    Set<Skill> getExpertSkills(){
+        return expertSKills;
+    }
 }

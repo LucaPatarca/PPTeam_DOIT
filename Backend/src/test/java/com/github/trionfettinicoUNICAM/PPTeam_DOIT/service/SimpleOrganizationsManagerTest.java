@@ -1,10 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.RealOrganization;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.RealUser;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,8 +19,8 @@ class SimpleOrganizationsManagerTest {
 
     @BeforeEach
     void initOrganization(){
-        User user = new RealUser("mail", "luca", 21);
-        organization = manager.createNewOrganization(new RealOrganization("org", "description", user.getMail()));
+        User user = new User("mail", "luca", 21);
+        organization = manager.createNewOrganization(new Organization("org", "description", user.getMail()));
     }
 
     @AfterEach

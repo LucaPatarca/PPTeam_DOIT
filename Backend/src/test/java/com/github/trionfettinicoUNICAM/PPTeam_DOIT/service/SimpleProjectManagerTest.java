@@ -18,8 +18,8 @@ class SimpleProjectManagerTest {
 
     @BeforeEach
     void initManager(){
-        User user = new RealUser("mail", "luca", 21);
-        Organization organization = organizationsManager.createNewOrganization(new RealOrganization("org", "description", user.getMail()));
+        User user = new User("mail", "luca", 21);
+        Organization organization = organizationsManager.createNewOrganization(new Organization("org", "description", user.getMail()));
         project = manager.createNewProject(new Project(organization.getName(), user.getMail(), "test", "description"));
     }
 

@@ -1,64 +1,130 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.OrganizationsManager;
 import org.springframework.data.annotation.Id;
 
+import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
  * Represents a registered user inside the application. It has the ability to join a project's team
  * and to do so, it needs a list of {@link Skill}s.
  */
-public interface User {
-    // TODO: 15/12/20 far diventare una classe come fatto con project
-    // TODO: 14/12/20 togliere metodi di comportamento che andranno spostati in UserManager
+public class User {
+
+    // TODO: 10/12/20 scrivere il javadoc di questi metodi (lasciati indietro perche comunque si spiegano gia bene da soli)
+
+    @Id
+    private String mail;
+    private String name;
+    private int age;
+    private Set<Skill> skills;
+    private Set<Role> roles;
+    private Set<Role> submissions;
+
+    public User(String mail, String name, Integer age) throws IllegalArgumentException {
+        setMail(mail);
+        setName(name);
+        setAge(age);
+        skills = new HashSet<>();
+        roles = new HashSet<>();
+        submissions = new HashSet<>();
+    }
+
     /**
      * Adds a skill to the user's list.
      * @param skill the skill to add
      */
-    void addSkill(Skill skill);
+    public void addSkill(Skill skill) {
+        //TODO aggiunger controllo se skill è gia presente
+        skills.add(Objects.requireNonNull(skill, "skill is null"));
+    }
 
-    void addSkills(Set<Skill> skills);
+    public void addSkills(Set<Skill> skills) {
+        Objects.requireNonNull(skills, "Skills is Null");
+        for(Skill s: skills) Objects.requireNonNull(s, "Skills contain a null skill");
+        //TODO aggiungere controllo se una delle skill è già presente
+        this.skills.addAll(skills);
+    }
 
     /**
      * Removes a skill from the user's list.
      * @param skill the skill to remove
      */
-    void removeSkill(Skill skill);
+    public void removeSkill(Skill skill) throws IllegalArgumentException{
+        if(!skills.contains(skill)) throw new IllegalArgumentException("skill not found");
+        skills.remove(Objects.requireNonNull(skill, "Skill is Null"));
+    }
 
     /**
      * @return the set of skills this user has.
      */
-    Set<Skill> getSkills();
+    public Set<Skill> getSkills() {
+        return skills;
+    }
 
-    void setSkills(Set<Skill> skills);
+    public void setSkills(Set<Skill> skills) {
+        Objects.requireNonNull(skills, "Skills is Null");
+        for(Skill s: skills) Objects.requireNonNull(s, "Skills contain a null skill");
+        this.skills = skills;
+    }
 
     /**
      * @return the list of {@link Role}s this user had submitted for.
      */
-    Set<Role> getSubmissions();
+    public Set<Role> getSubmissions() {
+        return submissions;
+    }
 
-    void setSubmissions(Set<Role> submissions);
+    public void setSubmissions(Set<Role> submissions) {
+        Objects.requireNonNull(submissions, "Submissions is Null");
+        for(Role r: submissions) Objects.requireNonNull(r, "Submissions contain a null role");
+        this.submissions = submissions;
+    }
 
     /**
      * @return the set of {@link Role}s for which this user had been accepted.
      */
-    Set<Role> getRoles();
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
-    void setRoles(Set<Role> roles);
+    public void setRoles(Set<Role> roles) {
+        Objects.requireNonNull(roles, "Roles is Null");
+        for(Role r: roles) Objects.requireNonNull(r, "Roles contain a null role");
+        this.roles = roles;
+    }
 
     /**
      * The {@link User} mail is unique for each user so a user can be identified by it's mail.
      * @return the user's mail
      */
     @Id
-    String getMail();
+    public String getMail() {
+        return mail;
+    }
 
-    void setMail(String mail);
+    public void setMail(String mail) throws IllegalArgumentException {
+        if(mail.length() == 0) throw new IllegalArgumentException("Mail is empty");
+        this.mail = mail;
+    }
 
-    String getName();
-    void setName(String name);
-    int getAge();
-    void setAge(int age);
+    public String getName() {
+        return this.name;
+    }
 
+    public void setName(String name) throws IllegalArgumentException {
+        if(name.length() == 0) throw new IllegalArgumentException("Name is empty");
+        this.name = name;
+    }
+
+    public int getAge() {
+        return this.age;
+    }
+
+    public void setAge(int age) throws IllegalArgumentException {
+        if(age < 0) throw new IllegalArgumentException("Age is negative");
+        //TODO aggiungere limite eta?
+        this.age = age;
+    }
 }

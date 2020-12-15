@@ -1,6 +1,5 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.ProjectRepository;

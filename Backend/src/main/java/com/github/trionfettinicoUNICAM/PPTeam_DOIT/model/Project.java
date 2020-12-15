@@ -20,7 +20,7 @@ public class Project {
     private String creatorMail;
     private boolean isClosed;
     private HashSet<Skill> neededSkills;
-    private RealTeam team;
+    private Team team;
     private HashSet<Role> candidates;
 
     public Project(String organizationName, String creatorMail, String name, String description) throws IllegalArgumentException {
@@ -28,9 +28,9 @@ public class Project {
         Objects.requireNonNull(organizationName, "Organization is Null");
         setID(organizationName+"."+name);
         this.candidates = new HashSet<>();
-        this.name = name;
-        this.description = description;
-        this.team = new RealTeam(this.getName());
+        setName(name);
+        setDescription(description);
+        this.team = new Team(this.getName());
         this.isClosed = false;
         this.neededSkills = new HashSet<>();
         setOrganizationName(organizationName);
@@ -38,13 +38,14 @@ public class Project {
     }
 
     public Project() {
+        //Todo ?
     }
 
     public String getID() {
         return ID;
     }
 
-    public void setID(String ID) {
+    public void setID(String ID) throws IllegalArgumentException {
         if(ID.indexOf('.') == -1) throw new IllegalArgumentException();
         this.ID = ID;
     }
@@ -96,6 +97,7 @@ public class Project {
         return isClosed;
     }
 
+    //TODO eccezione se lo stato è già nello stato che si vuole settare?
     public void setClosed(boolean closed) {
         isClosed = closed;
     }
@@ -111,6 +113,8 @@ public class Project {
     }
 
     public void setNeededSkills(HashSet<Skill> neededSkills) {
+        Objects.requireNonNull(neededSkills, "NeededSkills is Null");
+        for(Skill s: neededSkills) Objects.requireNonNull(s, "NeededSkills contains a null skill");
         this.neededSkills = neededSkills;
     }
 
@@ -118,8 +122,8 @@ public class Project {
         return team;
     }
 
-    public void setTeam(RealTeam team) {
-        this.team = team;
+    public void setTeam(Team team) {
+        this.team = Objects.requireNonNull(team, "Team is Null");;
     }
 
     /**
@@ -133,6 +137,8 @@ public class Project {
     }
 
     public void setCandidates(HashSet<Role> candidates) {
+        Objects.requireNonNull(candidates, "Candidates is Null");
+        for(Role r: candidates) Objects.requireNonNull(r, "Candidates contains a null role");
         this.candidates = candidates;
     }
 
@@ -143,18 +149,18 @@ public class Project {
      * The {@link User} should be notified for this operation.
      * @param role the role to accept
      */
-    public void acceptCandidate(RealRole role) throws IllegalStateException, RuntimeException {
+    public void acceptCandidate(Role role) throws IllegalStateException, RuntimeException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(!team.addRole(role)) throw new RuntimeException("unable to add role to team");
+        if(!team.addRole(Objects.requireNonNull(role, "role is null"))) throw new RuntimeException("unable to add role to team");
     }
 
     /**
      * Rejects the {@link Role} of a {@link User} who applied for this project.
      * @param role the role to be rejected
      */
-    public void rejectCandidate(RealRole role) throws IllegalStateException {
+    public void rejectCandidate(Role role) throws IllegalStateException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        candidates.remove(role);
+        candidates.remove(Objects.requireNonNull(role, "role is null"));
     }
 
     /**
@@ -173,9 +179,9 @@ public class Project {
      * @throws IllegalArgumentException if the user does not have this {@link Skill} or if
      * the skill is not needed for this project
      */
-    public boolean submit(User user, RealSkill skill) throws IllegalStateException {
+    public boolean submit(User user, Skill skill) throws IllegalStateException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        RealRole role = new RealRole(skill, user.getMail(), this.getName());
+        Role role = new Role(Objects.requireNonNull(skill, "skill is null"), Objects.requireNonNull(user, "user is null").getMail(), this.getName());
         if(!candidates.contains(role)) {
             candidates.add(role);
             return true;
@@ -188,7 +194,7 @@ public class Project {
      */
     public void removeSubmission(User user) throws IllegalStateException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        candidates.removeIf(role -> role.getUserMail().equals(user.getMail()));
+        candidates.removeIf(role -> role.getUserMail().equals(Objects.requireNonNull(user, "user is null").getMail()));
     }
 
     public boolean equals(Object object) {

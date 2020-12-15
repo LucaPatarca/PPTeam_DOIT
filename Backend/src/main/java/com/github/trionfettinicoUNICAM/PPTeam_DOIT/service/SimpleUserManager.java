@@ -1,6 +1,5 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.RealUser;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 
@@ -19,7 +18,7 @@ public class SimpleUserManager implements UserManager{
 
     @Override
     public User createUser(String mail, String name, Integer age) {
-        User user = new RealUser(mail, name, age);
+        User user = new User(mail, name, age);
         return repository.save(user);
     }
 
