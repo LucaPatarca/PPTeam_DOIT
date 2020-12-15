@@ -19,7 +19,7 @@ public class Project {
     private String organizationName;
     private String creatorMail;
     private boolean isClosed;
-    private HashSet<Skill> neededSkills;
+    private Set<Skill> neededSkills;
     private Team team;
     private HashSet<Role> candidates;
 
@@ -108,7 +108,7 @@ public class Project {
      * @return all the needed skills for this project grouped by name, each one associated
      * with it's count.
      */
-    public HashSet<Skill> getNeededSkills() {
+    public Set<Skill> getNeededSkills() {
         return neededSkills;
     }
 
@@ -123,7 +123,7 @@ public class Project {
     }
 
     public void setTeam(Team team) {
-        this.team = Objects.requireNonNull(team, "Team is Null");;
+        this.team = Objects.requireNonNull(team, "Team is Null");
     }
 
     /**
@@ -149,7 +149,7 @@ public class Project {
      * The {@link User} should be notified for this operation.
      * @param role the role to accept
      */
-    public void acceptCandidate(Role role) throws IllegalStateException, RuntimeException {
+    public void acceptCandidate(Role role) throws RuntimeException {
         if(isClosed) throw new IllegalStateException("Project is closed");
         if(!team.addRole(Objects.requireNonNull(role, "role is null"))) throw new RuntimeException("unable to add role to team");
     }

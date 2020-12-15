@@ -1,5 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;

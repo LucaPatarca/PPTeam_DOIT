@@ -1,5 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -19,11 +20,8 @@ public interface OrganizationsManager {
     Organization getOrganizationInstance(String organizationName);
 
     /**
-     * Creates a new {@link Organization} with the given parameters, the {@link User}
-     * will become a member of the new organization.
-     * @param creator the {@link User} who wants to create the new organization
-     * @param name the organization's unique name
-     * @param description the organization's description
+     * Creates a new {@link Organization} with the given parameters
+     * @param  organization the organization
      * @return the newly created organization
      */
     Organization createNewOrganization(Organization organization);

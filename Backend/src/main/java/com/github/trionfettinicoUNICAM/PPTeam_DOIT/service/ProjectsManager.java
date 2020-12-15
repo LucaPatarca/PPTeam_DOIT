@@ -12,7 +12,7 @@ import java.util.List;
 public interface ProjectsManager {
     /**
      * Retrieves the project associated with the given ID and returns an instance of it.
-     * @param projectName the unique name of the wanted project
+     * @param projectID the unique name of the wanted project
      * @return an instance of the project
      */
     Project getProjectInstance(String projectID);
@@ -20,9 +20,7 @@ public interface ProjectsManager {
     /**
      * Creates a new empty (with an empty team and no experts) project. The new project is associated
      * with the given {@link Organization}.
-     * @param organization the organization responsible for the project creation
-     * @param title the title of the new project
-     * @param description the text description of the new project
+     * @param  project the project
      * @return the newly created Project
      * @throws IllegalArgumentException if the {@link User} is not part of the organization
      */
@@ -31,7 +29,7 @@ public interface ProjectsManager {
     /**
      * Closes the project identified by the given ID. The project is NOT deleted from the system,
      * it will only be marked as "closed" and some useless information might be deleted.
-     * @param projectName the unique name of the project to close
+     * @param projectID the unique name of the project to close
      * @return true if the project has been deleted, false instead
      * @see ProjectsManager#deleteProject(String)
      */
@@ -39,7 +37,7 @@ public interface ProjectsManager {
 
     /**
      * Deletes a project from the system.
-     * @param projectName the unique name of the project to delete
+     * @param projectID the unique name of the project to delete
      * @return true if the project has been deleted, false instead
      */
     boolean deleteProject(String projectID);
