@@ -14,6 +14,7 @@ import java.util.Set;
  * </ul>
  */
 public interface Expert extends User{
+    // TODO: 15/12/20 far diventare una classe come fatto con project
     /**
      * Same as {@link User#addSkill(Skill)} except that this is for skills in which the user is expert.
      * @param skill the skill in which the user is expert

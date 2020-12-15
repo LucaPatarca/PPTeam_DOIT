@@ -1,9 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -14,29 +12,30 @@ class SimpleProjectManagerTest {
 
     @Autowired
     private ProjectsManager manager;
+    @Autowired
+    private OrganizationsManager organizationsManager;
     private Project project;
 
     @BeforeEach
     void initManager(){
-        Organization organization = new RealOrganization("org");
-        User user = new RealUser("mail");
-        organization.addMember(user);
-        project = manager.openNewEmptyProject(organization,"title", "description", user);
+        User user = new RealUser("mail", "luca", 21);
+        Organization organization = organizationsManager.createNewOrganization(new RealOrganization("org", "description", user.getMail()));
+        project = manager.createNewProject(new Project(organization.getName(), user.getMail(), "test", "description"));
     }
 
     @AfterEach
     void removeProjects(){
-        manager.deleteProject(project);
-    }
-
-    @Test
-    void getProjectInstance() {
-        assertNotNull(project);
-        assertEquals(project, manager.getProjectInstance("title"));
+        manager.deleteProject(project.getID());
+        organizationsManager.deleteOrganization("org");
     }
 
     @Test
     void openNewEmptyProject() {
+        assertNotNull(project);
+    }
 
+    @Test
+    void getProjectInstance() {
+        assertEquals(project, manager.getProjectInstance(project.getID()));
     }
 }

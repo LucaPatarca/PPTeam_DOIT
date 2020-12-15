@@ -7,26 +7,36 @@ import java.util.Set;
 
 public class RealTeam implements Team{
 
-    private Set<Role> roles;
+    private Set<RealRole> roles;
     private String projectName;
 
-    public RealTeam(String projectName) throws IllegalArgumentException {
+    public RealTeam(Set<RealRole> roles, String projectName) throws IllegalArgumentException {
         setProjectName(projectName);
-        this.roles=new HashSet<>();
+        this.roles=roles;
+    }
+
+    public RealTeam() {
+        this.projectName = "";
+        this.roles = new HashSet<>();
+    }
+
+    public RealTeam(String projectName) {
+        this.projectName = projectName;
+        this.roles = new HashSet<>();
     }
 
     @Override
-    public boolean addRole(Role role) {
+    public boolean addRole(RealRole role) {
         return roles.add(role);
     }
 
     @Override
-    public boolean addRoles(Collection<Role> roles) {
+    public boolean addRoles(Collection<RealRole> roles) {
         return this.roles.addAll(roles);
     }
 
     @Override
-    public boolean removeRole(Role role) {
+    public boolean removeRole(RealRole role) {
         return roles.remove(role);
     }
 
@@ -46,11 +56,11 @@ public class RealTeam implements Team{
         this.projectName = projectName;
     }
 
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<RealRole> roles) {
         this.roles = roles;
     }
 
-    public Set<Role> getRoles() {
+    public Set<RealRole> getRoles() {
         return roles;
     }
 

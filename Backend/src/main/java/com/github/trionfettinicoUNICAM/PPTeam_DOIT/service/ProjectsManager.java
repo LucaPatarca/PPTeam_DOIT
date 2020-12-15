@@ -15,7 +15,7 @@ public interface ProjectsManager {
      * @param projectName the unique name of the wanted project
      * @return an instance of the project
      */
-    Project getProjectInstance(String projectName);
+    Project getProjectInstance(String projectID);
 
     /**
      * Creates a new empty (with an empty team and no experts) project. The new project is associated
@@ -26,23 +26,23 @@ public interface ProjectsManager {
      * @return the newly created Project
      * @throws IllegalArgumentException if the {@link User} is not part of the organization
      */
-    Project openNewEmptyProject(Organization organization, String title, String description, User creator);
+    Project createNewProject(Project project);
 
     /**
      * Closes the project identified by the given ID. The project is NOT deleted from the system,
      * it will only be marked as "closed" and some useless information might be deleted.
-     * @param project the unique name of the project to close
+     * @param projectName the unique name of the project to close
      * @return true if the project has been deleted, false instead
-     * @see ProjectsManager#deleteProject(Project)
+     * @see ProjectsManager#deleteProject(String)
      */
-    boolean closeProject(Project project);
+    boolean closeProject(String projectID);
 
     /**
      * Deletes a project from the system.
      * @param projectName the unique name of the project to delete
      * @return true if the project has been deleted, false instead
      */
-    boolean deleteProject(Project project);
+    boolean deleteProject(String projectID);
 
     /**
      * Updates the {@link Project} passed as parameter and saves it.
@@ -52,4 +52,8 @@ public interface ProjectsManager {
     boolean updateProject(Project project);
 
     Page<Project> getPage(int page, int size);
+
+    boolean exists(String projectID);
+
+    List<Project> findByOrganizationName(String organizationName);
 }
