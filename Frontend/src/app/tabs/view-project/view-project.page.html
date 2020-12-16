@@ -1,13 +1,18 @@
 <ion-header>
  <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button auto-hide="true"></ion-menu-button>
-        </ion-buttons>
-        <ion-buttons slot="primary">
-          <ion-button>
-            <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-        <ion-title>VIEW PROJECT</ion-title>
-      </ion-toolbar>
+  <ion-title>VIEW PROJECT</ion-title>
+ </ion-toolbar>
 </ion-header>
+
+<ion-content fullscreen>
+
+ <ion-card>
+  <ion-item>
+    <ion-label>
+      <h2 text-capitalize>{{data.name}}</h2>
+      <p>{{data.description}}</p>
+    </ion-label>
+  </ion-item>
+</ion-card>
+</ion-content>
+<ion-button routerDirection="root" [routerLink]="['/list-of-projects']" [queryParams]="{topic: 'basic'}" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:true}" lines="none" detail="false">back</ion-button>

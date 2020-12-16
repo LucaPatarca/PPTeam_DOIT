@@ -1,3 +1,4 @@
+ <!-- menu generale per ogni applicazione -->
 <ion-app>
   <ion-split-pane contentId="main-content">
     <ion-menu contentId="main-content" type="overlay" auto-hide="true">
@@ -5,6 +6,7 @@
         <ion-list>
           <ion-list-header>Azioni</ion-list-header>
           <ion-menu-toggle auto-hide="false">
+          <!-- routerLink ci permette di indicare la pagina da aprire nel caso che quella sezione di codice venga toccata -->
             <ion-item routerDirection="root" [routerLink]="['/home']" [queryParams]="{topic: 'all'}" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:
               true}" lines="none" detail="false">
               <ion-label>Home</ion-label>

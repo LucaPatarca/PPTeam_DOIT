@@ -10,7 +10,6 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import {HttpClientModule} from "@angular/common/http"
-import { MenuController } from '@ionic/angular';
 
 
 @NgModule({
@@ -25,12 +24,5 @@ import { MenuController } from '@ionic/angular';
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(private menu:MenuController){}
-  close() {
-    this.menu.close();
-  }
-
-  open() {
-    this.menu.open();
-  }
+  constructor(){}
 }

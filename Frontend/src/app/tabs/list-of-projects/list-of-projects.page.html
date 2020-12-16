@@ -14,8 +14,9 @@
 
 <ion-content fullscreen>
 
+<!-- per ogni elemento presente in projects creo una ion-card-->
  <ion-card *ngFor="let project of projects">
-  <ion-item (click)="prova(project)" routerDirection="forward">
+  <ion-item (click)="viewProject(project)" routerDirection="forward">
     <ion-label>
       <h2 text-capitalize>{{project.name}}</h2>
       <p>{{project.description}}</p>
@@ -23,6 +24,7 @@
   </ion-item>
 </ion-card>
 
+<!-- comando per creare uno scroll infinito-->
 <ion-infinite-scroll threshold="5%" (ionInfinite)="loadMore($event)">
   <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more users ...">
   </ion-infinite-scroll-content>

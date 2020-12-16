@@ -1,8 +1,9 @@
-import { ViewProjectPage } from './../view-project/view-project.page';
 import { Component } from '@angular/core';
 import {HttpClient} from "@angular/common/http"
 import { Title }     from '@angular/platform-browser';
 import{Router} from "@angular/router";
+import { MenuController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-list-of-projects',
@@ -18,14 +19,16 @@ export class ListOfProjectsPage {
     private titleService: Title,
     private http: HttpClient,
     public router:Router,
-
+    public menuCtrl:MenuController
     ) {
     this.loadProjects();
     this.titleService.setTitle("listOfProjects");
+    this.menuCtrl.enable(true);
   }
 
+  // metodo per richiedere una pagina di elementi
   loadProjects(event?){
-    this.http.get(`http://localhost:8080/api/project/list/${this.page}`)
+    this.http.get(`http://localhost:8080/api/projects/list/${this.page}`)
     .subscribe(res => {
       console.log(res);
       this.projects= this.projects.concat(res['content']);
@@ -36,16 +39,13 @@ export class ListOfProjectsPage {
   }
 
   loadMore(event){
-      console.log(event);
         this.page++;
         this.loadProjects(event);
-
-        if(this.page == this.maximumPages){
-          event.target.disabled =true;
-        }
   }
 
-  prova(project:String){
+
+  // metodo per aprire la visualizzazione di una pagina (gli si passa un project)
+  viewProject(project:String){
     this.router.navigate(['/view-project',project]);
   }
 }

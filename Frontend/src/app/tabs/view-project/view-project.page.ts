@@ -1,5 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
+import { MenuController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-view-project',
@@ -8,9 +10,10 @@ import { Component } from '@angular/core';
 })
 
 export class ViewProjectPage  {
-data:String="";
+data:any;
   constructor(
-    private route:ActivatedRoute  ) { 
-    console.log(this.route.snapshot.params);
+    private route:ActivatedRoute , private menuCtrl:MenuController ) { 
+    this.data = this.route.snapshot.params;
+    this.menuCtrl.enable(false);
   }
 }

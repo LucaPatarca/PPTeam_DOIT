@@ -1,13 +1,32 @@
 <ion-header>
  <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button auto-hide="true"></ion-menu-button>
-        </ion-buttons>
-        <ion-buttons slot="primary">
-          <ion-button>
-            <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-        <ion-title>CREATE PROJECT</ion-title>
-      </ion-toolbar>
+  <ion-title>CREATE PROJECT</ion-title>
+ </ion-toolbar>
 </ion-header>
+
+<ion-content fullscreen>
+   <form  #form="ngForm">
+    <ion-grid>
+      <ion-row color="primary" justify-content-center>
+        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+          <div text-center>
+            <h3>Create new project!</h3>
+          </div>
+          <div padding>
+            <ion-item>
+            <!-- ngModel permette di creare un "oggetto" al quale si fara`riferimento per l'assegnazione del valore-->
+              <ion-input [(ngModel)]="title_project"  name="Title" type="text" placeholder="Title" ngModel required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input [(ngModel)]="description_project" name="Description" type="text" placeholder="Description" ngModel required></ion-input>
+            </ion-item>
+          </div>
+          <div padding>
+            <ion-button (click)="createProject()" size="large" type="submit" expand="block" routerDirection="root" [routerLink]="['/list-of-projects']" [queryParams]="{topic: 'basic'}" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:true}" lines="none" detail="false">CREATE</ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
+<ion-button routerDirection="root" [routerLink]="['/home']" [queryParams]="{topic: 'basic'}" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:true}" lines="none" detail="false">back</ion-button>
