@@ -13,7 +13,7 @@ import { MenuController } from '@ionic/angular';
 export class ListOfProjectsPage {
   projects = [];
   page = 0;
-  maximumPages=9;
+  textNoProjects="";  
 
   constructor(
     private titleService: Title,
@@ -32,6 +32,11 @@ export class ListOfProjectsPage {
     .subscribe(res => {
       console.log(res);
       this.projects= this.projects.concat(res['content']);
+      if(this.projects.length==0){
+        this.textNoProjects = "nessun progetto disponibile";
+      }else{
+        this.textNoProjects = "";
+      }
       if(event){
         event.target.complete();
       }

@@ -11,6 +11,19 @@
     <ion-label>
       <h2 text-capitalize>{{data.name}}</h2>
       <p>{{data.description}}</p>
+      <p>{{data.organizationName}}</p>
+      <p>{{data.creatorMail}}</p>
+      <p>{{isClosed}}</p>
+      <p>neededSkills ?</p>
+      <p>candidates ?</p>
+    </ion-label>
+  </ion-item>
+</ion-card>
+<ion-card *ngFor="let project of projects">
+  <ion-item (click)="viewProject(project)" routerDirection="forward">
+    <ion-label>
+      <h2 text-capitalize>{{project.name}}</h2>
+      <p>{{project.description}}</p>
     </ion-label>
   </ion-item>
 </ion-card>
