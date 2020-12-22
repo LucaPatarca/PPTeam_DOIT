@@ -28,4 +28,4 @@
   </ion-item>
 </ion-card>
 </ion-content>
-<ion-button routerDirection="root" [routerLink]="['/list-of-projects']" [queryParams]="{topic: 'basic'}" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:true}" lines="none" detail="false">back</ion-button>
+<ion-button (click)="onClick()" [routerLink]="['/list-of-projects']" [queryParams]="{topic: 'basic'}" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:true}" lines="none" detail="false">back</ion-button>

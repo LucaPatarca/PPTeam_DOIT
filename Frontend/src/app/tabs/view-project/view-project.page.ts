@@ -22,4 +22,11 @@ isClosed;
     }
     this.menuCtrl.enable(false);
   }
+
+  onClick(){
+    this.menuCtrl.enable(true);
+  }
+
 }
+
+
