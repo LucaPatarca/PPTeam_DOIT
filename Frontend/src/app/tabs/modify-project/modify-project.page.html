@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>MODIFY PROJECT</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-card>
+    <ion-item>
+      <ion-input [(ngModel)]="name"  name="name" type="text" placeholder= {{data.name}} ngModel required></ion-input>
+    </ion-item>  
+    <ion-item>
+      <ion-input [(ngModel)]="description"  name="description" type="text"  placeholder= {{data.description}} ngModel required></ion-input>
+    </ion-item>
+  </ion-card>
+</ion-content>
+
+<ion-button (click)="save()" [routerLink]="['/view-project']">save</ion-button>
+
+<ion-button (click)="viewProject()" [routerLink]="['/view-project']">back</ion-button>
+

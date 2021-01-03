@@ -23,7 +23,11 @@ const routes: Routes = [
   {
     path: 'create-project',
     loadChildren: () => import('./tabs/create-project/create-project.module').then( m => m.CreateProjectPageModule)
+  },  {
+    path: 'modify-project',
+    loadChildren: () => import('./tabs/modify-project/modify-project.module').then( m => m.ModifyProjectPageModule)
   },
+
 
 ];
 

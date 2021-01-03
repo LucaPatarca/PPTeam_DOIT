@@ -34,4 +34,25 @@ public class ProjectsController {
         project.setID(project.getOrganizationName()+"."+project.getName());
         return projectsManager.createNewProject(project);
     }
+
+    @PreAuthorize("permitAll")
+    @DeleteMapping(value = "/delete/{projectID}")
+    public boolean deleteProject(@PathVariable String projectID){
+        return projectsManager.deleteProject(projectID);
+    }
+
+    @PreAuthorize("permitAll")
+    @PutMapping(value = "/close/{projectID}")
+    public boolean closeProject(@PathVariable String projectID){
+        return projectsManager.closeProject(projectID);
+    }
+
+
+    @PreAuthorize("permitAll")
+    @PutMapping(value = "/modify", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public boolean modifyProject(@RequestBody Project project){
+        project.setID(project.getOrganizationName()+"."+project.getName());
+        return projectsManager.updateProject(project);
+    }
+
 }
