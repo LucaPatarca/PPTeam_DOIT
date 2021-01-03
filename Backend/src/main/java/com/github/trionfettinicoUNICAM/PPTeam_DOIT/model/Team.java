@@ -12,6 +12,8 @@ import java.util.Set;
  */
 public class Team{
 
+    // TODO: 15/12/20 togliere projectName dato che e' ridondante
+
     private Set<Role> roles;
     private String projectName;
 

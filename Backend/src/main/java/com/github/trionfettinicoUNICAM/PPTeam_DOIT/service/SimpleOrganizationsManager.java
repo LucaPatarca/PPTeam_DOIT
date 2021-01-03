@@ -48,9 +48,7 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
 
     @Override
     public List<Organization> findByUser(String userMail) {
-        return repository.findAll().stream().filter(
-                organization -> organization.getMembersMails().contains(userMail)
-        ).collect(Collectors.toList());
+        return repository.findByMember(userMail);
     }
 
     @Override

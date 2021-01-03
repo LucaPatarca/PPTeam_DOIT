@@ -23,12 +23,20 @@ const routes: Routes = [
   {
     path: 'create-project',
     loadChildren: () => import('./tabs/create-project/create-project.module').then( m => m.CreateProjectPageModule)
-  },  {
-    path: 'modify-project',
-    loadChildren: () => import('./tabs/modify-project/modify-project.module').then( m => m.ModifyProjectPageModule)
   },
-
-
+  {
+    path: 'create-organization',
+    loadChildren: () => import('./tabs/create-organization/create-organization.module').then( m => m.CreateOrganizationPageModule)
+  },
+  {
+    path: 'list-of-organizations',
+    loadChildren: () => import('./tabs/list-of-organizations/list-of-organizations.module').then( m => m.ListOfOrganizationsPageModule)
+  },
+  {
+    path: 'view-organization',
+    loadChildren: () => import('./tabs/view-organization/view-organization.module').then( m => m.ViewOrganizationPageModule)
+  },
+  
 ];
 
 @NgModule({

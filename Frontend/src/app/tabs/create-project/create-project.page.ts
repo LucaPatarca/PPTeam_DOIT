@@ -14,6 +14,11 @@ export class CreateProjectPage {
   title_project:String;
   description_project:String;
 
+  user = { "mail":"mail","name":"name_user","age":21}
+
+  organization = {"name":"org1","description":"description_org","creatorMail":this.user.mail}
+
+
 
   constructor(private menuCtrl:MenuController,private http:HttpClient) { 
     this.menuCtrl.enable(false);

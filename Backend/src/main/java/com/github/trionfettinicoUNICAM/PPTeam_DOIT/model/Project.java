@@ -11,7 +11,6 @@ import java.util.*;
  */
 @Document(collection = "project")
 public class Project {
-    //TODO cambiare l'ID dal nome a una combinazione di nome e organizzazione.
     @Id
     private String ID;
     private String name;
@@ -21,7 +20,7 @@ public class Project {
     private boolean isClosed;
     private Set<Skill> neededSkills;
     private Team team;
-    private HashSet<Role> candidates;
+    private Set<Role> candidates;
 
     public Project(String organizationName, String creatorMail, String name, String description) throws IllegalArgumentException {
         Objects.requireNonNull(creatorMail, "Creator is Null");
@@ -38,7 +37,6 @@ public class Project {
     }
 
     public Project() {
-        //Todo ?
     }
 
     public String getID() {
@@ -112,7 +110,7 @@ public class Project {
         return neededSkills;
     }
 
-    public void setNeededSkills(HashSet<Skill> neededSkills) {
+    public void setNeededSkills(Set<Skill> neededSkills) {
         Objects.requireNonNull(neededSkills, "NeededSkills is Null");
         for(Skill s: neededSkills) Objects.requireNonNull(s, "NeededSkills contains a null skill");
         this.neededSkills = neededSkills;
@@ -132,11 +130,11 @@ public class Project {
      * This method returns the set of candidates.
      * @return the set of candidates.
      */
-    public HashSet<Role> getCandidates() {
+    public Set<Role> getCandidates() {
         return candidates;
     }
 
-    public void setCandidates(HashSet<Role> candidates) {
+    public void setCandidates(Set<Role> candidates) {
         Objects.requireNonNull(candidates, "Candidates is Null");
         for(Role r: candidates) Objects.requireNonNull(r, "Candidates contains a null role");
         this.candidates = candidates;

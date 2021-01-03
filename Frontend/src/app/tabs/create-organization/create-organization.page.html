@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Create organization</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form  #form="ngForm">
+    <ion-grid>
+      <ion-row color="primary" justify-content-center>
+        <ion-col align-self-center size-md="6" size-lg="5" size-xs="12">
+          <div text-center>
+            <h3>Create new organization!</h3>
+          </div>
+          <div padding>
+            <ion-item>
+            <!-- ngModel permette di creare un "oggetto" al quale si fara`riferimento per l'assegnazione del valore-->
+              <ion-input [(ngModel)]="organization_name"  name="Name" type="text" placeholder="Name" ngModel required></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input [(ngModel)]="organization_description" name="Description" type="text" placeholder="Description" ngModel required></ion-input>
+            </ion-item>
+          </div>
+          <div padding>
+            <ion-button (click)="createOrganization()" size="large" type="submit" expand="block" [routerLink]="['/list-of-organizations']" >CREATE</ion-button>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>
+<ion-button [routerLink]="['/home']" [queryParams]="{topic: 'basic'}" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:true}" lines="none" detail="false">back</ion-button>

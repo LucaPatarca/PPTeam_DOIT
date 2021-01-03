@@ -1,8 +1,5 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.ProjectsManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

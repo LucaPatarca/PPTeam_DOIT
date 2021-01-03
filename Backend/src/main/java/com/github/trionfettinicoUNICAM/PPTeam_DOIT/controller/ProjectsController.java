@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/projects")
 public class ProjectsController {
 
+    // TODO: 15/12/20 ritornare dai metodi una Response (o qualcosa del genere) per segnalare lo stato del ritorno
+
     @Autowired
     private ProjectsManager projectsManager;
 

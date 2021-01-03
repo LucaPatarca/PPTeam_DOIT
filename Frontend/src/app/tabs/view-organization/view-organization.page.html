@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-toolbar>
+   <ion-title>VIEW ORGANIZATION</ion-title>
+  </ion-toolbar>
+ </ion-header>
+ 
+ <ion-content fullscreen>
+ 
+  <ion-card>
+   <ion-item>
+     <ion-label>
+       <h2 text-capitalize>{{data.name}}</h2>
+       <p>{{data.description}}</p>
+       <p>{{data.membersMails}}</p>
+       <p>{{data.creatorMail}}</p>
+     </ion-label>
+   </ion-item>
+  </ion-card>
+ </ion-content>
+ <ion-button (click)="deleteOrganization()" href="/list-of-organizations" type="submit">delete</ion-button>
+ <ion-button (click)="onBack()" [routerLink]="['/list-of-organizations']">back</ion-button>
+ 
