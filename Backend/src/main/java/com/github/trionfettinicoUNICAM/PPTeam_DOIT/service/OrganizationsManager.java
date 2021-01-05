@@ -1,6 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -39,6 +40,8 @@ public interface OrganizationsManager {
      * @return true if the organization is stored successfully, false instead.
      */
     boolean updateOrganization(Organization organization);
+
+    List<User> getUsers(String organizationName);
 
     boolean exists(String organizationName);
 

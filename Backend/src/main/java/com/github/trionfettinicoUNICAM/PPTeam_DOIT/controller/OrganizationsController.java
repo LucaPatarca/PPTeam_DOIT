@@ -1,6 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.OrganizationsManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +46,12 @@ public class OrganizationsController {
     @GetMapping("/byUser/{userMail}")
     public List<Organization> getByUser(@PathVariable String userMail){
         return organizationsManager.findByUser(userMail);
+    }
+
+    @PreAuthorize("permitAll")
+    @GetMapping("/getUsers/{organizationName}")
+    public List<User> getUsers(@PathVariable String organizationName){
+        return organizationsManager.getUsers(organizationName);
     }
 
 }

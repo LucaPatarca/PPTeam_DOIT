@@ -30,7 +30,8 @@ public class Organization {
     @Id
     private String name;
     private Set<String> membersMails;
-    private Map<String, Skill> expertsMails;
+    private Set<String> expertsMails;
+    private Map<String, Set<Skill>> collaboratorsMails;
     private String description;
     private String creatorMail;
 
@@ -41,17 +42,40 @@ public class Organization {
         this.membersMails = new HashSet<>();
         if(creatorMail.length() == 0) throw new IllegalArgumentException("creatorMail is empty");
         this.membersMails.add(creatorMail);
-        this.expertsMails = new HashMap<>();
+        this.expertsMails = new HashSet<>();
+        this.collaboratorsMails = new HashMap<>();
     }
 
-    public void addExpert(String expertMail, Skill skill) throws IllegalArgumentException {
+    public void addExpert(String expertMail) throws IllegalArgumentException {
         if(expertMail.length() == 0) throw new IllegalArgumentException("expertMail is empty");
-        expertsMails.put(expertMail, Objects.requireNonNull(skill, "Skill is null"));
+        expertsMails.add(expertMail);
+    }
+
+    public void addCollaborator(String collaboratorMail, Skill skill) throws IllegalArgumentException {
+        if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
+        Set<Skill> skills = new HashSet<>();
+        skills.add(skill);
+        collaboratorsMails.put(collaboratorMail,skills);
+    }
+
+    public void addCollaboratorSkill(String collaboratorMail, Skill skill) throws IllegalArgumentException {
+        if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
+        collaboratorsMails.get(collaboratorMail).add(skill);
+    }
+
+    public void removeCollaboratorSkill(String collaboratorMail, Skill skill) throws IllegalArgumentException {
+        if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
+        collaboratorsMails.get(collaboratorMail).remove(skill);
     }
 
     public void removeExpert(String expertMail) throws IllegalArgumentException {
         if(expertMail.length() == 0) throw new IllegalArgumentException("expertMail is empty");
         expertsMails.remove(expertMail);
+    }
+
+    public void removeCollaborator(String collaboratorMail) throws IllegalArgumentException {
+        if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
+        collaboratorsMails.remove(collaboratorMail);
     }
 
     public void addMember(String userMail) throws IllegalArgumentException {
@@ -74,11 +98,11 @@ public class Organization {
         this.membersMails=membersMails;
     }
 
-    public Map<String, Skill> getExpertsMails() {
+    public Set<String> getExpertsMails() {
         return expertsMails;
     }
 
-    public void setExpertsMails(Map<String,Skill> expertsMails) {
+    public void setExpertsMails(Set<String> expertsMails) {
         //TODO aggiungere controlli struttura ricevuta in input
         this.expertsMails=expertsMails;
     }

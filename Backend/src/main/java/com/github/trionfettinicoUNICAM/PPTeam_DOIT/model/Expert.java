@@ -1,5 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -15,6 +17,7 @@ import java.util.Set;
  *     in this case the quality of expert is valid throughout the application.</li>
  * </ul>
  */
+@Document(collection = "expert")
 public class Expert extends User {
 
     private Set<Skill> expertSKills;
@@ -29,14 +32,19 @@ public class Expert extends User {
      * @param skill the skill in which the user is expert
      */
     void addExpertSKill(Skill skill){
-        //TODO aggiungere controllo se skill è gia presente
-        expertSKills.add(Objects.requireNonNull(skill, "skill is null"));
+        if(expertSKills.contains(skill))
+            expertSKills.add(Objects.requireNonNull(skill, "skill is null"));
+        //TODO cosa far ritornare se skill non presente ?
     }
 
     void addExpertSkills(List<Skill> skills){
         Objects.requireNonNull(skills, "Skills is Null");
-        for(Skill s: skills) Objects.requireNonNull(s, "Skills contain a null skill");
-        //TODO aggiungere controllo se una delle skill è già presente
+        for(Skill s: skills)
+        {
+            if(!expertSKills.contains(s))
+                //TODO cosa far ritornare se skill non presente ? P.S non ho ben capito la parte dopo
+            Objects.requireNonNull(s, "Skills contain a null skill");
+        }
         expertSKills.addAll(skills);
     }
 
