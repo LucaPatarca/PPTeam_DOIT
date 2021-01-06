@@ -36,6 +36,10 @@ const routes: Routes = [
     path: 'view-organization',
     loadChildren: () => import('./tabs/view-organization/view-organization.module').then( m => m.ViewOrganizationPageModule)
   },
+  {
+    path: 'modify-project',
+    loadChildren: () => import('./tabs/modify-project/modify-project.module').then( m => m.ModifyProjectPageModule)
+  },
   
 ];
 

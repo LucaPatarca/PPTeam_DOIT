@@ -31,10 +31,10 @@ export class CreateOrganizationPage implements OnInit {
     }
     this.http.post("http://localhost:8080/api/organizations/createNew",newOrganization,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
       res => {
-        console.log('res', res);	
+        console.log('Successfully created new organization');	
       }, 
       err => { 
-        console.log('oops some error in Project'); 
+        console.log('oops some error in Organization'); 
       }
     );
     this.menuCtrl.enable(true);

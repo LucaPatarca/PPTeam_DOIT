@@ -26,10 +26,10 @@ export class CreateProjectPage {
 
   createProject(){
     // metodo per effettuare una chiamata post
-    var newProject = {"name":this.title_project,"description":this.description_project,"organizationName":"org","creatorMail":"mail","neededSkills":[],"closed":false,"team":{"roles":[],"projectName":this.title_project},"candidates":[]};
+    var newProject = {"name":this.title_project,"description":this.description_project,"organizationName":"org1","creatorMail":"mail","neededSkills":[],"closed":false,"team":{"roles":[],"projectName":this.title_project},"candidates":[]};
     this.http.post("http://localhost:8080/api/projects/createNew",newProject,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
       res => {
-        console.log('res2', res);	
+        console.log('Successfully created new project');	
       }, 
       err => { 
         console.log('oops some error in Project'); 

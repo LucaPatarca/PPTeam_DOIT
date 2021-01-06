@@ -2,7 +2,9 @@ import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import{Router} from "@angular/router";
-import { HttpClient,HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { Project } from 'src/app/model/project';
+import { DataService } from 'src/app/services/data.service';
 
 
 @Component({
@@ -12,53 +14,39 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
 })
 
 export class ViewProjectPage  {
-data:any;
-isClosed;
+isClosed:string;
+project:Project;
   constructor(
-    private route:ActivatedRoute , private menuCtrl:MenuController, public router:Router, private http:HttpClient ) { 
-    this.data = this.route.snapshot.params;
-    if(this.data.isClosed==true){
+    private route:ActivatedRoute, 
+    private menuCtrl:MenuController, 
+    public router:Router, 
+    private http:HttpClient,
+    public data:DataService
+  ) { 
+    const id = this.route.snapshot.params["id"];
+    this.project = this.data.getProject(id);
+    if(this.project.closed){
       this.isClosed="true";
     }else{
       this.isClosed="false";
     }
     this.menuCtrl.enable(false);
-
-    console.log(this.isClosed);
-
   }
 
   onClick(){
     this.menuCtrl.enable(true);
   }
 
-  modify(data:String){
-    this.router.navigate(['/modify-project', data]);
-    this.onClick();
+  modify(){
+    this.router.navigate(['/modify-project', {"id":this.project.id}]);
   }
 
-  close(data:any){
-
-    this.http.put("http://localhost:8080/api/projects/close/" + this.data.organizationName + "." + this.data.name , null)
+  delete(){
+    this.http.delete("http://localhost:8080/api/projects/delete/" + this.project.id)
     .subscribe(
       res => {
-        console.log('Close successful Project with Id: ' + this.data.organizationName + '.' + this.data.name, res);	
-      }, 
-      err => { 
-        console.log('There was an error!', err); 
-      }
-    );
-
-    this.router.navigate(['/view-project', data]);
-    this.onClick();
-  }
-
-  delete(data:any){
-
-    this.http.delete("http://localhost:8080/api/projects/delete/" + this.data.organizationName + "." + this.data.name)
-    .subscribe(
-      res => {
-        console.log('Delete successful Project with Id: ' + this.data.organizationName + '.' + this.data.name, res);	
+        console.log('Delete successful Project with Id: ' + this.project.id);
+        this.data.removeProject(this.project);	
       }, 
       err => { 
         console.log('There was an error!', err); 

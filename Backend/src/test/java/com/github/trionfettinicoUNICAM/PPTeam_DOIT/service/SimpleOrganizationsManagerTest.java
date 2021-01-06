@@ -26,7 +26,7 @@ class SimpleOrganizationsManagerTest {
     @AfterEach
     void removeOrganization(){
         boolean result = manager.deleteOrganization("organization1");
-        if(!result) fail();
+        assertTrue(result);
     }
 
     @Test

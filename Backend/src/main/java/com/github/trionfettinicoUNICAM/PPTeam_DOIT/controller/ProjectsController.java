@@ -52,8 +52,7 @@ public class ProjectsController {
 
     @PreAuthorize("permitAll")
     @PutMapping(value = "/modify", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public boolean modifyProject(@RequestBody Project project){
-        project.setID(project.getOrganizationName()+"."+project.getName());
+    public Project modifyProject(@RequestBody Project project){
         return projectsManager.updateProject(project);
     }
 

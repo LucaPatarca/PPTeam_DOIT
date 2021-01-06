@@ -47,7 +47,7 @@ public interface ProjectsManager {
      * @param project the project to be saved
      * @return true if the project is stored successfully, false instead.
      */
-    boolean updateProject(Project project);
+    Project updateProject(Project project);
 
     Page<Project> getPage(int page, int size);
 

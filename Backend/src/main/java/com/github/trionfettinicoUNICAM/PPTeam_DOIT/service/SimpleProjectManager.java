@@ -49,9 +49,13 @@ public class SimpleProjectManager implements ProjectsManager{
     }
 
     @Override
-    public boolean updateProject(Project project) {
+    public Project updateProject(Project project) {
+        if (!project.getID().equals(project.getOrganizationName() + "." + project.getName())) {
+            projectRepository.deleteById(project.getID());
+            project.setID(project.getOrganizationName() + "." + project.getName());
+        }
         projectRepository.save(project);
-        return getProjectInstance(project.getName()).equals(project);
+        return getProjectInstance(project.getID());
     }
 
     @Override

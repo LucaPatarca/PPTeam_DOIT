@@ -7,15 +7,15 @@
 <ion-content fullscreen>
   <ion-card>
     <ion-item>
-      <ion-input [(ngModel)]="name"  name="name" type="text" placeholder= {{data.name}} ngModel required></ion-input>
+      <ion-input [(ngModel)]="project.name"  name="name" type="text" placeholder= {{project.name}} ngModel required></ion-input>
     </ion-item>  
     <ion-item>
-      <ion-input [(ngModel)]="description"  name="description" type="text"  placeholder= {{data.description}} ngModel required></ion-input>
+      <ion-input [(ngModel)]="project.description"  name="description" type="text"  placeholder= {{project.description}} ngModel required></ion-input>
     </ion-item>
   </ion-card>
 </ion-content>
 
-<ion-button (click)="save()" [routerLink]="['/view-project']">save</ion-button>
+<ion-button (click)="save()">save</ion-button>
 
-<ion-button (click)="viewProject()" [routerLink]="['/view-project']">back</ion-button>
+<ion-button (click)="viewProject(project.id)">back</ion-button>
 

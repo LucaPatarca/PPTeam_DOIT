@@ -32,7 +32,6 @@ export class ListOfOrganizationsPage implements OnInit {
   loadOrganizations(event?){
     this.http.get(`http://localhost:8080/api/organizations/list/${this.page}`)
     .subscribe(res => {
-      console.log(res);
       this.organizations= this.organizations.concat(res['content']);
       if(this.organizations.length==0){
         this.textNoOrganizations = "nessuna organizzazione disponibile disponibile";

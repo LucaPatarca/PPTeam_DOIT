@@ -9,10 +9,10 @@
  <ion-card>
   <ion-item>
     <ion-label>
-      <h2 text-capitalize>{{data.name}}</h2>
-      <p>{{data.description}}</p>
-      <p>{{data.organizationName}}</p>
-      <p>{{data.creatorMail}}</p>
+      <h2 text-capitalize>{{project.name}}</h2>
+      <p>{{project.description}}</p>
+      <p>{{project.organizationName}}</p>
+      <p>{{project.creatorMail}}</p>
       <p>{{isClosed}}</p>
       <p>neededSkills ?</p>
       <p>candidates ?</p>
@@ -21,10 +21,8 @@
  </ion-card>
 </ion-content>
 
-<ion-button (click)="modify(data)" [routerLink]="['/modify-project']">modify</ion-button>
+<ion-button (click)="modify()" [routerLink]="['/modify-project']">modify</ion-button>
 
-<ion-button (click)="close(data)" [routerLink]="['/view-project']">close</ion-button>
-
-<ion-button (click)="delete(data)" [routerLink]="['/list-of-projects']">delete</ion-button>
+<ion-button (click)="delete()" [routerLink]="['/list-of-projects']">delete</ion-button>
 
 <ion-button (click)="onClick()" [routerLink]="['/list-of-projects']" [queryParams]="{topic: 'basic'}" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:true}" lines="none" detail="false">back</ion-button>
