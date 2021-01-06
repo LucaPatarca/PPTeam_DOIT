@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
+import { GlobalsService } from 'src/app/services/globals.service';
 
 @Component({
   selector: 'app-create-organization',
@@ -11,7 +12,10 @@ export class CreateOrganizationPage implements OnInit {
 
   organization_description:string
   organization_name:string
-  constructor(private menuCtrl:MenuController, private http: HttpClient) { 
+  constructor(private menuCtrl:MenuController, 
+    private http: HttpClient,
+    private globals:GlobalsService
+    ) { 
     this.menuCtrl.enable(false)
   }
 
@@ -23,13 +27,14 @@ export class CreateOrganizationPage implements OnInit {
     const newOrganization = {
       "name": this.organization_name,
       "description": this.organization_description,
-      "expertsMails": {},
+      "expertsMails": [],
       "membersMails": [
-        "mail"
+        this.globals.userMail
       ],
-      "creatorMail": "mail",
+      "creatorMail": this.globals.userMail,
+      "collaboratorsMails": {},
     }
-    this.http.post("http://localhost:8080/api/organizations/createNew",newOrganization,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
+    this.http.post(this.globals.createOrganizationApiUrl,newOrganization,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
       res => {
         console.log('Successfully created new organization');	
       }, 

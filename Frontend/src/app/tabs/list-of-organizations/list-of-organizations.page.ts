@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { GlobalsService } from 'src/app/services/globals.service';
 
 @Component({
   selector: 'app-list-of-organizations',
@@ -19,7 +20,8 @@ export class ListOfOrganizationsPage implements OnInit {
     private titleService: Title,
     private http: HttpClient,
     public router:Router,
-    public menuCtrl:MenuController
+    public menuCtrl:MenuController,
+    private globals:GlobalsService
     ) {
     this.loadOrganizations();
     this.titleService.setTitle("listOfOrganizations");
@@ -30,11 +32,11 @@ export class ListOfOrganizationsPage implements OnInit {
 
   // metodo per richiedere una pagina di elementi
   loadOrganizations(event?){
-    this.http.get(`http://localhost:8080/api/organizations/list/${this.page}`)
+    this.http.get(this.globals.listOfOrganizationsApiUrl+this.page)
     .subscribe(res => {
       this.organizations= this.organizations.concat(res['content']);
       if(this.organizations.length==0){
-        this.textNoOrganizations = "nessuna organizzazione disponibile disponibile";
+        this.textNoOrganizations = "Nessuna Organizzazione disponibile";
       }else{
         this.textNoOrganizations = "";
       }

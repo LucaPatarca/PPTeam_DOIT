@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { GlobalsService } from 'src/app/services/globals.service';
 
 @Component({
   selector: 'app-view-organization',
@@ -12,7 +13,11 @@ export class ViewOrganizationPage implements OnInit {
   data:any
 
   constructor(
-    private route:ActivatedRoute , private menuCtrl:MenuController , private http:HttpClient) { 
+    private route:ActivatedRoute, 
+    private menuCtrl:MenuController, 
+    private http:HttpClient,
+    private globals:GlobalsService
+    ) { 
     this.data = this.route.snapshot.params;
     this.menuCtrl.enable(false);
   }
@@ -25,7 +30,7 @@ export class ViewOrganizationPage implements OnInit {
   }
 
   deleteOrganization(){
-    this.http.delete("http://localhost:8080/api/organizations/"+this.data.name).subscribe(
+    this.http.delete(this.globals.organizationApiUrl+this.data.name).subscribe(
       res => {
         console.log("organization removed successfully");
       },

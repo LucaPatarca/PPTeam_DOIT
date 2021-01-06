@@ -5,6 +5,7 @@ import{Router} from "@angular/router";
 import { MenuController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { Project } from 'src/app/model/project';
+import { GlobalsService } from 'src/app/services/globals.service';
 
 
 @Component({
@@ -21,7 +22,8 @@ export class ListOfProjectsPage {
     private http: HttpClient,
     public data: DataService,
     public router:Router,
-    public menuCtrl:MenuController
+    public menuCtrl:MenuController,
+    private globals:GlobalsService
     ) {
     this.data.clear();
     this.loadProjects();
@@ -31,7 +33,7 @@ export class ListOfProjectsPage {
 
   // metodo per richiedere una pagina di elementi
   loadProjects(event?){
-    this.http.get(`http://localhost:8080/api/projects/list/${this.page}`)
+    this.http.get(this.globals.listOfProjectsApiUrl+this.page)
     .subscribe(res => {
       this.data.addProject(res['content']);
       if(this.data.list.length==0){

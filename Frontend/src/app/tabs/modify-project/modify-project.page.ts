@@ -4,6 +4,7 @@ import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { MenuController } from '@ionic/angular';
 import { Project } from 'src/app/model/project';
 import { DataService } from 'src/app/services/data.service';
+import { GlobalsService } from 'src/app/services/globals.service';
 
 @Component({
   selector: 'app-modify-project',
@@ -18,7 +19,8 @@ export class ModifyProjectPage {
     public router:Router, 
     private menuCtrl:MenuController,
     private http:HttpClient,
-    private dataService:DataService
+    private dataService:DataService,
+    private globals:GlobalsService
   ) { 
     const id = this.route.snapshot.params['id'];
     this.project = dataService.getProject(id);
@@ -29,7 +31,7 @@ export class ModifyProjectPage {
     
 
   save(){
-    this.http.put("http://localhost:8080/api/projects/modify", this.project, { headers: new HttpHeaders(), responseType: 'json'})
+    this.http.put(this.globals.modifyProjectApiUrl, this.project, { headers: new HttpHeaders(), responseType: 'json'})
     .subscribe(
       res => {
         console.log('Successfully saved Project with Id: ' + this.project.id);	

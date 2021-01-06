@@ -5,6 +5,7 @@ import{Router} from "@angular/router";
 import { HttpClient } from '@angular/common/http';
 import { Project } from 'src/app/model/project';
 import { DataService } from 'src/app/services/data.service';
+import { GlobalsService } from 'src/app/services/globals.service';
 
 
 @Component({
@@ -21,7 +22,8 @@ project:Project;
     private menuCtrl:MenuController, 
     public router:Router, 
     private http:HttpClient,
-    public data:DataService
+    public data:DataService,
+    private globals: GlobalsService
   ) { 
     const id = this.route.snapshot.params["id"];
     this.project = this.data.getProject(id);
@@ -42,7 +44,7 @@ project:Project;
   }
 
   delete(){
-    this.http.delete("http://localhost:8080/api/projects/delete/" + this.project.id)
+    this.http.delete(this.globals.projectApiUrl + this.project.id)
     .subscribe(
       res => {
         console.log('Delete successful Project with Id: ' + this.project.id);

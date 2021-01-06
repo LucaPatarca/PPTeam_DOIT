@@ -134,4 +134,13 @@ public class Organization {
         if(creatorMail.length() == 0) throw new IllegalArgumentException("creatorMail is empty");
         this.creatorMail=creatorMail;
     }
+
+    public Map<String, Set<Skill>> getCollaboratorsMails() {
+        return collaboratorsMails;
+    }
+
+    public void setCollaboratorsMails(Map<String, Set<Skill>> collaboratorsMails) {
+        this.collaboratorsMails = collaboratorsMails;
+    }
+
 }

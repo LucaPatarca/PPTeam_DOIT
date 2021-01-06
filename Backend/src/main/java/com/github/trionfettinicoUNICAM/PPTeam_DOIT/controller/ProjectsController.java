@@ -38,7 +38,7 @@ public class ProjectsController {
     }
 
     @PreAuthorize("permitAll")
-    @DeleteMapping(value = "/delete/{projectID}")
+    @DeleteMapping(value = "/{projectID}")
     public boolean deleteProject(@PathVariable String projectID){
         return projectsManager.deleteProject(projectID);
     }
