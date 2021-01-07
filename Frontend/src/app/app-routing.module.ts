@@ -14,31 +14,31 @@ const routes: Routes = [
   },
   {
     path: 'list-of-projects',
-    loadChildren: () => import('./tabs/list-of-projects/list-of-projects.module').then( m => m.ListOfProjectsPageModule)
+    loadChildren: () => import('./tabs/project/list-of-projects/list-of-projects.module').then( m => m.ListOfProjectsPageModule)
   },
     {
       path: 'view-project',
-      loadChildren: () => import('./tabs/view-project/view-project.module').then( m => m.ViewProjectPageModule)
+      loadChildren: () => import('./tabs/project/view-project/view-project.module').then( m => m.ViewProjectPageModule)
     },
   {
     path: 'create-project',
-    loadChildren: () => import('./tabs/create-project/create-project.module').then( m => m.CreateProjectPageModule)
+    loadChildren: () => import('./tabs/project/create-project/create-project.module').then( m => m.CreateProjectPageModule)
   },
   {
     path: 'create-organization',
-    loadChildren: () => import('./tabs/create-organization/create-organization.module').then( m => m.CreateOrganizationPageModule)
+    loadChildren: () => import('./tabs/organization/create-organization/create-organization.module').then( m => m.CreateOrganizationPageModule)
   },
   {
     path: 'list-of-organizations',
-    loadChildren: () => import('./tabs/list-of-organizations/list-of-organizations.module').then( m => m.ListOfOrganizationsPageModule)
+    loadChildren: () => import('./tabs/organization/list-of-organizations/list-of-organizations.module').then( m => m.ListOfOrganizationsPageModule)
   },
   {
     path: 'view-organization',
-    loadChildren: () => import('./tabs/view-organization/view-organization.module').then( m => m.ViewOrganizationPageModule)
+    loadChildren: () => import('./tabs/organization/view-organization/view-organization.module').then( m => m.ViewOrganizationPageModule)
   },
   {
     path: 'modify-project',
-    loadChildren: () => import('./tabs/modify-project/modify-project.module').then( m => m.ModifyProjectPageModule)
+    loadChildren: () => import('./tabs/project/modify-project/modify-project.module').then( m => m.ModifyProjectPageModule)
   },
   
 ];

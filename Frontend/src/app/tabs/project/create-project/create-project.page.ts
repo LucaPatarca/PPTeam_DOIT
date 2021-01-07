@@ -31,7 +31,6 @@ export class CreateProjectPage {
     this.http.post(this.globals.createProjectApiUrl,newProject,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
       res => {
         console.log('Successfully created new project');
-        this.dataService.addProject(res as Project);
       }, 
       err => { 
         console.log('oops some error in Project'); 

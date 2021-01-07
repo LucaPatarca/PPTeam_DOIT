@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
@@ -10,7 +10,7 @@ import { GlobalsService } from 'src/app/services/globals.service';
   templateUrl: './list-of-organizations.page.html',
   styleUrls: ['./list-of-organizations.page.scss'],
 })
-export class ListOfOrganizationsPage implements OnInit {
+export class ListOfOrganizationsPage {
 
   organizations = [];
   page = 0;
@@ -26,8 +26,6 @@ export class ListOfOrganizationsPage implements OnInit {
     this.loadOrganizations();
     this.titleService.setTitle("listOfOrganizations");
     this.menuCtrl.enable(true);
-  }
-  ngOnInit(): void {
   }
 
   // metodo per richiedere una pagina di elementi

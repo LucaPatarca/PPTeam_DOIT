@@ -22,11 +22,11 @@
             </ion-item>
           </div>
           <div padding>
-            <ion-button (click)="createProject()" size="large" type="submit" expand="block" [routerLink]="['/list-of-projects']" >CREATE</ion-button>
+            <ion-button (click)="createProject()" size="large" type="submit" expand="block" [routerLink]="['/list-of-projects']" routerDirection="root" >CREATE</ion-button>
           </div>
         </ion-col>
       </ion-row>
     </ion-grid>
   </form>
 </ion-content>
-<ion-button [routerLink]="['/home']" [queryParams]="{topic: 'basic'}" routerLinkActive="selected" [routerLinkActiveOptions]="{exact:true}" lines="none" detail="false">back</ion-button>
+<ion-button [routerLink]="['/home']" routerDirection="root">back</ion-button>

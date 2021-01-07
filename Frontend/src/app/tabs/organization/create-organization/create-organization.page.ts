@@ -16,10 +16,11 @@ export class CreateOrganizationPage implements OnInit {
     private http: HttpClient,
     private globals:GlobalsService
     ) { 
-    this.menuCtrl.enable(false)
+      this.menuCtrl.enable(false)
   }
 
   ngOnInit() {
+    
   }
 
   createOrganization(){
