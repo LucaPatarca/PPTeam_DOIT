@@ -22,8 +22,8 @@ public class Expert extends User {
 
     private Set<Skill> expertSKills;
 
-    public Expert(String mail, String name, Integer age) {
-        super(mail, name, age);
+    public Expert(String mail, String name) {
+        super(mail, name);
         expertSKills = new HashSet<>();
     }
 

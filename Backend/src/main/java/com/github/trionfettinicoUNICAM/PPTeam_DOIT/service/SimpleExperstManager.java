@@ -23,7 +23,7 @@ public class SimpleExperstManager implements ExpertsManager{
 
     @Override
     public Expert createExpert(User user) {
-        Expert expert = new Expert(user.getMail(),user.getName(), user.getAge()) ;
+        Expert expert = new Expert(user.getMail(),user.getName()) ;
         return repository.save(expert);
     }
 

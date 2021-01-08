@@ -19,7 +19,7 @@ class SimpleOrganizationsManagerTest {
 
     @BeforeEach
     void initOrganization(){
-        User user = new User("mail", "luca", 21);
+        User user = new User("mail", "luca");
         organization = manager.createNewOrganization(new Organization("org", "description", user.getMail()));
     }
 

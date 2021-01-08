@@ -14,11 +14,11 @@ const routes: Routes = [
   },
   {
     path: 'list-of-projects',
-    loadChildren: () => import('./tabs/project/list-of-projects/list-of-projects.module').then( m => m.ListOfProjectsPageModule)
+    loadChildren: () => import('./tabs/project/view/list-of-projects/list-of-projects.module').then( m => m.ListOfProjectsPageModule)
   },
     {
       path: 'view-project',
-      loadChildren: () => import('./tabs/project/view-project/view-project.module').then( m => m.ViewProjectPageModule)
+      loadChildren: () => import('./tabs/project/view/view-project/view-project.module').then( m => m.ViewProjectPageModule)
     },
   {
     path: 'create-project',
@@ -30,16 +30,24 @@ const routes: Routes = [
   },
   {
     path: 'list-of-organizations',
-    loadChildren: () => import('./tabs/organization/list-of-organizations/list-of-organizations.module').then( m => m.ListOfOrganizationsPageModule)
+    loadChildren: () => import('./tabs/organization/view/list-of-organizations/list-of-organizations.module').then( m => m.ListOfOrganizationsPageModule)
   },
   {
     path: 'view-organization',
-    loadChildren: () => import('./tabs/organization/view-organization/view-organization.module').then( m => m.ViewOrganizationPageModule)
+    loadChildren: () => import('./tabs/organization/view/view-organization/view-organization.module').then( m => m.ViewOrganizationPageModule)
   },
   {
     path: 'modify-project',
     loadChildren: () => import('./tabs/project/modify-project/modify-project.module').then( m => m.ModifyProjectPageModule)
+  },  {
+    path: 'add-collaborator',
+    loadChildren: () => import('./tabs/organization/expert/add-collaborator/add-collaborator.module').then( m => m.AddCollaboratorPageModule)
   },
+  {
+    path: 'create-user',
+    loadChildren: () => import('./tabs/user/create-user/create-user.module').then( m => m.CreateUserPageModule)
+  },
+
   
 ];
 

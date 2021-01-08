@@ -22,11 +22,11 @@
             </ion-item>
           </div>
           <div padding>
-            <ion-button (click)="createOrganization()" size="large" type="submit" expand="block" [routerLink]="['/list-of-organizations']" routerDirection="root" >CREATE</ion-button>
+            <ion-button (click)="createOrganization()">CREATE</ion-button>
           </div>
         </ion-col>
       </ion-row>
     </ion-grid>
   </form>
 </ion-content>
-<ion-button [routerLink]="['/home']" routerDirection="root">back</ion-button>
+<ion-button (click)="back()">back</ion-button>

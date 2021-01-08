@@ -4,18 +4,17 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CreateProjectPageRoutingModule } from './create-project-routing.module';
+import { AddCollaboratorPageRoutingModule } from './add-collaborator-routing.module';
 
-
-import { CreateProjectPage } from './create-project.page';
+import { AddCollaboratorPage } from './add-collaborator.page';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CreateProjectPageRoutingModule
+    AddCollaboratorPageRoutingModule
   ],
-  declarations: [CreateProjectPage]
+  declarations: [AddCollaboratorPage]
 })
-export class CreateProjectPageModule {}
+export class AddCollaboratorPageModule {}

@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { GlobalsService } from 'src/app/services/globals.service';
 
@@ -13,6 +14,7 @@ export class CreateOrganizationPage implements OnInit {
   organization_description:string
   organization_name:string
   constructor(private menuCtrl:MenuController, 
+    private router:Router,
     private http: HttpClient,
     private globals:GlobalsService
     ) { 
@@ -44,6 +46,12 @@ export class CreateOrganizationPage implements OnInit {
       }
     );
     this.menuCtrl.enable(true);
+    this.router.navigate(["/list-of-organizations"]);
+  }
+
+  back(){
+    this.menuCtrl.enable(true);
+    this.router.navigate(["/home"], { queryParams: { 'refresh': 1 } });
   }
 
 }

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
@@ -10,7 +10,7 @@ import { GlobalsService } from 'src/app/services/globals.service';
   templateUrl: './list-of-organizations.page.html',
   styleUrls: ['./list-of-organizations.page.scss'],
 })
-export class ListOfOrganizationsPage {
+export class ListOfOrganizationsPage  {
 
   organizations = [];
   page = 0;
@@ -52,6 +52,6 @@ export class ListOfOrganizationsPage {
 
   // metodo per aprire la visualizzazione di una pagina (gli si passa un organization)
   viewOrganization(organization:String){
-    this.router.navigate(['/view-organization',organization]);
+    this.router.navigate(['/view-organization',organization], { queryParams: { 'refresh': 1 } });
   }
 }

@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import {HttpClient} from "@angular/common/http"
 import { Title }     from '@angular/platform-browser';
-import{Router} from "@angular/router";
+import{ActivatedRouteSnapshot, DetachedRouteHandle, Router, RouteReuseStrategy} from "@angular/router";
 import { MenuController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
-import { Project } from 'src/app/model/project';
 import { GlobalsService } from 'src/app/services/globals.service';
 
 
@@ -13,7 +12,7 @@ import { GlobalsService } from 'src/app/services/globals.service';
   templateUrl: './list-of-projects.page.html',
   styleUrls: ['./list-of-projects.page.scss'],
 })
-export class ListOfProjectsPage {
+export class ListOfProjectsPage implements RouteReuseStrategy {
   page = 0;
   textNoProjects="";  
 
@@ -26,9 +25,25 @@ export class ListOfProjectsPage {
     private globals:GlobalsService
     ) {
     this.data.clear();
+    console.log("bella");
     this.loadProjects();
     this.titleService.setTitle("listOfProjects");
     this.menuCtrl.enable(true);
+    }
+  shouldDetach(route: ActivatedRouteSnapshot): boolean {
+    throw new Error('Method not implemented.');
+  }
+  store(route: ActivatedRouteSnapshot, handle: DetachedRouteHandle): void {
+    throw new Error('Method not implemented.');
+  }
+  shouldAttach(route: ActivatedRouteSnapshot): boolean {
+    throw new Error('Method not implemented.');
+  }
+  retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle {
+    throw new Error('Method not implemented.');
+  }
+  shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
+    throw new Error('Method not implemented.');
   }
 
   // metodo per richiedere una pagina di elementi

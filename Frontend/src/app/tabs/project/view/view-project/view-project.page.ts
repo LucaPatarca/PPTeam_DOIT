@@ -1,5 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import{Router} from "@angular/router";
 import { HttpClient } from '@angular/common/http';
@@ -37,6 +37,7 @@ project:Project;
 
   onClick(){
     this.menuCtrl.enable(true);
+    this.router.navigate(["/list-of-projects"], { queryParams: { 'refresh': 1 } })
   }
 
   modify(){
@@ -54,10 +55,9 @@ project:Project;
         console.log('There was an error!', err); 
       }
     );
-
-    this.router.navigate(['/list-of-projects']);
     this.onClick();
   }
+  
 
 }
 

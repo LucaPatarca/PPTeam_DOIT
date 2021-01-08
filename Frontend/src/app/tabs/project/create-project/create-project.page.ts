@@ -1,8 +1,7 @@
+import { Router } from '@angular/router';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MenuController } from '@ionic/angular';
-import { Project } from 'src/app/model/project';
-import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 
 
@@ -19,9 +18,8 @@ export class CreateProjectPage {
 
   constructor(private menuCtrl:MenuController,
     private http:HttpClient,
-    private globals: GlobalsService,
-    private dataService: DataService
-    ) { 
+    private router:Router,
+    private globals: GlobalsService) { 
     this.menuCtrl.enable(false);
   }
 
@@ -31,11 +29,17 @@ export class CreateProjectPage {
     this.http.post(this.globals.createProjectApiUrl,newProject,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
       res => {
         console.log('Successfully created new project');
+        this.menuCtrl.enable(true);
+        this.router.navigate(['/list-of-projects']);
       }, 
       err => { 
         console.log('oops some error in Project'); 
       }
     );
+  }
+
+  back(){
     this.menuCtrl.enable(true);
+    this.router.navigate(['/home'], { queryParams: { 'refresh': 1 } });
   }
 }

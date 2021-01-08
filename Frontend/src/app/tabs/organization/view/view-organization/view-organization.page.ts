@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { GlobalsService } from 'src/app/services/globals.service';
 
@@ -14,6 +14,7 @@ export class ViewOrganizationPage implements OnInit {
 
   constructor(
     private route:ActivatedRoute, 
+    private router:Router,
     private menuCtrl:MenuController, 
     private http:HttpClient,
     private globals:GlobalsService
@@ -27,6 +28,7 @@ export class ViewOrganizationPage implements OnInit {
 
   onBack(){
     this.menuCtrl.enable(true);
+    this.router.navigate(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
   }
 
   deleteOrganization(){

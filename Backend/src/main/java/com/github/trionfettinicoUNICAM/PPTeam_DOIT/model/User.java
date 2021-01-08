@@ -1,6 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashSet;
 import java.util.Objects;
@@ -10,6 +11,7 @@ import java.util.Set;
  * Represents a registered user inside the application. It has the ability to join a project's team
  * and to do so, it needs a list of {@link Skill}s.
  */
+@Document(collection = "user")
 public class User {
 
     // TODO: 10/12/20 scrivere il javadoc di questi metodi (lasciati indietro perche comunque si spiegano gia bene da soli)
@@ -17,15 +19,13 @@ public class User {
     @Id
     private String mail;
     private String name;
-    private int age;
     private Set<Skill> skills;
     private Set<Role> roles;
     private Set<Role> submissions;
 
-    public User(String mail, String name, Integer age) throws IllegalArgumentException {
+    public User(String mail, String name) throws IllegalArgumentException {
         setMail(mail);
         setName(name);
-        setAge(age);
         skills = new HashSet<>();
         roles = new HashSet<>();
         submissions = new HashSet<>();
@@ -116,15 +116,5 @@ public class User {
     public void setName(String name) throws IllegalArgumentException {
         if(name.length() == 0) throw new IllegalArgumentException("Name is empty");
         this.name = name;
-    }
-
-    public int getAge() {
-        return this.age;
-    }
-
-    public void setAge(int age) throws IllegalArgumentException {
-        if(age < 0) throw new IllegalArgumentException("Age is negative");
-        //TODO aggiungere limite eta?
-        this.age = age;
     }
 }

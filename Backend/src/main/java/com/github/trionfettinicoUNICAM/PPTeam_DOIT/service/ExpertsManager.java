@@ -4,7 +4,6 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Expert;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 
-import java.util.Set;
 
 public interface ExpertsManager {
     Expert getExpertInstance(String userMail);
