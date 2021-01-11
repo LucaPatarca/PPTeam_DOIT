@@ -1,6 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import org.springframework.data.domain.Page;
 
@@ -48,4 +49,7 @@ public interface OrganizationsManager {
     List<Organization> findByUser(String userMail);
 
     Page<Organization> getPage(int page, int i);
+
+    boolean addCollaborator(String organizationName, String userMail, Skill skill);
+
 }

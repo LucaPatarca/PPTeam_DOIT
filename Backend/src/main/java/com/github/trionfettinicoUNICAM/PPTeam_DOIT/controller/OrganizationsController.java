@@ -1,6 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.OrganizationsManager;
 
@@ -52,6 +53,12 @@ public class OrganizationsController {
     @GetMapping("/getUsers/{organizationName}")
     public List<User> getUsers(@PathVariable String organizationName){
         return organizationsManager.getUsers(organizationName);
+    }
+
+    @PreAuthorize("permitAll")
+    @PostMapping("/addCollaborator/{organizationName}/{userMail}")
+    public boolean addExpert(@PathVariable String organizationName, @PathVariable String userMail, @RequestBody Skill skill){
+        return organizationsManager.addCollaborator(organizationName, userMail, skill);
     }
 
 }

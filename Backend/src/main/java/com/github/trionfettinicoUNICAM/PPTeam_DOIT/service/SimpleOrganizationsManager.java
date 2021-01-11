@@ -1,6 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
 
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class SimpleOrganizationsManager implements OrganizationsManager{
@@ -71,4 +71,22 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     public Page<Organization> getPage(int page, int size) {
         return repositoryOrg.findAll(PageRequest.of(page, size));
     }
+
+    @Override
+    public boolean addCollaborator(String organizationName, String userMail, Skill skill) {
+        //TODO da aggiustare, non trova le instanze anche se sono presenti nel DB
+        if(repositoryOrg.findById(organizationName).isPresent() && repositoryUser.findById(userMail).isPresent()){
+            Organization organization = repositoryOrg.findById(organizationName).get();
+            organization.addCollaborator(userMail, skill);
+            repositoryOrg.deleteById(organizationName);
+            repositoryOrg.save(organization);
+            User user = repositoryUser.findById(userMail).get();
+            user.addSkill(skill);
+            repositoryUser.deleteById(userMail);
+            repositoryUser.save(user);
+            return true;
+        }
+        return false;
+    }
+
 }
