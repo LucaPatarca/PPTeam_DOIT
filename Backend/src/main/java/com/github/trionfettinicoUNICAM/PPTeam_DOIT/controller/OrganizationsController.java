@@ -57,7 +57,7 @@ public class OrganizationsController {
 
     @PreAuthorize("permitAll")
     @PostMapping("/addCollaborator/{organizationName}/{userMail}")
-    public boolean addExpert(@PathVariable String organizationName, @PathVariable String userMail, @RequestBody Skill skill){
+    public boolean addCollaborator(@PathVariable String organizationName, @PathVariable String userMail, @RequestBody Skill skill){
         return organizationsManager.addCollaborator(organizationName, userMail, skill);
     }
 

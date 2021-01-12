@@ -80,13 +80,7 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
             organization.addMember(userMail);
             repositoryOrg.save(organization);
             User user = repositoryUser.findById(userMail).get();
-            Optional<Skill> optionalSkill = user.getSkills().stream().filter(it->it.equals(skill)).findAny();
-            if(optionalSkill.isPresent()){
-                optionalSkill.get().getExpertInOrganization().add(organizationName);
-            } else{
-                skill.getExpertInOrganization().add(organizationName);
-                user.addSkill(skill);
-            }
+            user.setExpert(skill,organizationName);
             repositoryUser.save(user);
             return true;
         }
