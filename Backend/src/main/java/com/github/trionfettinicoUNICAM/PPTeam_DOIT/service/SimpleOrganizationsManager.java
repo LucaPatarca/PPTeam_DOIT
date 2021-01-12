@@ -74,15 +74,12 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
 
     @Override
     public boolean addCollaborator(String organizationName, String userMail, Skill skill) {
-        //TODO da aggiustare, non trova le instanze anche se sono presenti nel DB
         if(repositoryOrg.findById(organizationName).isPresent() && repositoryUser.findById(userMail).isPresent()){
             Organization organization = repositoryOrg.findById(organizationName).get();
             organization.addCollaborator(userMail, skill);
-            repositoryOrg.deleteById(organizationName);
             repositoryOrg.save(organization);
             User user = repositoryUser.findById(userMail).get();
             user.addSkill(skill);
-            repositoryUser.deleteById(userMail);
             repositoryUser.save(user);
             return true;
         }

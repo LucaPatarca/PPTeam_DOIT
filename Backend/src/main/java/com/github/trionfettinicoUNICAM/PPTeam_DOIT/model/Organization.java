@@ -31,7 +31,7 @@ public class Organization {
     private String name;
     private Set<String> membersMails;
     private Set<String> expertsMails;
-    private Map<String, Set<Skill>> collaboratorsMails;
+    private Set<String> collaboratorsMails;
     private String description;
     private String creatorMail;
 
@@ -43,7 +43,7 @@ public class Organization {
         if(creatorMail.length() == 0) throw new IllegalArgumentException("creatorMail is empty");
         this.membersMails.add(creatorMail);
         this.expertsMails = new HashSet<>();
-        this.collaboratorsMails = new HashMap<>();
+        this.collaboratorsMails = new HashSet<>();
     }
 
     public void addExpert(String expertMail) throws IllegalArgumentException {
@@ -55,17 +55,17 @@ public class Organization {
         if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
         Set<Skill> skills = new HashSet<>();
         skills.add(skill);
-        collaboratorsMails.put(collaboratorMail,skills);
+        collaboratorsMails.add(collaboratorMail);
     }
 
     public void addCollaboratorSkill(String collaboratorMail, Skill skill) throws IllegalArgumentException {
         if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
-        collaboratorsMails.get(collaboratorMail).add(skill);
+        //collaboratorsMails.add(collaboratorMail);
     }
 
     public void removeCollaboratorSkill(String collaboratorMail, Skill skill) throws IllegalArgumentException {
         if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
-        collaboratorsMails.get(collaboratorMail).remove(skill);
+        collaboratorsMails.remove(collaboratorMail);
     }
 
     public void removeExpert(String expertMail) throws IllegalArgumentException {
@@ -135,11 +135,11 @@ public class Organization {
         this.creatorMail=creatorMail;
     }
 
-    public Map<String, Set<Skill>> getCollaboratorsMails() {
+    public Set<String> getCollaboratorsMails() {
         return collaboratorsMails;
     }
 
-    public void setCollaboratorsMails(Map<String, Set<Skill>> collaboratorsMails) {
+    public void setCollaboratorsMails(Set<String> collaboratorsMails) {
         this.collaboratorsMails = collaboratorsMails;
     }
 

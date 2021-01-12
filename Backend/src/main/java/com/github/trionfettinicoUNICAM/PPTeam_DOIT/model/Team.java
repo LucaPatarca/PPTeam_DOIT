@@ -14,6 +14,8 @@ public class Team{
 
     // TODO: 15/12/20 togliere projectName dato che e' ridondante
 
+    // TODO: 09/01/21 trasformare in un set di ruoli (nel progetto) ed eliminare questa classe dalla faccia della terra
+
     private Set<Role> roles;
     private String projectName;
 

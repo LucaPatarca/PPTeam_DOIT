@@ -35,7 +35,6 @@ export class CreateUserPage implements OnInit {
       });
     }
   ngOnInit(): void {
-    console.log("ci siamo ");
   }
     validation_messages = {
       'name': [
@@ -51,7 +50,6 @@ export class CreateUserPage implements OnInit {
       this.http.post(this.globals.userExistApiUrl,this.email).subscribe(
         res => {
           if(res==false){
-            console.log("ok");
             var newUser = {"name":this.name,mail:this.email};
             this.http.post(this.globals.createUserApiUrl,newUser,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
               res => {

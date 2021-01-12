@@ -16,6 +16,8 @@ public class User {
 
     // TODO: 10/12/20 scrivere il javadoc di questi metodi (lasciati indietro perche comunque si spiegano gia bene da soli)
 
+    // TODO: 09/01/21 rimuovere roles e submissions (e metodi associati)
+
     @Id
     private String mail;
     private String name;
