@@ -12,12 +12,12 @@ public class Role{
 
     private Skill skill;
     private String userMail;
-    private String projectName;
+    private boolean asExpert;
 
-    public Role(Skill skill, String userMail, String projectName) throws IllegalArgumentException {
+    public Role(Skill skill, String userMail, boolean asExpert) throws IllegalArgumentException {
         setSkill(skill);
         setUserMail(userMail);
-        setProjectName(projectName);
+        setAsExpert(asExpert);
     }
 
     public Skill getSkill() {
@@ -37,13 +37,12 @@ public class Role{
         this.userMail=userMail;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public boolean isAsExpert() {
+        return asExpert;
     }
 
-    public void setProjectName(String projectName) throws IllegalArgumentException {
-        if(projectName.length() == 0) throw new IllegalArgumentException("ProjectName is empty");
-        this.projectName=projectName;
+    public void setAsExpert(boolean asExpert) {
+        this.asExpert = asExpert;
     }
 
     public boolean equals(Object object) {
@@ -51,10 +50,10 @@ public class Role{
         if (object == null || getClass() != object.getClass()) return false;
         if (!super.equals(object)) return false;
         Role realRole = (Role) object;
-        return userMail.equals(realRole.userMail) && projectName.equals(realRole.projectName);
+        return userMail.equals(realRole.userMail);
     }
 
     public int hashCode() {
-        return Objects.hash(super.hashCode(), userMail, projectName);
+        return Objects.hash(super.hashCode(), userMail);
     }
 }

@@ -6,8 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.*;
 
 /**
- * Represents a project, it has a {@link Team}, a list of candidates, and a set of {@link Skill}s
- * that are needed to complete this project's task.
+ *
  */
 @Document(collection = "project")
 public class Project {
@@ -19,7 +18,7 @@ public class Project {
     private String creatorMail;
     private boolean isClosed;
     private Set<Skill> neededSkills;
-    private Team team;
+    private Set<Role> team;
     private Set<Role> candidates;
 
     public Project(String organizationName, String creatorMail, String name, String description) throws IllegalArgumentException {
@@ -29,7 +28,7 @@ public class Project {
         this.candidates = new HashSet<>();
         setName(name);
         setDescription(description);
-        this.team = new Team(this.getName());
+        this.team = new HashSet<>();
         this.isClosed = false;
         this.neededSkills = new HashSet<>();
         setOrganizationName(organizationName);
@@ -116,11 +115,11 @@ public class Project {
         this.neededSkills = neededSkills;
     }
 
-    public Team getTeam() {
+    public Set<Role> getTeam() {
         return team;
     }
 
-    public void setTeam(Team team) {
+    public void setTeam(Set<Role> team) {
         this.team = Objects.requireNonNull(team, "Team is Null");
     }
 
@@ -142,14 +141,11 @@ public class Project {
 
 
     /**
-     * Accepts the {@link Role} of a {@link User} who applied for this project.
-     * After this operation the {@link Role} becomes part of the project's {@link Team}.
-     * The {@link User} should be notified for this operation.
-     * @param role the role to accept
+     *
      */
     public void acceptCandidate(Role role) throws RuntimeException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(!team.addRole(Objects.requireNonNull(role, "role is null"))) throw new RuntimeException("unable to add role to team");
+        if(!team.add(Objects.requireNonNull(role, "role is null"))) throw new RuntimeException("unable to add role to team");
     }
 
     /**
@@ -177,9 +173,9 @@ public class Project {
      * @throws IllegalArgumentException if the user does not have this {@link Skill} or if
      * the skill is not needed for this project
      */
-    public boolean submit(User user, Skill skill) throws IllegalStateException {
+    public boolean submit(User user, Skill skill,boolean asExpert) throws IllegalStateException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        Role role = new Role(Objects.requireNonNull(skill, "skill is null"), Objects.requireNonNull(user, "user is null").getMail(), this.getName());
+        Role role = new Role(Objects.requireNonNull(skill, "skill is null"), Objects.requireNonNull(user, "user is null").getMail(),asExpert);
         if(!candidates.contains(role)) {
             candidates.add(role);
             return true;

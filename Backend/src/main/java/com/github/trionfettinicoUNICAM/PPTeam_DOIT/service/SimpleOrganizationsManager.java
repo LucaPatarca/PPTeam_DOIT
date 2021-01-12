@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.ServiceLoader;
 
 @Service
 public class SimpleOrganizationsManager implements OrganizationsManager{
@@ -76,10 +77,16 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     public boolean addCollaborator(String organizationName, String userMail, Skill skill) {
         if(repositoryOrg.findById(organizationName).isPresent() && repositoryUser.findById(userMail).isPresent()){
             Organization organization = repositoryOrg.findById(organizationName).get();
-            organization.addCollaborator(userMail, skill);
+            organization.addMember(userMail);
             repositoryOrg.save(organization);
             User user = repositoryUser.findById(userMail).get();
-            user.addSkill(skill);
+            Optional<Skill> optionalSkill = user.getSkills().stream().filter(it->it.equals(skill)).findAny();
+            if(optionalSkill.isPresent()){
+                optionalSkill.get().getExpertInOrganization().add(organizationName);
+            } else{
+                skill.getExpertInOrganization().add(organizationName);
+                user.addSkill(skill);
+            }
             repositoryUser.save(user);
             return true;
         }

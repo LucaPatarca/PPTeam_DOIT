@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -22,15 +23,11 @@ public class User {
     private String mail;
     private String name;
     private Set<Skill> skills;
-    private Set<Role> roles;
-    private Set<Role> submissions;
 
     public User(String mail, String name) throws IllegalArgumentException {
         setMail(mail);
         setName(name);
         skills = new HashSet<>();
-        roles = new HashSet<>();
-        submissions = new HashSet<>();
     }
 
     /**
@@ -72,32 +69,6 @@ public class User {
     }
 
     /**
-     * @return the list of {@link Role}s this user had submitted for.
-     */
-    public Set<Role> getSubmissions() {
-        return submissions;
-    }
-
-    public void setSubmissions(Set<Role> submissions) {
-        Objects.requireNonNull(submissions, "Submissions is Null");
-        for(Role r: submissions) Objects.requireNonNull(r, "Submissions contain a null role");
-        this.submissions = submissions;
-    }
-
-    /**
-     * @return the set of {@link Role}s for which this user had been accepted.
-     */
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        Objects.requireNonNull(roles, "Roles is Null");
-        for(Role r: roles) Objects.requireNonNull(r, "Roles contain a null role");
-        this.roles = roles;
-    }
-
-    /**
      * The {@link User} mail is unique for each user so a user can be identified by it's mail.
      * @return the user's mail
      */
@@ -118,5 +89,25 @@ public class User {
     public void setName(String name) throws IllegalArgumentException {
         if(name.length() == 0) throw new IllegalArgumentException("Name is empty");
         this.name = name;
+    }
+
+    public void setGloballyExpert(Skill skill){
+        Optional<Skill> optionalSkill = this.getSkills().stream().filter(it->it.equals(skill)).findAny();
+        if(optionalSkill.isPresent()){
+            optionalSkill.get().setGloballyExpert(true);
+        } else{
+            skill.setGloballyExpert(true);
+            this.addSkill(skill);
+        }
+    }
+
+    public void setExpert(Skill skill, String organizationName){
+        Optional<Skill> optionalSkill = this.getSkills().stream().filter(it->it.equals(skill)).findAny();
+        if(optionalSkill.isPresent()){
+            optionalSkill.get().getExpertInOrganization().add(organizationName);
+        } else{
+            skill.getExpertInOrganization().add(organizationName);
+            this.addSkill(skill);
+        }
     }
 }

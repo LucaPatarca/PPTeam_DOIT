@@ -14,24 +14,9 @@ public class Organization {
 
     // TODO: 10/12/20 scrivere il javadoc di questi metodi (lasciati indietro perche comunque si spiegano gia bene da soli)
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Organization that = (Organization) o;
-        return name.equals(that.name) && membersMails.equals(that.membersMails) && expertsMails.equals(that.expertsMails) && description.equals(that.description) && creatorMail.equals(that.creatorMail);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(name, membersMails, expertsMails, description, creatorMail);
-    }
-
     @Id
     private String name;
     private Set<String> membersMails;
-    private Set<String> expertsMails;
-    private Set<String> collaboratorsMails;
     private String description;
     private String creatorMail;
 
@@ -42,50 +27,23 @@ public class Organization {
         this.membersMails = new HashSet<>();
         if(creatorMail.length() == 0) throw new IllegalArgumentException("creatorMail is empty");
         this.membersMails.add(creatorMail);
-        this.expertsMails = new HashSet<>();
-        this.collaboratorsMails = new HashSet<>();
     }
 
-    public void addExpert(String expertMail) throws IllegalArgumentException {
+    public void addMember(String expertMail) {
         if(expertMail.length() == 0) throw new IllegalArgumentException("expertMail is empty");
-        expertsMails.add(expertMail);
+        if(!membersMails.contains(expertMail)){
+            membersMails.add(expertMail);
+        }else{
+            throw new IllegalArgumentException("expert mail is already contained");
+        }
     }
 
-    public void addCollaborator(String collaboratorMail, Skill skill) throws IllegalArgumentException {
-        if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
-        Set<Skill> skills = new HashSet<>();
-        skills.add(skill);
-        collaboratorsMails.add(collaboratorMail);
-    }
-
-    public void addCollaboratorSkill(String collaboratorMail, Skill skill) throws IllegalArgumentException {
-        if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
-        //collaboratorsMails.add(collaboratorMail);
-    }
-
-    public void removeCollaboratorSkill(String collaboratorMail, Skill skill) throws IllegalArgumentException {
-        if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
-        collaboratorsMails.remove(collaboratorMail);
-    }
-
-    public void removeExpert(String expertMail) throws IllegalArgumentException {
-        if(expertMail.length() == 0) throw new IllegalArgumentException("expertMail is empty");
-        expertsMails.remove(expertMail);
-    }
-
-    public void removeCollaborator(String collaboratorMail) throws IllegalArgumentException {
-        if(collaboratorMail.length() == 0) throw new IllegalArgumentException("collaboratorMail is empty");
-        collaboratorsMails.remove(collaboratorMail);
-    }
-
-    public void addMember(String userMail) throws IllegalArgumentException {
+    public void removeMember(String userMail) {
         if(userMail.length() == 0) throw new IllegalArgumentException("userMail is empty");
-        membersMails.add(userMail);
-    }
-
-    public void removeMember(String userMail) throws IllegalArgumentException {
-        if(userMail.length() == 0) throw new IllegalArgumentException("userMail is empty");
-        membersMails.remove(userMail);
+        if(membersMails.contains(userMail))
+            membersMails.remove(userMail);
+        else
+            throw new IllegalArgumentException("userMail does not exist");
     }
 
     public Set<String> getMembersMails() {
@@ -96,15 +54,6 @@ public class Organization {
         Objects.requireNonNull(membersMails, "membersMails is null");
         for(String s: membersMails) if(s.length() == 0) throw new IllegalArgumentException("membersMails contain a empty memberMail");
         this.membersMails=membersMails;
-    }
-
-    public Set<String> getExpertsMails() {
-        return expertsMails;
-    }
-
-    public void setExpertsMails(Set<String> expertsMails) {
-        //TODO aggiungere controlli struttura ricevuta in input
-        this.expertsMails=expertsMails;
     }
 
     @Id
@@ -133,14 +82,6 @@ public class Organization {
     public void setCreatorMail(String creatorMail) throws IllegalArgumentException {
         if(creatorMail.length() == 0) throw new IllegalArgumentException("creatorMail is empty");
         this.creatorMail=creatorMail;
-    }
-
-    public Set<String> getCollaboratorsMails() {
-        return collaboratorsMails;
-    }
-
-    public void setCollaboratorsMails(Set<String> collaboratorsMails) {
-        this.collaboratorsMails = collaboratorsMails;
     }
 
 }
