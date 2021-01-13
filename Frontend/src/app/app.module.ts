@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 import { FormBuilder ,FormsModule ,ReactiveFormsModule  } from '@angular/forms';
+import { IonicStorageModule  } from '@ionic/storage';
 
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
@@ -17,8 +18,15 @@ import {HttpClientModule} from "@angular/common/http"
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
-  imports: [BrowserModule, IonicModule.forRoot(),ReactiveFormsModule,
-    FormsModule, AppRoutingModule,HttpClientModule],
+  imports: [
+    BrowserModule,
+    IonicModule.forRoot(),
+    ReactiveFormsModule,
+    FormsModule,
+    AppRoutingModule,
+    HttpClientModule,
+    IonicStorageModule.forRoot(),
+    ],
   providers: [
     FormBuilder,
     StatusBar,

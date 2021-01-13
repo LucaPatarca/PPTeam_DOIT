@@ -11,8 +11,9 @@
      <ion-label>
        <h2 text-capitalize>{{organization.name}}</h2>
        <p>{{organization.description}}</p>
-       <p>{{organization.membersMails}}</p>
-       <p>{{organization.creatorMail}}</p>
+       <p>creator : {{organization.creatorMail}}</p>
+       <p>member : </p>
+        <p  *ngFor="let memberMail of organization.membersMails">{{memberMail}}</p>
      </ion-label>
    </ion-item>
   </ion-card>

@@ -39,13 +39,18 @@ const routes: Routes = [
   {
     path: 'modify-project',
     loadChildren: () => import('./tabs/project/modify-project/modify-project.module').then( m => m.ModifyProjectPageModule)
-  },  {
+  },
+  {
     path: 'add-collaborator',
     loadChildren: () => import('./tabs/organization/expert/add-collaborator/add-collaborator.module').then( m => m.AddCollaboratorPageModule)
   },
   {
     path: 'create-user',
     loadChildren: () => import('./tabs/user/create-user/create-user.module').then( m => m.CreateUserPageModule)
+  },
+  {
+    path: 'login-user',
+    loadChildren: () => import('./tabs/user/login-user/login-user.module').then( m => m.LoginUserPageModule)
   },
 
   

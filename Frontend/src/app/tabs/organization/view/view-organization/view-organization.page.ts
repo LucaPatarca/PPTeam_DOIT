@@ -24,6 +24,7 @@ export class ViewOrganizationPage {
     ) { 
     const id = this.route.snapshot.params["id"];
     this.organization = this.data.getOrganizationt(id);
+    console.log(this.organization);
     this.menuCtrl.enable(false);
   }
 

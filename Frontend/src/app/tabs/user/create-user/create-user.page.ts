@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
   templateUrl: './create-user.page.html',
   styleUrls: ['./create-user.page.scss'],
 })
-export class CreateUserPage implements OnInit {
+export class CreateUserPage  {
 
   validations_form: FormGroup;
   name:string;
@@ -34,8 +34,7 @@ export class CreateUserPage implements OnInit {
         ])],
       });
     }
-  ngOnInit(): void {
-  }
+
     validation_messages = {
       'name': [
         { type: 'required', message: 'Name is required.' }

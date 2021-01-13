@@ -1,6 +1,5 @@
-import { Title } from '@angular/platform-browser';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MenuController, NavController } from '@ionic/angular';
 import { GlobalsService } from 'src/app/services/globals.service';
 import { DataService } from 'src/app/services/data.service';

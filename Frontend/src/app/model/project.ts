@@ -6,6 +6,6 @@ export class Project {
     creatorMail:string;
     closed:boolean;
     neededSkills:[];
-    team:{};
+    team:[];
     candidates:[];
 }

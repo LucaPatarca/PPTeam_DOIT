@@ -34,6 +34,11 @@ export class AppComponent {
     this.navCtrl.navigateRoot(['/create-user'], { queryParams: { 'refresh': 1 } });
   }
 
+  logInUser(){
+    this.menuCtrl.enable(false);
+    this.navCtrl.navigateRoot(['/login-user'], { queryParams: { 'refresh': 1 } });
+  }
+
   listOrganizations(){
     this.navCtrl.navigateRoot(['/list-of-organizations'], { queryParams: { 'refresh': 1 } });
   }

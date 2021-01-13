@@ -17,6 +17,8 @@ import { GlobalsService } from 'src/app/services/globals.service';
 export class ViewProjectPage  {
 isClosed:string;
 project:Project;
+emptyNeededskills:String;
+emptyCandidates:String;
   constructor(
     private route:ActivatedRoute, 
     private menuCtrl:MenuController, 
@@ -28,9 +30,9 @@ project:Project;
     const id = this.route.snapshot.params["id"];
     this.project = this.data.getProject(id);
     if(this.project.closed){
-      this.isClosed="true";
+      this.isClosed="open";
     }else{
-      this.isClosed="false";
+      this.isClosed="closed";
     }
     this.menuCtrl.enable(false);
   }
