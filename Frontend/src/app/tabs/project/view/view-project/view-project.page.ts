@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { MenuController, AlertController } from '@ionic/angular';
 import{Router} from "@angular/router";
 import { HttpClient } from '@angular/common/http';
 import { Project } from 'src/app/model/project';
@@ -25,7 +25,8 @@ emptyCandidates:String;
     public router:Router, 
     private http:HttpClient,
     public data:DataService,
-    private globals: GlobalsService
+    private globals: GlobalsService,
+    private alertCtrl:AlertController
   ) { 
     const id = this.route.snapshot.params["id"];
     this.project = this.data.getProject(id);
@@ -49,9 +50,17 @@ emptyCandidates:String;
   delete(){
     this.http.delete(this.globals.projectApiUrl + this.project.id)
     .subscribe(
-      res => {
+      async res => {
         console.log('Delete successful Project with Id: ' + this.project.id);
         this.data.removeProject(this.project);	
+        const alert = await this.alertCtrl.create({
+          cssClass: 'my-custom-class',
+          header: 'Cancellato',
+          message: 'Progetto Cancellato.',
+          buttons: ['OK']
+        });
+      
+        await alert.present();
       }, 
       err => { 
         console.log('There was an error!', err); 

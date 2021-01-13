@@ -7,6 +7,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.OrganizationsManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,6 +60,12 @@ public class OrganizationsController {
     @PostMapping("/addCollaborator/{organizationName}/{userMail}")
     public boolean addCollaborator(@PathVariable String organizationName, @PathVariable String userMail, @RequestBody Skill skill){
         return organizationsManager.addCollaborator(organizationName, userMail, skill);
+    }
+
+    @PreAuthorize("permitAll")
+    @GetMapping("/listCreatorOrg/{userMail}")
+    public List<Organization> listOfOrganizationOfUser(@PathVariable String userMail){
+        return organizationsManager.findCreator(userMail);
     }
 
     @PreAuthorize("permitAll")

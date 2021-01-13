@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 @Repository
 public interface OrganizationRepository extends MongoRepository<Organization,String> {
+
+    List<Organization> findByCreatorMail(String creatorMail);
+
     default List<Organization> findByMember(String userMail){
         return findAll().stream().filter(organization ->
                 organization.getMembersMails().contains(userMail)

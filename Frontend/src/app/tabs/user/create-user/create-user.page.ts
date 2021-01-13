@@ -1,10 +1,10 @@
+import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MenuController } from '@ionic/angular';
+import { MenuController, AlertController } from '@ionic/angular';
 import { Component } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage';
 
 
 
@@ -24,7 +24,8 @@ export class CreateUserPage  {
     private http:HttpClient,
     private globals:GlobalsService,
     private router:Router,
-    private storage:Storage,
+    private alertCtrl:AlertController,
+    private dataService:DataService
     ) {
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
       this.menuCtrl.enable(false);
@@ -54,11 +55,18 @@ export class CreateUserPage  {
           if(res==false){
             var newUser = {"name":this.name,mail:this.email};
             this.http.post(this.globals.createUserApiUrl,newUser,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
-              res => {
+              async res => {
                       console.log('Successfully created new User');
                       this.back();
-                      this.storage.set("user",this.email);
-                      
+                      this.dataService.setUser(this.email)
+                      const alert = await this.alertCtrl.create({
+                        cssClass: 'my-custom-class',
+                        header: 'Perfetto',
+                        message: 'LogIn eseguito.',
+                        buttons: ['OK']
+                      });
+                    
+                      await alert.present();
                      }, 
               err => { 
                       console.log('oops some error in User'); 

@@ -48,6 +48,8 @@ public interface OrganizationsManager {
 
     List<Organization> findByUser(String userMail);
 
+    List<Organization> findCreator(String userMail);
+
     Page<Organization> getPage(int page, int i);
 
     boolean addCollaborator(String organizationName, String userMail, Skill skill);

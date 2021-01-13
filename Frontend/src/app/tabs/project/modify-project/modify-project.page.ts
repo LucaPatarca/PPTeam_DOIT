@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { HttpClient,HttpHeaders } from '@angular/common/http';
-import { MenuController } from '@ionic/angular';
+import { MenuController, AlertController } from '@ionic/angular';
 import { Project } from 'src/app/model/project';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
@@ -26,7 +26,8 @@ export class ModifyProjectPage implements OnInit {
     public formBuilder:FormBuilder,
     private http:HttpClient,
     private dataService:DataService,
-    private globals:GlobalsService
+    private globals:GlobalsService,
+    private alertCtrl:AlertController
   ) { 
     this.validations_form = this.formBuilder.group({
        
@@ -59,9 +60,17 @@ export class ModifyProjectPage implements OnInit {
           this.project.description = this.description;
           this.http.put(this.globals.modifyProjectApiUrl, this.project, { headers: new HttpHeaders(), responseType: 'json'})
           .subscribe(
-            res => {
+            async res => {
               console.log('Successfully saved Project with Id: ' + this.project.id);	
               this.dataService.updateProject(this.project.id,res as Project);
+              const alert = await this.alertCtrl.create({
+                cssClass: 'my-custom-class',
+                header: 'Modificato',
+                message: 'Progetto Modificato.',
+                buttons: ['OK']
+              });
+            
+              await alert.present();
               this.viewProject(res['id']);
             }, 
             err => { 

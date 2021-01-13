@@ -1,6 +1,6 @@
 import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
-import { MenuController, NavController } from '@ionic/angular';
+import { MenuController, NavController, AlertController } from '@ionic/angular';
 
 
 import { Platform } from '@ionic/angular';
@@ -23,7 +23,8 @@ export class AppComponent {
     private statusBar: StatusBar,
     private menuCtrl:MenuController,
     private navCtrl:NavController,
-    private dataService:DataService
+    private dataService:DataService,
+    private alertCtrl:AlertController
   ) {
     if(this.dataService.getUser()!="")
       this.isLog = true;
@@ -69,12 +70,36 @@ export class AppComponent {
     this.navCtrl.navigateRoot(['/create-project'], { queryParams: { 'refresh': 1 } });
   }
 
+  selectOrganizationCreator(){
+    this.navCtrl.navigateRoot(['select-organization']), { queryParams: { 'refresh': 1 } };
+  }
+
+  async quitFromOrg(){
+    this.dataService.quitFromOrg();
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Selezionata',
+      message: 'Organizzazione Selezionata.',
+      buttons: ['OK']
+    });
+  
+    await alert.present();
+  }
+
   home(){
     this.navCtrl.navigateRoot(['/home'], { queryParams: { 'refresh': 1 } });
   }
 
-  logOutUser(){
+  async logOutUser(){
     this.dataService.removeUser();
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Perfetto',
+      message: 'LogOut eseguito.',
+      buttons: ['OK']
+    });
+  
+    await alert.present();
     this.navCtrl.navigateRoot(['/home']);
   }
 }

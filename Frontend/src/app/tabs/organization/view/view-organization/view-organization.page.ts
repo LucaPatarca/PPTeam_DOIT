@@ -2,7 +2,7 @@ import { Organization } from './../../../../model/organization';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
+import { MenuController, AlertController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 
@@ -20,7 +20,8 @@ export class ViewOrganizationPage {
     public data:DataService,
     private menuCtrl:MenuController, 
     private http:HttpClient,
-    private globals:GlobalsService
+    private globals:GlobalsService,
+    private alertCtrl:AlertController
     ) { 
     const id = this.route.snapshot.params["id"];
     this.organization = this.data.getOrganizationt(id);
@@ -35,9 +36,17 @@ export class ViewOrganizationPage {
 
   deleteOrganization(){
     this.http.delete(this.globals.organizationApiUrl+this.organization.name).subscribe(
-      res => {
+      async res => {
         console.log("organization removed successfully");
         this.data.removeOrganizationt(this.organization);
+        const alert = await this.alertCtrl.create({
+          cssClass: 'my-custom-class',
+          header: 'Cancellata',
+          message: 'Organizzazione Cancellata.',
+          buttons: ['OK']
+        });
+      
+        await alert.present();
       },
       err => {
         console.log("error on delete organization: "+err);

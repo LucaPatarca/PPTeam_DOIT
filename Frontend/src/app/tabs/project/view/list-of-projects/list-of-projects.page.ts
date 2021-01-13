@@ -5,6 +5,7 @@ import{ActivatedRouteSnapshot, DetachedRouteHandle, Router, RouteReuseStrategy} 
 import { MenuController,NavController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
+import { Project } from 'src/app/model/project';
 
 
 @Component({
@@ -36,8 +37,7 @@ export class ListOfProjectsPage {
     this.http.get(this.globals.listOfProjectsApiUrl+this.page)
     .subscribe(res => {
       console.log(res); 
-      this.data.addProject(res['content']);
-      console.log("babbp natale");
+      this.data.addProject(res as Project);
       if(this.data.listProject.length==0){
         this.textNoProjects = "nessun progetto disponibile";
       }else{

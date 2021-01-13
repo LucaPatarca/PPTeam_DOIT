@@ -13,7 +13,7 @@ import { GlobalsService } from 'src/app/services/globals.service';
 })
 export class ListOfOrganizationsPage  {
   page = 0;
-  textNoOrganizations="";  
+  textNoOrganizations="Nessuna Organizzazione disponibile";  
 
   constructor(
     private titleService: Title,
@@ -35,11 +35,6 @@ export class ListOfOrganizationsPage  {
     this.http.get(this.globals.listOfOrganizationsApiUrl+this.page)
     .subscribe(res => {
       this.data.addOrganization(res['content']);
-      if(this.data.listOrganization.length==0){
-        this.textNoOrganizations = "Nessuna Organizzazione disponibile";
-      }else{
-        this.textNoOrganizations = "";
-      }
       if(event){
         event.target.complete();
       }

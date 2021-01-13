@@ -8,14 +8,20 @@ import { Project } from '../model/project';
 export class DataService {
   public listProject:Project[];
   public listOrganization:Organization[];
+  public listOrganizationCreator:Organization[];
   public userMail:String;
   public isLog:boolean;
+  public orgUser:String;
+  public isLogOrg:boolean;
 
   constructor() {
     this.listProject = new Array();
     this.listOrganization = new Array();
+    this.listOrganizationCreator = new Array();
     this.userMail="";
+    this.orgUser="";
     this.isLog=false;
+    this.isLogOrg=false;
   }
 
   public getUser():String{
@@ -45,6 +51,16 @@ export class DataService {
     return this.listProject.find(it=>it.id==id);
   }
 
+  public setOrgUser(nameOrg:string){
+    this.orgUser = nameOrg;
+    this.isLogOrg = true;
+  }
+
+  public quitFromOrg(){
+    this.orgUser = "";
+    this.isLogOrg =false;
+  }
+
   public updateProject(oldID:string, project:Project){
     const index = this.listProject.findIndex(it=>it.id==oldID);
     if(index > -1)
@@ -63,6 +79,10 @@ export class DataService {
 
   public addOrganization(organization:Organization){
     this.listOrganization = this.listOrganization.concat(organization);
+  }
+
+  public addOrganizationCreator(organization:Organization){
+    this.listOrganizationCreator = this.listOrganizationCreator.concat(organization);
   }
 
   public getOrganizationt(name:string) : Organization{
@@ -84,4 +104,16 @@ export class DataService {
   public clearOrganization(){
     this.listOrganization=new Array();
   }
+
+  public clearOrganizationCreator(){
+    this.listOrganizationCreator=new Array();
+  }
+
+  public isOrganizationEmpty():boolean{
+      return this.listOrganization.length==0;
+  }
+
+  public isOrganizationCreatorEmpty():boolean{
+    return this.listOrganizationCreator.length==0;
+}
 }

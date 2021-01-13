@@ -51,7 +51,11 @@ const routes: Routes = [
   {
     path: 'login-user',
     loadChildren: () => import('./tabs/user/login-user/login-user.module').then( m => m.LoginUserPageModule)
+  },  {
+    path: 'select-organization',
+    loadChildren: () => import('./tabs/user/select-organization/select-organization.module').then( m => m.SelectOrganizationPageModule)
   },
+
 
   
 ];

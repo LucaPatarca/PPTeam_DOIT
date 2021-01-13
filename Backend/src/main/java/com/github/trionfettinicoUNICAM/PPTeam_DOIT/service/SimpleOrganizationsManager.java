@@ -69,6 +69,12 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     }
 
     @Override
+    public List<Organization> findCreator(String userMail) {
+        return repositoryOrg.findByCreatorMail(userMail);
+    }
+
+
+    @Override
     public Page<Organization> getPage(int page, int size) {
         return repositoryOrg.findAll(PageRequest.of(page, size));
     }

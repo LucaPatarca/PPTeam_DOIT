@@ -1,3 +1,4 @@
+import { Organization } from './../model/organization';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -18,11 +19,13 @@ export class GlobalsService {
 
 
   public organizationApiUrl:string = "http://localhost:8080/api/organizations/";
-  public defaultOrganizationName = "org";
   public listOfOrganizationsApiUrl = this.organizationApiUrl+"list/";
   public createOrganizationApiUrl = this.organizationApiUrl + "createNew/";
   public existOrganizationApiUrl = this.organizationApiUrl + "exist/";
+  public getOrganizationUserCreatorApiUrl = this.organizationApiUrl+"listCreatorOrg/"; 
 
+
+  public defaultOrganizationName = "org";
 
 
 

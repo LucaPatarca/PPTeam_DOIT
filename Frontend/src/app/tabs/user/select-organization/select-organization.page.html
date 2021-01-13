@@ -1,0 +1,37 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>select-organization</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+ 
+ <div class="row">
+     <div class="col">
+         <div class="text-center">
+             <h5 *ngIf="data.isOrganizationCreatorEmpty()" style="text-align: center;">{{textNoOrganizations}}</h5>
+             <h5 *ngIf="!data.isOrganizationCreatorEmpty()" style="text-align: center;">Seleziona l'organizzaione con cui accedere</h5>
+         </div>
+     </div>
+ </div>
+ <!-- per ogni elemento presente in organizations creo una ion-card-->
+  <ion-card (click)="selectOrg(organization)" *ngFor="let organization of data.listOrganizationCreator">
+   <ion-item >
+     <ion-label>
+       <h2 text-capitalize>{{organization.name}}</h2>
+       <p>{{organization.description}}</p>
+     </ion-label>
+   </ion-item>
+ </ion-card>
+ 
+ <!-- comando per creare uno scroll infinito-->
+ <ion-infinite-scroll threshold="5%" (ionInfinite)="loadMore($event)">
+   <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more organizations ...">
+   </ion-infinite-scroll-content>
+ </ion-infinite-scroll>
+ 
+ </ion-content>
+
+ <ion-button (click)="onClick()"  >back</ion-button>
+
+

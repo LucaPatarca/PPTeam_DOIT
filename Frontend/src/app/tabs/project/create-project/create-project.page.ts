@@ -1,6 +1,6 @@
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { MenuController, NavController } from '@ionic/angular';
+import { MenuController, NavController, AlertController } from '@ionic/angular';
 import { GlobalsService } from 'src/app/services/globals.service';
 import { DataService } from 'src/app/services/data.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
@@ -25,6 +25,7 @@ export class CreateProjectPage {
     public formBuilder:FormBuilder,
     private navCtrl:NavController,
     private dataService:DataService,
+    private alertCtrl:AlertController,
     private globals: GlobalsService) { 
     this.menuCtrl.enable(false);
     this.validations_form = this.formBuilder.group({ 
@@ -47,8 +48,8 @@ export class CreateProjectPage {
     var newProject = {
       "name":this.title,
       "description":this.description,
-      "organizationName":this.globals.defaultOrganizationName,
-      "creatorMail":this.globals.userMail,
+      "organizationName":this.dataService.orgUser,
+      "creatorMail":this.dataService.userMail,
       "neededSkills":[],
       "closed":false,
       "team":[],
@@ -58,10 +59,18 @@ export class CreateProjectPage {
       res_1 =>{
         if(res_1==false){
           this.http.post(this.globals.createProjectApiUrl,newProject,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
-            res => {
+            async res => {
               console.log('Successfully created new project');
               this.menuCtrl.enable(true);
               this.dataService.addProject(res as Project);
+              const alert = await this.alertCtrl.create({
+                cssClass: 'my-custom-class',
+                header: 'Creato',
+                message: 'Progetto Creato.',
+                buttons: ['OK']
+              });
+      
+              await alert.present();
               this.navCtrl.navigateRoot(['/list-of-projects']);
             }, 
             err => { 
