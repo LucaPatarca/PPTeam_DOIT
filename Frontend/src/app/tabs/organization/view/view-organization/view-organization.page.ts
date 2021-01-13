@@ -1,7 +1,9 @@
+import { Organization } from './../../../../model/organization';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 
 @Component({
@@ -9,21 +11,20 @@ import { GlobalsService } from 'src/app/services/globals.service';
   templateUrl: './view-organization.page.html',
   styleUrls: ['./view-organization.page.scss'],
 })
-export class ViewOrganizationPage implements OnInit {
-  data:any
+export class ViewOrganizationPage {
+  organization:Organization;
 
   constructor(
     private route:ActivatedRoute, 
     private router:Router,
+    public data:DataService,
     private menuCtrl:MenuController, 
     private http:HttpClient,
     private globals:GlobalsService
     ) { 
-    this.data = this.route.snapshot.params;
+    const id = this.route.snapshot.params["id"];
+    this.organization = this.data.getOrganizationt(id);
     this.menuCtrl.enable(false);
-  }
-
-  ngOnInit() {
   }
 
   onBack(){
@@ -32,9 +33,10 @@ export class ViewOrganizationPage implements OnInit {
   }
 
   deleteOrganization(){
-    this.http.delete(this.globals.organizationApiUrl+this.data.name).subscribe(
+    this.http.delete(this.globals.organizationApiUrl+this.organization.name).subscribe(
       res => {
         console.log("organization removed successfully");
+        this.data.removeOrganizationt(this.organization);
       },
       err => {
         console.log("error on delete organization: "+err);

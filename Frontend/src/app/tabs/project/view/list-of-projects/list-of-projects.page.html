@@ -22,7 +22,7 @@
     </div>
 </div>
 <!-- per ogni elemento presente in projects creo una ion-card-->
- <ion-card *ngFor="let project of data.list">
+ <ion-card *ngFor="let project of data.listProject">
   <ion-item (click)="viewProject(project.id)" routerDirection="forward">
     <ion-label>
       <h2 text-capitalize>{{project.name}}</h2>

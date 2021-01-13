@@ -61,4 +61,11 @@ public class OrganizationsController {
         return organizationsManager.addCollaborator(organizationName, userMail, skill);
     }
 
+    @PreAuthorize("permitAll")
+    @PostMapping("/exist/")
+    public boolean existsUser(@RequestBody String name){
+        return organizationsManager.exists(name);
+    }
+
+
 }

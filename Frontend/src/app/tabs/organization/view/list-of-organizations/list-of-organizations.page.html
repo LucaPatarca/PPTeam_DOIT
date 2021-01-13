@@ -22,8 +22,8 @@
      </div>
  </div>
  <!-- per ogni elemento presente in organizations creo una ion-card-->
-  <ion-card *ngFor="let organization of organizations">
-   <ion-item (click)="viewOrganization(organization)" routerDirection="forward">
+  <ion-card *ngFor="let organization of data.listOrganization">
+   <ion-item (click)="viewOrganization(organization.name)" routerDirection="forward">
      <ion-label>
        <h2 text-capitalize>{{organization.name}}</h2>
        <p>{{organization.description}}</p>

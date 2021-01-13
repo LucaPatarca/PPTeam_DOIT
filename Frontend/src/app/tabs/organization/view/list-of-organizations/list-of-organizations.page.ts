@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
+import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 
 @Component({
@@ -11,8 +12,6 @@ import { GlobalsService } from 'src/app/services/globals.service';
   styleUrls: ['./list-of-organizations.page.scss'],
 })
 export class ListOfOrganizationsPage  {
-
-  organizations = [];
   page = 0;
   textNoOrganizations="";  
 
@@ -20,9 +19,12 @@ export class ListOfOrganizationsPage  {
     private titleService: Title,
     private http: HttpClient,
     public router:Router,
+    public data: DataService,
     public menuCtrl:MenuController,
+    private navCtrl:NavController,
     private globals:GlobalsService
     ) {
+    this.data.clearOrganization();
     this.loadOrganizations();
     this.titleService.setTitle("listOfOrganizations");
     this.menuCtrl.enable(true);
@@ -32,8 +34,8 @@ export class ListOfOrganizationsPage  {
   loadOrganizations(event?){
     this.http.get(this.globals.listOfOrganizationsApiUrl+this.page)
     .subscribe(res => {
-      this.organizations= this.organizations.concat(res['content']);
-      if(this.organizations.length==0){
+      this.data.addOrganization(res['content']);
+      if(this.data.listOrganization.length==0){
         this.textNoOrganizations = "Nessuna Organizzazione disponibile";
       }else{
         this.textNoOrganizations = "";
@@ -52,6 +54,6 @@ export class ListOfOrganizationsPage  {
 
   // metodo per aprire la visualizzazione di una pagina (gli si passa un organization)
   viewOrganization(organization:String){
-    this.router.navigate(['/view-organization',organization], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateRoot(['/view-organization',{"id":organization}], { queryParams: { 'refresh': 1 } });
   }
 }

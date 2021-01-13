@@ -56,4 +56,10 @@ public class ProjectsController {
         return projectsManager.updateProject(project);
     }
 
+    @PreAuthorize("permitAll")
+    @PostMapping("/exist/")
+    public boolean existsUser(@RequestBody String title){
+        return projectsManager.exists(title);
+    }
+
 }

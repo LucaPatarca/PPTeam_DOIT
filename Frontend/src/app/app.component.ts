@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
 import { Component } from '@angular/core';
-import { MenuController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -17,7 +17,7 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private menuCtrl:MenuController,
-    private router:Router,
+    private navCtrl:NavController,
   ) {
     this.initializeApp();
   }
@@ -31,28 +31,28 @@ export class AppComponent {
 
   createUser(){
     this.menuCtrl.enable(false);
-    this.router.navigate(['/create-user'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateRoot(['/create-user'], { queryParams: { 'refresh': 1 } });
   }
 
   listOrganizations(){
-    this.router.navigate(['/list-of-organizations'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateRoot(['/list-of-organizations'], { queryParams: { 'refresh': 1 } });
   }
 
   createOrganization(){
     this.menuCtrl.enable(false);
-    this.router.navigate(['/create-organization'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateRoot(['/create-organization'], { queryParams: { 'refresh': 1 } });
   }
 
   listProjects(){
-    this.router.navigate(['/list-of-projects'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateRoot(['/list-of-projects'], { queryParams: { 'refresh': 1 } });
   }
 
   createProject(){
     this.menuCtrl.enable(false);
-    this.router.navigate(['/create-project'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateRoot(['/create-project'], { queryParams: { 'refresh': 1 } });
   }
   home(){
-    this.router.navigate(['/home'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateRoot(['/home'], { queryParams: { 'refresh': 1 } });
 
   }
 }

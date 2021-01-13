@@ -4,18 +4,40 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content fullscreen>
-  <ion-card>
-    <ion-item>
-      <ion-input [(ngModel)]="project.name"  name="name" type="text" placeholder= {{project.name}} ngModel required></ion-input>
-    </ion-item>  
-    <ion-item>
-      <ion-input [(ngModel)]="project.description"  name="description" type="text"  placeholder= {{project.description}} ngModel required></ion-input>
-    </ion-item>
-  </ion-card>
+<ion-content padding class="form-content">
+  <form [formGroup]="validations_form" (ngSubmit)="save()">
+  <ion-item>
+      <ion-label position="floating" color="primary">Title</ion-label>
+      <ion-input type="text" formControlName="title" [(ngModel)]="title" placeholder= {{project.name}} ></ion-input>
+  </ion-item>
+  <ng-container *ngFor="let validation of validation_messages.title">
+    <div class="error-message" *ngIf="validations_form.get('title').hasError(validation.type) && (validations_form.get('title').dirty || validations_form.get('title').touched)">
+      {{ validation.message }}
+    </div>
+  </ng-container>
+  <ion-item>
+    <ion-label position="floating" color="primary">Description</ion-label>
+    <ion-input type="text" formControlName="description" [(ngModel)]="description" placeholder= {{project.description}}></ion-input>
+  </ion-item>
+  <ng-container *ngFor="let validation of validation_messages.description">
+    <div class="error-message" *ngIf="validations_form.get('description').hasError(validation.type) && (validations_form.get('description').dirty || validations_form.get('description').touched)">
+      {{ validation.message }}
+    </div>
+  </ng-container>
+    <ion-button color="primary" class="submit-btn" expand="block" type="submit" [disabled]="!validations_form.valid">Submit data</ion-button>
+  </form>
+  <div class="row error-project">
+     <div class="col">
+         <div class="text-center">
+             <h5 style="text-align: center;">{{project_already_exists}}</h5>
+         </div>
+     </div>
+ </div>
+ 
 </ion-content>
 
-<ion-button (click)="save()">save</ion-button>
+
+
 
 <ion-button (click)="viewProject(project.id)">back</ion-button>
 
