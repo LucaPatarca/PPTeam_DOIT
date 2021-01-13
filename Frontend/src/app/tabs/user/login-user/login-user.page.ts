@@ -1,9 +1,10 @@
+import { DataService } from 'src/app/services/data.service';
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MenuController, NavController } from '@ionic/angular';
 import { GlobalsService } from 'src/app/services/globals.service';
-import { Storage } from '@ionic/storage';
+
 
 @Component({
   selector: 'app-login-user',
@@ -19,8 +20,8 @@ export class LoginUserPage {
     public formBuilder:FormBuilder,
     private http:HttpClient,
     private globals:GlobalsService,
-    private storage:Storage,
-    private navCtrl:NavController
+    private navCtrl:NavController,
+    private dataService:DataService
     ) {
       this.menuCtrl.enable(false);
       this.validations_form = this.formBuilder.group({
@@ -42,7 +43,7 @@ export class LoginUserPage {
       this.http.post(this.globals.userExistApiUrl,this.email).subscribe(
         res => {
           if(res==true){
-            this.storage.set("user",this.email);
+            this.dataService.setUser(this.email);
             this.back();
         }else{
             this.email_doesnt_exists = this.email+" : email doesn't exists";

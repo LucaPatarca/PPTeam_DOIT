@@ -1,10 +1,12 @@
-import { Router } from '@angular/router';
+import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
 import { MenuController, NavController } from '@ionic/angular';
+
 
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+
 
 @Component({
   selector: 'app-root',
@@ -12,13 +14,21 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
   styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+
+  isLog:boolean;
+
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private menuCtrl:MenuController,
     private navCtrl:NavController,
+    private dataService:DataService
   ) {
+    if(this.dataService.getUser()!="")
+      this.isLog = true;
+    else
+      this.isLog = false;
     this.initializeApp();
   }
 
@@ -28,6 +38,8 @@ export class AppComponent {
       this.splashScreen.hide();
     });
   }
+
+  
 
   createUser(){
     this.menuCtrl.enable(false);
@@ -56,8 +68,13 @@ export class AppComponent {
     this.menuCtrl.enable(false);
     this.navCtrl.navigateRoot(['/create-project'], { queryParams: { 'refresh': 1 } });
   }
+
   home(){
     this.navCtrl.navigateRoot(['/home'], { queryParams: { 'refresh': 1 } });
+  }
 
+  logOutUser(){
+    this.dataService.removeUser();
+    this.navCtrl.navigateRoot(['/home']);
   }
 }

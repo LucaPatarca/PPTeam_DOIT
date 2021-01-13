@@ -1,9 +1,11 @@
 import { GlobalsService } from 'src/app/services/globals.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MenuController } from '@ionic/angular';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Storage } from '@ionic/storage';
+
 
 
 @Component({
@@ -21,7 +23,8 @@ export class CreateUserPage  {
     public formBuilder:FormBuilder,
     private http:HttpClient,
     private globals:GlobalsService,
-    private router:Router
+    private router:Router,
+    private storage:Storage,
     ) {
       this.router.routeReuseStrategy.shouldReuseRoute = () => false;
       this.menuCtrl.enable(false);
@@ -54,6 +57,8 @@ export class CreateUserPage  {
               res => {
                       console.log('Successfully created new User');
                       this.back();
+                      this.storage.set("user",this.email);
+                      
                      }, 
               err => { 
                       console.log('oops some error in User'); 

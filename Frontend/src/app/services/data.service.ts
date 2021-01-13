@@ -8,9 +8,33 @@ import { Project } from '../model/project';
 export class DataService {
   public listProject:Project[];
   public listOrganization:Organization[];
+  public userMail:String;
+  public isLog:boolean;
+
   constructor() {
     this.listProject = new Array();
     this.listOrganization = new Array();
+    this.userMail="";
+    this.isLog=false;
+  }
+
+  public getUser():String{
+    return this.userMail;
+  }
+
+  public userIsLog():boolean{
+    
+    return this.isLog;
+  }
+
+  public setUser(user:String){
+    this.userMail = user;
+    this.isLog = true;
+  }
+
+  public removeUser(){
+    this.userMail = "";
+    this.isLog = false;
   }
 
   public addProject(project:Project){
