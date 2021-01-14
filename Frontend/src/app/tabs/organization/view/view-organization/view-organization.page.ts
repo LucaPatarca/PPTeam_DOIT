@@ -25,7 +25,6 @@ export class ViewOrganizationPage {
     ) { 
     const id = this.route.snapshot.params["id"];
     this.organization = this.data.getOrganizationt(id);
-    console.log(this.organization);
     this.menuCtrl.enable(false);
   }
 
@@ -37,6 +36,9 @@ export class ViewOrganizationPage {
   deleteOrganization(){
     this.http.delete(this.globals.organizationApiUrl+this.organization.name).subscribe(
       async res => {
+        if(this.organization.creatorMail==this.data.userMail){
+          this.data.quitFromOrg();
+        }
         console.log("organization removed successfully");
         this.data.removeOrganizationt(this.organization);
         const alert = await this.alertCtrl.create({

@@ -1,10 +1,12 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
 
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.ProjectRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +25,8 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     private OrganizationRepository repositoryOrg;
     @Autowired
     private UserRepository repositoryUser;
+    @Autowired
+    private ProjectRepository repositoryProject;
 
     @Override
     public Organization getOrganizationInstance(String organizationName) {
@@ -39,6 +43,9 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     @Override
     public boolean deleteOrganization(String organizationName) {
         repositoryOrg.deleteById(organizationName);
+        for (Project project:repositoryProject.findByOrganizationName(organizationName)) {
+            repositoryProject.deleteById(project.getID());
+        }
         return !exists(organizationName);
     }
 

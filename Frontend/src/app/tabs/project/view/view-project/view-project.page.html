@@ -23,9 +23,9 @@
  </ion-card>
 </ion-content>
 
-<ion-button (click)="modify()">modify</ion-button>
+<ion-button *ngIf="project.creatorMail==data.userMail" (click)="modify()">modify</ion-button>
 
-<ion-button (click)="delete()" type="submit">delete</ion-button>
+<ion-button *ngIf="project.creatorMail==data.userMail" (click)="delete()" type="submit">delete</ion-button>
 
 
 <ion-button (click)="onClick()"  >back</ion-button>

@@ -27,8 +27,7 @@ export class SelectOrganizationPage  {
     ) {
     this.data.clearOrganizationCreator();
     this.loadOrganizations();
-    this.titleService.setTitle("listOfOrganizations");
-    this.menuCtrl.enable(true);
+    this.titleService.setTitle("selectOrg");
   }
 
   // metodo per richiedere una pagina di elementi

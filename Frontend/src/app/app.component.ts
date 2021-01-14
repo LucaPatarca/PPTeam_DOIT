@@ -71,6 +71,7 @@ export class AppComponent {
   }
 
   selectOrganizationCreator(){
+    this.menuCtrl.enable(false);
     this.navCtrl.navigateRoot(['select-organization']), { queryParams: { 'refresh': 1 } };
   }
 
@@ -78,8 +79,8 @@ export class AppComponent {
     this.dataService.quitFromOrg();
     const alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
-      header: 'Selezionata',
-      message: 'Organizzazione Selezionata.',
+      header: 'Log out',
+      message: 'LogOut da Organizzazione.',
       buttons: ['OK']
     });
   

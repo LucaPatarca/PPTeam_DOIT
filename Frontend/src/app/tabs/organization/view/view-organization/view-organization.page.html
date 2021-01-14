@@ -18,6 +18,6 @@
    </ion-item>
   </ion-card>
  </ion-content>
- <ion-button (click)="deleteOrganization()" >delete</ion-button>
+ <ion-button *ngIf="organization.creatorMail==data.userMail" (click)="deleteOrganization()" >delete</ion-button>
  <ion-button (click)="onBack()">back</ion-button>
  
