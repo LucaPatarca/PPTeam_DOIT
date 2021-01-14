@@ -53,7 +53,7 @@ export class SelectOrganizationPage  {
 
   // metodo per aprire la visualizzazione di una pagina (gli si passa un organization)
   async selectOrg(organization:Organization){
-    this.data.setOrgUser(Organization.name);
+    this.data.setOrgUser(organization.name);
     const alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
       header: 'Selezionata',

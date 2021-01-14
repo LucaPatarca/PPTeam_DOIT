@@ -24,7 +24,7 @@ export class CreateProjectPage {
     private http:HttpClient,
     public formBuilder:FormBuilder,
     private navCtrl:NavController,
-    private dataService:DataService,
+    public dataService:DataService,
     private alertCtrl:AlertController,
     private globals: GlobalsService) { 
     this.menuCtrl.enable(false);

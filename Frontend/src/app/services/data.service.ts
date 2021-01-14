@@ -41,6 +41,7 @@ export class DataService {
   public removeUser(){
     this.userMail = "";
     this.isLog = false;
+    this.quitFromOrg();
   }
 
   public addProject(project:Project){
@@ -115,5 +116,9 @@ export class DataService {
 
   public isOrganizationCreatorEmpty():boolean{
     return this.listOrganizationCreator.length==0;
-}
+  }
+
+  public isProjectEmpty():boolean{
+    return this.listProject.length==0;
+  }
 }

@@ -24,6 +24,9 @@
       {{ validation.message }}
     </div>
   </ng-container>
+  <ion-item>
+    <ion-label color="primary">Organization: {{dataService.orgUser}}</ion-label>
+  </ion-item>
     <ion-button color="primary" class="submit-btn" expand="block" type="submit" [disabled]="!validations_form.valid">Submit data</ion-button>
   </form>
   <div class="row error-project">

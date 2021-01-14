@@ -17,7 +17,7 @@
 <div class="row">
     <div class="col">
         <div class="text-center">
-            <h5 style="text-align: center;">{{textNoProjects}}</h5>
+            <h5 *ngIf="data.isProjectEmpty()" style="text-align: center;">Nessun progetto disponibile</h5>
         </div>
     </div>
 </div>

@@ -15,7 +15,6 @@ import { Project } from 'src/app/model/project';
 })
 export class ListOfProjectsPage {
   page = 0;
-  textNoProjects="";  
 
   constructor(
     private titleService: Title,
@@ -36,13 +35,8 @@ export class ListOfProjectsPage {
   loadProjects(event?){
     this.http.get(this.globals.listOfProjectsApiUrl+this.page)
     .subscribe(res => {
-      console.log(res); 
-      this.data.addProject(res as Project);
-      if(this.data.listProject.length==0){
-        this.textNoProjects = "nessun progetto disponibile";
-      }else{
-        this.textNoProjects = "";
-      }
+      const toAdd:Project[] = res['content'] as Project[];
+      toAdd.forEach(project=>this.data.addProject(project));
       if(event){
         event.target.complete();
       }

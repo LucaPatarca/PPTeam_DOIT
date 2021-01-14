@@ -31,9 +31,9 @@ emptyCandidates:String;
     const id = this.route.snapshot.params["id"];
     this.project = this.data.getProject(id);
     if(this.project.closed){
-      this.isClosed="open";
-    }else{
       this.isClosed="closed";
+    }else{
+      this.isClosed="opened";
     }
     this.menuCtrl.enable(false);
   }
