@@ -51,9 +51,18 @@ const routes: Routes = [
   {
     path: 'login-user',
     loadChildren: () => import('./tabs/user/login-user/login-user.module').then( m => m.LoginUserPageModule)
-  },  {
+  },
+  {
     path: 'select-organization',
     loadChildren: () => import('./tabs/user/select-organization/select-organization.module').then( m => m.SelectOrganizationPageModule)
+  },
+  {
+    path: 'add-expert',
+    loadChildren: () => import('./tabs/organization/expert/add-expert/add-expert.module').then( m => m.AddExpertPageModule)
+  },
+  {
+    path: 'add-skill',
+    loadChildren: () => import('./tabs/organization/expert/add-collaborator/add-skill/add-skill.module').then( m => m.AddSkillPageModule)
   },
 
 

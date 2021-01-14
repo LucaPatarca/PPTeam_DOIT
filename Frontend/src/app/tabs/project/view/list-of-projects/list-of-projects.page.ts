@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {HttpClient} from "@angular/common/http"
 import { Title }     from '@angular/platform-browser';
-import{ActivatedRouteSnapshot, DetachedRouteHandle, Router, RouteReuseStrategy} from "@angular/router";
+import { Router } from "@angular/router";
 import { MenuController,NavController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
@@ -35,6 +35,7 @@ export class ListOfProjectsPage {
   loadProjects(event?){
     this.http.get(this.globals.listOfProjectsApiUrl+this.page)
     .subscribe(res => {
+      console.log(res);
       const toAdd:Project[] = res['content'] as Project[];
       toAdd.forEach(project=>this.data.addProject(project));
       if(event){

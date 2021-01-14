@@ -1,0 +1,31 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>addSkill</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="form-content">
+  <form [formGroup]="validations_form" (ngSubmit)="addSkill()">
+  <ion-item>
+      <ion-label position="floating" color="primary">Name</ion-label>
+      <ion-input type="text" formControlName="skill" [(ngModel)]="skill"></ion-input>
+  </ion-item>
+  <ng-container *ngFor="let validation of validation_messages.skill">
+    <div class="error-message" *ngIf="validations_form.get('skill').hasError(validation.type) && (validations_form.get('skill').dirty || validations_form.get('skill').touched)">
+      {{ validation.message }}
+    </div>
+  </ng-container>
+    <ion-button color="primary" class="submit-btn" expand="block" type="submit" [disabled]="!validations_form.valid">Submit data</ion-button>
+  </form>
+  <div class="row error-project">
+     <div class="col">
+         <div class="text-center">
+             <h5 style="text-align: center;">{{skill_already_exists}}</h5>
+         </div>
+     </div>
+ </div>
+
+</ion-content>
+
+<ion-button (click)="back()">back</ion-button>
+

@@ -48,6 +48,10 @@ export class DataService {
     this.listProject = this.listProject.concat(project);
   }
 
+  public getIsLogOrg():boolean{
+    return this.isLogOrg;
+  }
+
   public getProject(id:string) : Project{
     return this.listProject.find(it=>it.id==id);
   }

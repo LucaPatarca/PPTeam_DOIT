@@ -2,7 +2,7 @@ import { Organization } from './../../../../model/organization';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MenuController, AlertController } from '@ionic/angular';
+import { MenuController, AlertController, NavController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 
@@ -21,7 +21,7 @@ export class ViewOrganizationPage {
     private menuCtrl:MenuController, 
     private http:HttpClient,
     private globals:GlobalsService,
-    private alertCtrl:AlertController
+    private alertCtrl:AlertController,
     ) { 
     const id = this.route.snapshot.params["id"];
     this.organization = this.data.getOrganizationt(id);
@@ -56,4 +56,30 @@ export class ViewOrganizationPage {
     );
     this.onBack();
   }
+
+  async addExpert(){
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Scegli',
+      message: 'Che tipo di esperto ?',
+      buttons: [
+        {
+          text: 'Interno',
+          handler: () => {
+            this.router.navigate(["/add-collaborator"]);
+          }
+        }, {
+          text: 'Esterno',
+          handler: () => {
+            console.log('Confirm Okay');
+          }
+        }
+      ]
+    });
+  
+    await alert.present();
+   }
+
 }
+
+

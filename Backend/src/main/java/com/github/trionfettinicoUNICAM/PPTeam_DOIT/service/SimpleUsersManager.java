@@ -1,5 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 
@@ -41,5 +42,20 @@ public class SimpleUsersManager implements UsersManager {
         if(this.repository.count()==0)
             return false;
         return repository.existsById(userMail);
+    }
+
+    @Override
+    public boolean existSkill(String newSkill, String userMail) {
+        for (Skill skill : repository.findById(userMail).get().getSkills()) {
+            if(skill.getName().toLowerCase().trim().equals(newSkill.trim().toLowerCase()))
+                return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean addCollaborator(String userEmail,Skill skill) {
+        repository.findById(userEmail).get().addSkill(skill);
+        return true;
     }
 }

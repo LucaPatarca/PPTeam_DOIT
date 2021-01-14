@@ -10,7 +10,9 @@ export class GlobalsService {
   public UserApiUrl:string = "http://localhost:8080/api/users/";
   public createUserApiUrl = this.UserApiUrl + "createNew/";
   public userExistApiUrl = this.UserApiUrl + "exist/";
-  
+  public userExistSkill = this.UserApiUrl + "existSkill/";
+  public userAddSkillCollaborator = this.UserApiUrl+"addSkillCollaborator/"
+
 
   public createProjectApiUrl = this.projectApiUrl + "createNew/";
   public listOfProjectsApiUrl = this.projectApiUrl+"list/";
@@ -23,6 +25,7 @@ export class GlobalsService {
   public createOrganizationApiUrl = this.organizationApiUrl + "createNew/";
   public existOrganizationApiUrl = this.organizationApiUrl + "exist/";
   public getOrganizationUserCreatorApiUrl = this.organizationApiUrl+"listCreatorOrg/"; 
+  public getOrganizationMember = this.organizationApiUrl+"getUsers/";
 
 
   public defaultOrganizationName = "org";
