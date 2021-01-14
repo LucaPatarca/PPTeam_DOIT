@@ -16,7 +16,7 @@ export class ViewOrganizationPage {
 
   constructor(
     private route:ActivatedRoute, 
-    private router:Router,
+    private nav:NavController,
     public data:DataService,
     private menuCtrl:MenuController, 
     private http:HttpClient,
@@ -30,7 +30,7 @@ export class ViewOrganizationPage {
 
   onBack(){
     this.menuCtrl.enable(true);
-    this.router.navigate(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
+    this.nav.navigateBack(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
   }
 
   deleteOrganization(){
@@ -66,7 +66,7 @@ export class ViewOrganizationPage {
         {
           text: 'Interno',
           handler: () => {
-            this.router.navigate(["/add-collaborator"]);
+            this.nav.navigateForward(["/add-collaborator"]);
           }
         }, {
           text: 'Esterno',

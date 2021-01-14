@@ -85,7 +85,7 @@ export class CreateOrganizationPage {
     this.navCtrl.navigateRoot(["/list-of-organizations"]);
   }
 
-  back(){
+  onBack(){
     this.menuCtrl.enable(true);
     this.navCtrl.navigateRoot(["/home"], { queryParams: { 'refresh': 1 } });
   }

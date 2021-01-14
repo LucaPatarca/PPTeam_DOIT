@@ -36,6 +36,6 @@ export class AddCollaboratorPage {
   }
 
   addSkill(user:User){
-    this.navCtrl.navigateRoot(["/add-skill",{"userMail":user.mail}]);
+    this.navCtrl.navigateForward(["/add-skill",{"userMail":user.mail}]);
   }
 }

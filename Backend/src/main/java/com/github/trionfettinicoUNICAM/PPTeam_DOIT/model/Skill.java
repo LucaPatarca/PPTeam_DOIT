@@ -29,6 +29,12 @@ public class Skill {
         this.isGloballyExpert = isGloballyExpert;
     }
 
+    public Skill(){
+        this.name = "";
+        this.expertInOrganization = new HashSet<>();
+        this.isGloballyExpert = false;
+    }
+
     public void setName(String name){
         if(name.isBlank()) throw new IllegalArgumentException("Name is empty");
         this.name = name;

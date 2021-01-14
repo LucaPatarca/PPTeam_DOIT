@@ -25,7 +25,7 @@ public class ProjectsController {
     }
 
     @PreAuthorize("permitAll")
-    @PostMapping("/{projectID}")
+    @GetMapping("/{projectID}")
     public Project getProject(@PathVariable String projectID){
         return projectsManager.getProjectInstance(projectID);
     }

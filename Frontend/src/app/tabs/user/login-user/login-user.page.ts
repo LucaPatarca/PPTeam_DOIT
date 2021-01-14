@@ -57,7 +57,7 @@ export class LoginUserPage {
             });
           
             await alert.present();
-            this.back();
+            this.onBack();
         }else{
             this.email_doesnt_exists = this.email+" : email doesn't exists";
         }
@@ -69,8 +69,8 @@ export class LoginUserPage {
       );
     }
 
-    back(){
-      this.navCtrl.navigateRoot(['/home'], { queryParams: { 'refresh': 1 } });
+    onBack(){
+      this.navCtrl.navigateBack(['/home'], { queryParams: { 'refresh': 1 } });
       this.menuCtrl.enable(true);
     }
 

@@ -44,12 +44,12 @@ export class AppComponent {
 
   createUser(){
     this.menuCtrl.enable(false);
-    this.navCtrl.navigateRoot(['/create-user'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateForward(['/create-user'], { queryParams: { 'refresh': 1 } });
   }
 
   logInUser(){
     this.menuCtrl.enable(false);
-    this.navCtrl.navigateRoot(['/login-user'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateForward(['/login-user'], { queryParams: { 'refresh': 1 } });
   }
 
   listOrganizations(){
@@ -58,7 +58,7 @@ export class AppComponent {
 
   createOrganization(){
     this.menuCtrl.enable(false);
-    this.navCtrl.navigateRoot(['/create-organization'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateForward(['/create-organization'], { queryParams: { 'refresh': 1 } });
   }
 
   listProjects(){
@@ -67,12 +67,12 @@ export class AppComponent {
 
   createProject(){
     this.menuCtrl.enable(false);
-    this.navCtrl.navigateRoot(['/create-project'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateForward(['/create-project'], { queryParams: { 'refresh': 1 } });
   }
 
   selectOrganizationCreator(){
     this.menuCtrl.enable(false);
-    this.navCtrl.navigateRoot(['select-organization']), { queryParams: { 'refresh': 1 } };
+    this.navCtrl.navigateForward(['select-organization'], { queryParams: { 'refresh': 1 } });
   }
 
   async quitFromOrg(){

@@ -1,7 +1,7 @@
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MenuController, AlertController } from '@ionic/angular';
+import { MenuController, AlertController, NavController } from '@ionic/angular';
 import { Component } from '@angular/core';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -23,11 +23,10 @@ export class CreateUserPage  {
     public formBuilder:FormBuilder,
     private http:HttpClient,
     private globals:GlobalsService,
-    private router:Router,
+    private nav:NavController,
     private alertCtrl:AlertController,
     private dataService:DataService
     ) {
-      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
       this.menuCtrl.enable(false);
       this.validations_form = this.formBuilder.group({
        
@@ -57,7 +56,7 @@ export class CreateUserPage  {
             this.http.post(this.globals.createUserApiUrl,newUser,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
               async res => {
                       console.log('Successfully created new User');
-                      this.back();
+                      this.onBack();
                       this.dataService.setUser(this.email)
                       const alert = await this.alertCtrl.create({
                         cssClass: 'my-custom-class',
@@ -83,8 +82,8 @@ export class CreateUserPage  {
       );
     }
 
-    back(){
-      this.router.navigate(['/home'], { queryParams: { 'refresh': 1 } });
+    onBack(){
+      this.nav.navigateBack(['/home'], { queryParams: { 'refresh': 1 } });
       this.menuCtrl.enable(true);
     }
 }

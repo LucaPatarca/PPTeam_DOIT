@@ -23,7 +23,8 @@ public class SimpleProjectManager implements ProjectsManager{
 
     @Override
     public Project getProjectInstance(String projectID) {
-        return projectRepository.findById(projectID).orElse(null);
+        Project project = projectRepository.findById(projectID).orElse(null);
+        return project;
     }
 
     @Override

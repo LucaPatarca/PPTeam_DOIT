@@ -1,5 +1,8 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="onBack()"></ion-back-button>
+    </ion-buttons>
     <ion-title>Create organization</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -35,5 +38,3 @@
  </div>
  
 </ion-content>
-
-<ion-button (click)="back()">back</ion-button>

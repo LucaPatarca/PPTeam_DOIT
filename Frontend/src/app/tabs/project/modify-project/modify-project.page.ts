@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from "@angular/router";
 import { HttpClient,HttpHeaders } from '@angular/common/http';
-import { MenuController, AlertController } from '@ionic/angular';
+import { MenuController, AlertController, NavController } from '@ionic/angular';
 import { Project } from 'src/app/model/project';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
@@ -21,7 +21,7 @@ export class ModifyProjectPage implements OnInit {
 
   constructor(
     private route:ActivatedRoute, 
-    public router:Router, 
+    public nav:NavController, 
     private menuCtrl:MenuController,
     public formBuilder:FormBuilder,
     private http:HttpClient,
@@ -71,7 +71,7 @@ export class ModifyProjectPage implements OnInit {
               });
             
               await alert.present();
-              this.viewProject(res['id']);
+              this.onBack(res['id']);
             }, 
             err => { 
               console.log('There was an error!', err); 
@@ -87,8 +87,8 @@ export class ModifyProjectPage implements OnInit {
       });
   }
 
-  viewProject(id:string){
-    this.router.navigate(['/view-project',{'id':id}]);
+  public onBack(id:string){
+    this.nav.navigateBack(['/view-project',{'id':id}]);
   }
 
 }

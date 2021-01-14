@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { MenuController, AlertController } from '@ionic/angular';
+import { MenuController, AlertController, NavController } from '@ionic/angular';
 import{Router} from "@angular/router";
 import { HttpClient } from '@angular/common/http';
 import { Project } from 'src/app/model/project';
@@ -22,7 +22,7 @@ emptyCandidates:String;
   constructor(
     private route:ActivatedRoute, 
     private menuCtrl:MenuController, 
-    public router:Router, 
+    public nav: NavController, 
     private http:HttpClient,
     public data:DataService,
     private globals: GlobalsService,
@@ -38,13 +38,13 @@ emptyCandidates:String;
     this.menuCtrl.enable(false);
   }
 
-  onClick(){
+  onBack(){
     this.menuCtrl.enable(true);
-    this.router.navigate(["/list-of-projects"], { queryParams: { 'refresh': 1 } })
+    this.nav.navigateBack(["/list-of-projects"], { queryParams: { 'refresh': 1 } })
   }
 
   modify(){
-    this.router.navigate(['/modify-project', {"id":this.project.id}]);
+    this.nav.navigateForward(['/modify-project', {"id":this.project.id}]);
   }
 
   delete(){
@@ -66,7 +66,29 @@ emptyCandidates:String;
         console.log('There was an error!', err); 
       }
     );
-    this.onClick();
+    this.onBack();
+  }
+
+  public reload(event?){
+    this.http.get(this.globals.projectApiUrl+this.project.id).subscribe(
+      res=>{
+        console.log(res);
+        if(res != null){
+          const reloadedProject: Project = res as Project;
+          this.data.updateProject(this.project.id,reloadedProject);
+          this.project = reloadedProject;
+          if(this.project.closed){
+            this.isClosed="closed";
+          }else{
+            this.isClosed="opened";
+          }
+        }
+      },
+      err=>{
+        console.log(err);
+      }
+    );
+    event.target.complete();
   }
   
 

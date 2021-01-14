@@ -88,7 +88,7 @@ export class CreateProjectPage {
   
   }
 
-  back(){
+  onBack(){
     this.menuCtrl.enable(true);
     this.navCtrl.navigateRoot(['/home'], { queryParams: { 'refresh': 1 } });
   }

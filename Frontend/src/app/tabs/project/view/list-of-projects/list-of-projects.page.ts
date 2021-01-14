@@ -52,6 +52,6 @@ export class ListOfProjectsPage {
 
   // metodo per aprire la visualizzazione di una pagina (gli si passa un project)
   viewProject(id:string){
-    this.navCtrl.navigateRoot(['/view-project',{"id":id}]);
+    this.navCtrl.navigateForward(['/view-project',{"id":id}]);
   }
 }

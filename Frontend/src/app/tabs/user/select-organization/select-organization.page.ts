@@ -61,12 +61,12 @@ export class SelectOrganizationPage  {
     });
   
     await alert.present();
-    this.navCtrl.navigateRoot(["/home"]);
+    this.onBack();
   }
 
-  onClick(){
+  onBack(){
     this.menuCtrl.enable(true);
-    this.navCtrl.navigateRoot(["/home"], { queryParams: { 'refresh': 1 } })
+    this.navCtrl.navigateBack(["/home"], { queryParams: { 'refresh': 1 } })
   }
 
 }
