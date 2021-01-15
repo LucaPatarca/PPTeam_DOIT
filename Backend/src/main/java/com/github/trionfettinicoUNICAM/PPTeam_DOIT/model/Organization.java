@@ -1,5 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,12 +16,13 @@ public class Organization {
     // TODO: 10/12/20 scrivere il javadoc di questi metodi (lasciati indietro perche comunque si spiegano gia bene da soli)
 
     @Id
+    private String id;
     private String name;
     private Set<String> membersMails;
     private String description;
     private String creatorMail;
 
-    public Organization(String name, String description, String creatorMail) throws IllegalArgumentException {
+    public Organization(String name, String description, String creatorMail) {
         setName(name);
         setDescription(description);
         setCreatorMail(creatorMail);
@@ -56,7 +58,6 @@ public class Organization {
         this.membersMails=membersMails;
     }
 
-    @Id
     public String getName() {
         return name;
     }
@@ -84,4 +85,25 @@ public class Organization {
         this.creatorMail=creatorMail;
     }
 
+    @Id
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Organization that = (Organization) o;
+        return id.equals(that.id) && name.equals(that.name) && membersMails.equals(that.membersMails) && description.equals(that.description) && creatorMail.equals(that.creatorMail);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, membersMails, description, creatorMail);
+    }
 }

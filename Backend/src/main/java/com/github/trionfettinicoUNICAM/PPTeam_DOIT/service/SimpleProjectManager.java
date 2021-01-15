@@ -4,6 +4,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.ProjectRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,7 +30,7 @@ public class SimpleProjectManager implements ProjectsManager{
 
     @Override
     public Project createNewProject(Project project) {
-        Optional<Organization> organization = organizationRepository.findById(project.getOrganizationName());
+        Optional<Organization> organization = organizationRepository.findById(project.getOrganizationId());
         if (organization.isPresent() && organization.get().getMembersMails().contains(project.getCreatorMail()))
             return projectRepository.save(project);
         else return null;
@@ -51,12 +52,8 @@ public class SimpleProjectManager implements ProjectsManager{
 
     @Override
     public Project updateProject(Project project) {
-        if (!project.getID().equals(project.getOrganizationName() + "." + project.getName())) {
-            projectRepository.deleteById(project.getID());
-            project.setID(project.getOrganizationName() + "." + project.getName());
-        }
         projectRepository.save(project);
-        return getProjectInstance(project.getID());
+        return getProjectInstance(project.getId());
     }
 
     @Override
@@ -70,7 +67,13 @@ public class SimpleProjectManager implements ProjectsManager{
     }
 
     @Override
-    public List<Project> findByOrganizationName(String organizationName) {
-        return projectRepository.findByOrganizationName(organizationName);
+    public boolean existsSignature(String projectSignature) {
+        return projectRepository.findAll().stream().anyMatch(it->
+                (it.getOrganizationId()+"."+it.getName()).equals(projectSignature));
+    }
+
+    @Override
+    public List<Project> findByOrganizationId(String organizationId) {
+        return projectRepository.findByOrganizationId(organizationId);
     }
 }

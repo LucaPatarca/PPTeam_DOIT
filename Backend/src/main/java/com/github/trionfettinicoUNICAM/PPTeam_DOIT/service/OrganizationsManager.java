@@ -3,6 +3,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface OrganizationsManager {
      * @param organizationName the organization's unique name
      * @return an instance of the organization
      */
-    Organization getOrganizationInstance(String organizationName);
+    Organization getOrganizationInstance(String organizationId);
 
     /**
      * Creates a new {@link Organization} with the given parameters
@@ -33,18 +34,20 @@ public interface OrganizationsManager {
      * @param organizationName the organization's unique name
      * @return true if the organization is successfully removed, false instead
      */
-    boolean deleteOrganization(String organizationName);
+    boolean deleteOrganization(String organizationId);
 
     /**
      * Updates the {@link Organization} passed as parameter and saves it.
      * @param organization the organization to be saved
      * @return true if the organization is stored successfully, false instead.
      */
-    boolean updateOrganization(Organization organization);
+    Organization updateOrganization(Organization organization);
 
-    List<User> getUsers(String organizationName);
+    List<User> getUsers(String organizationId);
 
-    boolean exists(String organizationName);
+    boolean existsName(String organizationName);
+
+    boolean exists(String organizationId);
 
     List<Organization> findByUser(String userMail);
 
@@ -52,6 +55,6 @@ public interface OrganizationsManager {
 
     Page<Organization> getPage(int page, int i);
 
-    boolean addCollaborator(String organizationName, String userMail, Skill skill);
+    boolean addCollaborator(String organizationId, String userMail, Skill skill);
 
 }

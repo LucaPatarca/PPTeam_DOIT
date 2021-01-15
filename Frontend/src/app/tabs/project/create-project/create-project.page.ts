@@ -48,14 +48,14 @@ export class CreateProjectPage {
     var newProject = {
       "name":this.title,
       "description":this.description,
-      "organizationName":this.dataService.orgUser,
+      "organizationId":this.dataService.orgUser,
       "creatorMail":this.dataService.userMail,
       "neededSkills":[],
       "closed":false,
       "team":[],
       "candidates":[]
     };
-    this.http.post(this.globals.existProjectApiUrl,newProject.organizationName.concat(".".concat(newProject.name))).subscribe(
+    this.http.get(this.globals.existProjectApiUrl+newProject.organizationId.concat(".".concat(newProject.name))).subscribe(
       res_1 =>{
         if(res_1==false){
           this.http.post(this.globals.createProjectApiUrl,newProject,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
@@ -75,6 +75,7 @@ export class CreateProjectPage {
             }, 
             err => { 
               console.log('oops some error in Project'); 
+              console.log(err);
             }
           );
         }else{

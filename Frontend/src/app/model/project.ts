@@ -2,7 +2,7 @@ export class Project {
     id:string;
     name:string;
     description:string;
-    organizationName:string;
+    organizationId:string;
     creatorMail:string;
     closed:boolean;
     neededSkills:[];

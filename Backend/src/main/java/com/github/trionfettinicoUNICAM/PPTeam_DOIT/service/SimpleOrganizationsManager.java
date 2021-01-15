@@ -8,15 +8,13 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationReposi
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.ProjectRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.ServiceLoader;
+import java.util.*;
 
 @Service
 public class SimpleOrganizationsManager implements OrganizationsManager{
@@ -29,8 +27,8 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     private ProjectRepository repositoryProject;
 
     @Override
-    public Organization getOrganizationInstance(String organizationName) {
-        return repositoryOrg.findById(organizationName).orElse(null);
+    public Organization getOrganizationInstance(String organizationId) {
+        return repositoryOrg.findById(organizationId).orElse(null);
     }
 
     @Override
@@ -41,23 +39,24 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     }
 
     @Override
-    public boolean deleteOrganization(String organizationName) {
-        repositoryOrg.deleteById(organizationName);
-        for (Project project:repositoryProject.findByOrganizationName(organizationName)) {
-            repositoryProject.deleteById(project.getID());
+    public boolean deleteOrganization(String organizationId) {
+        repositoryOrg.deleteById(organizationId);
+        for (Project project:repositoryProject.findByOrganizationId(organizationId)) {
+            repositoryProject.deleteById(project.getId());
         }
-        return !exists(organizationName);
+        return !exists(organizationId);
     }
 
     @Override
-    public boolean updateOrganization(Organization organization) {
+    public Organization updateOrganization(Organization organization) {
+        //TODO si deve prima cancellare l'instanza vecchia
         repositoryOrg.save(organization);
-        return true;
+        return getOrganizationInstance(organization.getId());
     }
 
     @Override
-    public List<User> getUsers(String organizationName) {
-        Optional<Organization> org = repositoryOrg.findById(organizationName);
+    public List<User> getUsers(String organizationId) {
+        Optional<Organization> org = repositoryOrg.findById(organizationId);
         List<User> users = new ArrayList<>();
         for (String email : org.get().getMembersMails()) {
             users.add(repositoryUser.findById(email).get());
@@ -66,8 +65,14 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     }
 
     @Override
-    public boolean exists(String organizationName) {
-        return repositoryOrg.existsById(organizationName);
+    public boolean existsName(String organizationName) {
+        return repositoryOrg.findAll().stream()
+                .anyMatch(it->it.getName().equals(organizationName));
+    }
+
+    @Override
+    public boolean exists(String organizationId) {
+        return repositoryOrg.existsById(organizationId);
     }
 
     @Override
@@ -87,13 +92,13 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     }
 
     @Override
-    public boolean addCollaborator(String organizationName, String userMail, Skill skill) {
-        if(repositoryOrg.findById(organizationName).isPresent() && repositoryUser.findById(userMail).isPresent()){
-            Organization organization = repositoryOrg.findById(organizationName).get();
+    public boolean addCollaborator(String organizationId, String userMail, Skill skill) {
+        if(repositoryOrg.findById(organizationId).isPresent() && repositoryUser.findById(userMail).isPresent()){
+            Organization organization = repositoryOrg.findById(organizationId).get();
             organization.addMember(userMail);
             repositoryOrg.save(organization);
             User user = repositoryUser.findById(userMail).get();
-            user.setExpert(skill,organizationName);
+            user.setExpert(skill,organizationId);
             repositoryUser.save(user);
             return true;
         }

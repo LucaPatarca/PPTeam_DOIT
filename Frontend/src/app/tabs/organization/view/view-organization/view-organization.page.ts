@@ -34,7 +34,7 @@ export class ViewOrganizationPage {
   }
 
   deleteOrganization(){
-    this.http.delete(this.globals.organizationApiUrl+this.organization.name).subscribe(
+    this.http.delete(this.globals.organizationApiUrl+this.organization.id).subscribe(
       async res => {
         if(this.organization.creatorMail==this.data.userMail){
           this.data.quitFromOrg();
@@ -55,6 +55,10 @@ export class ViewOrganizationPage {
       },
     );
     this.onBack();
+  }
+
+  modifyOrganization(){
+    this.nav.navigateForward(['/modify-organization', {"id":this.organization.id}]);
   }
 
   async addExpert(){

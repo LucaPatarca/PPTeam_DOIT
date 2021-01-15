@@ -5,6 +5,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.OrganizationsManager;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -21,9 +22,9 @@ public class OrganizationsController {
     private OrganizationsManager organizationsManager;
 
     @PreAuthorize("permitAll")
-    @GetMapping("/{organizationName}")
-    public Organization getOrganization(@PathVariable String organizationName){
-        return organizationsManager.getOrganizationInstance(organizationName);
+    @GetMapping("/{organizationId}")
+    public Organization getOrganization(@PathVariable String organizationId){
+        return organizationsManager.getOrganizationInstance(organizationId);
     }
 
     @PreAuthorize("permitAll")
@@ -39,9 +40,9 @@ public class OrganizationsController {
     }
 
     @PreAuthorize("permitAll")
-    @DeleteMapping("/{organizationName}")
-    public boolean deleteOrganization(@PathVariable String organizationName){
-        return organizationsManager.deleteOrganization(organizationName);
+    @DeleteMapping("/{organizationId}")
+    public boolean deleteOrganization(@PathVariable String organizationId){
+        return organizationsManager.deleteOrganization(organizationId);
     }
 
     @PreAuthorize("permitAll")
@@ -51,15 +52,15 @@ public class OrganizationsController {
     }
 
     @PreAuthorize("permitAll")
-    @GetMapping("/getUsers/{organizationName}")
-    public List<User> getUsers(@PathVariable String organizationName){
-        return organizationsManager.getUsers(organizationName);
+    @GetMapping("/getUsers/{organizationId}")
+    public List<User> getUsers(@PathVariable String organizationId){
+        return organizationsManager.getUsers(organizationId);
     }
 
     @PreAuthorize("permitAll")
-    @PostMapping("/addCollaborator/{organizationName}/{userMail}")
-    public boolean addCollaborator(@PathVariable String organizationName, @PathVariable String userMail, @RequestBody Skill skill){
-        return organizationsManager.addCollaborator(organizationName, userMail, skill);
+    @PostMapping("/addCollaborator/{organizationId}/{userMail}")
+    public boolean addCollaborator(@PathVariable String organizationId, @PathVariable String userMail, @RequestBody Skill skill){
+        return organizationsManager.addCollaborator(organizationId, userMail, skill);
     }
 
     @PreAuthorize("permitAll")
@@ -69,10 +70,15 @@ public class OrganizationsController {
     }
 
     @PreAuthorize("permitAll")
-    @PostMapping("/exist/")
-    public boolean existsUser(@RequestBody String name){
-        return organizationsManager.exists(name);
+    @GetMapping("/exist/{organizationName}")
+    public boolean existsUser(@PathVariable String organizationName){
+        return organizationsManager.exists(organizationName);
     }
 
+    @PreAuthorize("permitAll")
+    @PutMapping(value = "/modify", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Organization modifyOrganization(@RequestBody Organization organization){
+        return organizationsManager.updateOrganization(organization);
+    }
 
 }

@@ -67,7 +67,11 @@ const routes: Routes = [
   {
     path: 'view-skill',
     loadChildren: () => import('./tabs/user/view-skill/view-skill.module').then( m => m.ViewSkillPageModule)
+  },  {
+    path: 'modify-organization',
+    loadChildren: () => import('./tabs/organization/modify-organization/modify-organization.module').then( m => m.ModifyOrganizationPageModule)
   },
+
 
 
   

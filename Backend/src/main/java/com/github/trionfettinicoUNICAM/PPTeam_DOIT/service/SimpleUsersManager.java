@@ -4,10 +4,12 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class SimpleUsersManager implements UsersManager {
@@ -56,7 +58,7 @@ public class SimpleUsersManager implements UsersManager {
     }
 
     @Override
-    public boolean hasSkillExpertFor(Skill newSkill, String userMail, String organizationName) {
+    public boolean hasSkillExpertFor(Skill newSkill, String userMail, String organizationId) {
         Optional<User> user = repository.findById(userMail);
         Skill userSkill = null;
         if(user.isPresent()){
@@ -64,7 +66,7 @@ public class SimpleUsersManager implements UsersManager {
                 if(skill.equals(newSkill))
                     userSkill = skill;
             }
-            return userSkill != null && userSkill.isExpertFor(organizationName);
+            return userSkill != null && userSkill.isExpertFor(organizationId);
         }
         return false;
     }

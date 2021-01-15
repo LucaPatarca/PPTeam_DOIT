@@ -1,9 +1,8 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Objects;
-import java.util.Set;
+import org.bson.types.ObjectId;
+
+import java.util.*;
 
 /**
  *
@@ -23,10 +22,10 @@ public class Skill {
         this.isGloballyExpert = isExpert;
     }
 
-    public Skill(String name, String userOrganizationName) {
+    public Skill(String name, String organizationId) {
         this.name = name;
         this.expertInOrganization = new HashSet<>();
-        this.expertInOrganization.add(userOrganizationName);
+        this.expertInOrganization.add(organizationId);
         this.isGloballyExpert = false;
     }
 
@@ -68,8 +67,8 @@ public class Skill {
         isGloballyExpert = globallyExpert;
     }
 
-    public boolean isExpertFor(String organizationName){
-        return this.isGloballyExpert() || this.expertInOrganization.contains(organizationName);
+    public boolean isExpertFor(String organizationId){
+        return this.isGloballyExpert() || this.expertInOrganization.contains(organizationId);
     }
 
     @Override

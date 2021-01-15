@@ -53,7 +53,7 @@ export class ModifyProjectPage implements OnInit {
     
 
   save(){
-    this.http.post(this.globals.existProjectApiUrl,this.project.organizationName.concat(".".concat(this.title))).subscribe(
+    this.http.get(this.globals.existProjectApiUrl+this.project.organizationId.concat(".".concat(this.title))).subscribe(
       res_1 =>{
         if(res_1==false){
           this.project.name = this.title;

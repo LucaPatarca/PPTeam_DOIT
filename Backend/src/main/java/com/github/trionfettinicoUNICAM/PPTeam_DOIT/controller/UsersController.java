@@ -3,12 +3,14 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.UsersManager;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/users")
@@ -36,10 +38,10 @@ public class UsersController {
     }
 
     @PreAuthorize("permitAll")
-    @PutMapping("/addSkillCollaborator/{userOrganization}/{userEmail}/{skillName}")
-    public boolean addCollaborator(@PathVariable String userOrganization, @PathVariable String userEmail, @PathVariable String skillName){
-        Skill skill = new Skill(skillName, userOrganization);
-        if(usersManager.hasSkillExpertFor(skill,userEmail,userOrganization))
+    @PutMapping("/addSkillCollaborator/{organizationId}/{userEmail}/{skillName}")
+    public boolean addCollaborator(@PathVariable String organizationId, @PathVariable String userEmail, @PathVariable String skillName){
+        Skill skill = new Skill(skillName, organizationId);
+        if(usersManager.hasSkillExpertFor(skill,userEmail,organizationId))
             return false;
         return usersManager.addCollaborator(userEmail,skill);
     }

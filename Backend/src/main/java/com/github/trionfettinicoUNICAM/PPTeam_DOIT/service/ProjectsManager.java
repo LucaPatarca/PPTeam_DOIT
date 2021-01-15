@@ -1,6 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -53,5 +54,7 @@ public interface ProjectsManager {
 
     boolean exists(String projectID);
 
-    List<Project> findByOrganizationName(String organizationName);
+    boolean existsSignature(String projectSignature);
+
+    List<Project> findByOrganizationId(String organizationId);
 }

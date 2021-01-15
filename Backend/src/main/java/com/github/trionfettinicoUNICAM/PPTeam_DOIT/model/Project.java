@@ -1,5 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,40 +12,39 @@ import java.util.*;
 @Document(collection = "project")
 public class Project {
     @Id
-    private String ID;
+    private String id;
     private String name;
     private String description;
-    private String organizationName;
+    private String organizationId;
     private String creatorMail;
     private boolean isClosed;
     private Set<Skill> neededSkills;
     private Set<Role> team;
     private Set<Role> candidates;
 
-    public Project(String organizationName, String creatorMail, String name, String description) throws IllegalArgumentException {
+    public Project(String organizationId, String creatorMail, String name, String description) throws IllegalArgumentException {
         Objects.requireNonNull(creatorMail, "Creator is Null");
-        Objects.requireNonNull(organizationName, "Organization is Null");
-        setID(organizationName+"."+name);
+        Objects.requireNonNull(organizationId, "Organization is Null");
         this.candidates = new HashSet<>();
         setName(name);
         setDescription(description);
         this.team = new HashSet<>();
         this.isClosed = false;
         this.neededSkills = new HashSet<>();
-        setOrganizationName(organizationName);
+        setOrganizationId(organizationId);
         setCreatorMail(creatorMail);
     }
 
     public Project() {
     }
 
-    public String getID() {
-        return ID;
+    @Id
+    public String getId() {
+        return id;
     }
 
-    public void setID(String ID) throws IllegalArgumentException {
-        if(ID.indexOf('.') == -1) throw new IllegalArgumentException();
-        this.ID = ID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -67,14 +67,13 @@ public class Project {
         this.description=description;
     }
 
-    public String getOrganizationName() {
-        return organizationName;
+    public String getOrganizationId() {
+        return organizationId;
     }
 
-    public void setOrganizationName(String organizationName) throws IllegalStateException, IllegalArgumentException {
+    public void setOrganizationId(String organizationId) throws IllegalStateException, IllegalArgumentException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(organizationName.length() == 0) throw new IllegalArgumentException("OrganizationName is empty");
-        this.organizationName=organizationName;
+        this.organizationId=organizationId;
     }
 
     public String getCreatorMail() {
@@ -195,10 +194,10 @@ public class Project {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Project that = (Project) object;
-        return name.equals(that.name) && description.equals(that.description) && organizationName.equals(that.organizationName) && creatorMail.equals(that.creatorMail);
+        return name.equals(that.name) && description.equals(that.description) && organizationId.equals(that.organizationId) && creatorMail.equals(that.creatorMail);
     }
 
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, description, organizationName, creatorMail);
+        return Objects.hash(super.hashCode(), name, description, organizationId, creatorMail);
     }
 }

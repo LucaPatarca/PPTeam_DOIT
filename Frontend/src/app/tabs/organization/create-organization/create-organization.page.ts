@@ -53,7 +53,7 @@ export class CreateOrganizationPage {
       "creatorMail": this.dataService.getUser(),
       "collaboratorsMails": {},
     }
-    this.http.post(this.globals.existProjectApiUrl,newOrganization.name).subscribe(
+    this.http.get(this.globals.existOrganizationApiUrl+newOrganization.name).subscribe(
       res_1 =>{
         if(res_1==false){
           this.http.post(this.globals.createOrganizationApiUrl,newOrganization,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(

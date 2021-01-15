@@ -20,13 +20,13 @@ class SimpleProjectManagerTest {
     void initManager(){
         User user = new User("mail", "luca");
         Organization organization = organizationsManager.createNewOrganization(new Organization("org", "description", user.getMail()));
-        project = manager.createNewProject(new Project(organization.getName(), user.getMail(), "test", "description"));
+        project = manager.createNewProject(new Project(organization.getId(), user.getMail(), "test", "description"));
     }
 
     @AfterEach
     void removeProjects(){
-        manager.deleteProject(project.getID());
-        organizationsManager.deleteOrganization("org");
+        manager.deleteProject(project.getId());
+        organizationsManager.deleteOrganization(project.getOrganizationId());
     }
 
     @Test
@@ -36,6 +36,6 @@ class SimpleProjectManagerTest {
 
     @Test
     void getProjectInstance() {
-        assertEquals(project, manager.getProjectInstance(project.getID()));
+        assertEquals(project, manager.getProjectInstance(project.getId()));
     }
 }

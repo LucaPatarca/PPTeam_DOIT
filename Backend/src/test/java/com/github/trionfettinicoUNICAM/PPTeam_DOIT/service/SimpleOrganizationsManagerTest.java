@@ -25,13 +25,14 @@ class SimpleOrganizationsManagerTest {
 
     @AfterEach
     void removeOrganization(){
-        boolean result = manager.deleteOrganization("organization1");
+        boolean result = manager.deleteOrganization(organization.getId());
         assertTrue(result);
     }
 
     @Test
     void getOrganizationInstance() {
-        assertEquals(organization, manager.getOrganizationInstance(organization.getName()));
+        Organization found = manager.getOrganizationInstance(organization.getId());
+        assertEquals(organization, found);
     }
 
     @Test

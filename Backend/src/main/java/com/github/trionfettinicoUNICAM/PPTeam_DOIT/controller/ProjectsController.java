@@ -2,6 +2,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.ProjectsManager;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -33,7 +34,6 @@ public class ProjectsController {
     @PreAuthorize("permitAll")
     @PostMapping(value = "/createNew", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Project createNewProject(@RequestBody Project project){
-        project.setID(project.getOrganizationName()+"."+project.getName());
         return projectsManager.createNewProject(project);
     }
 
@@ -57,9 +57,9 @@ public class ProjectsController {
     }
 
     @PreAuthorize("permitAll")
-    @PostMapping("/exist/")
-    public boolean existsUser(@RequestBody String title){
-        return projectsManager.exists(title);
+    @GetMapping("/exist/{projectSignature}")
+    public boolean existsUser(@PathVariable String projectSignature){
+        return projectsManager.exists(projectSignature);
     }
 
 }

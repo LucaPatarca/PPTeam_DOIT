@@ -1,12 +1,10 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents a registered user inside the application. It has the ability to join a project's team
@@ -105,12 +103,12 @@ public class User {
         }
     }
 
-    public void setExpert(Skill skill, String organizationName){
+    public void setExpert(Skill skill, String organizationId){
         Optional<Skill> optionalSkill = this.getSkills().stream().filter(it->it.equals(skill)).findAny();
         if(optionalSkill.isPresent()){
-            optionalSkill.get().getExpertInOrganization().add(organizationName);
+            optionalSkill.get().getExpertInOrganization().add(organizationId);
         } else{
-            skill.getExpertInOrganization().add(organizationName);
+            skill.getExpertInOrganization().add(organizationId);
             this.addSkill(skill);
         }
     }
