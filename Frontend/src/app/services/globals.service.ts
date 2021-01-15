@@ -5,14 +5,16 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class GlobalsService {
-  public projectApiUrl:string = "http://localhost:8080/api/projects/";
 
-  public UserApiUrl:string = "http://localhost:8080/api/users/";
+  public serverUrl:string = "http://localhost:8080"
+
+  public projectApiUrl:string = this.serverUrl+"/api/projects/";
+
+  public UserApiUrl:string = this.serverUrl+"/api/users/";
   public createUserApiUrl = this.UserApiUrl + "createNew/";
   public userExistApiUrl = this.UserApiUrl + "exist/";
   public userExistSkill = this.UserApiUrl + "existSkill/";
   public userAddSkillCollaborator = this.UserApiUrl+"addSkillCollaborator/"
-  public getUserSkills = this.UserApiUrl+"getUserSkills/";
 
 
   public createProjectApiUrl = this.projectApiUrl + "createNew/";
@@ -21,7 +23,7 @@ export class GlobalsService {
   public existProjectApiUrl = this.projectApiUrl+"exist/";
 
 
-  public organizationApiUrl:string = "http://localhost:8080/api/organizations/";
+  public organizationApiUrl:string = this.serverUrl+"/api/organizations/";
   public listOfOrganizationsApiUrl = this.organizationApiUrl+"list/";
   public createOrganizationApiUrl = this.organizationApiUrl + "createNew/";
   public existOrganizationApiUrl = this.organizationApiUrl + "exist/";
