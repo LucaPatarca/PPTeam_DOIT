@@ -56,8 +56,8 @@ export class DataService {
     return this.listProject.find(it=>it.id==id);
   }
 
-  public setOrgUser(orgId:string){
-    this.orgUser = orgId;
+  public setOrgUser(nameOrg:string){
+    this.orgUser = nameOrg;
     this.isLogOrg = true;
   }
 
@@ -90,8 +90,8 @@ export class DataService {
     this.listOrganizationCreator = this.listOrganizationCreator.concat(organization);
   }
 
-  public getOrganizationt(id:string) : Organization{
-    return this.listOrganization.find(it=>it.id==id);
+  public getOrganizationt(name:string) : Organization{
+    return this.listOrganization.find(it=>it.name==name);
   }
 
   public updateOrganization(oldName:string, organization:Organization){
