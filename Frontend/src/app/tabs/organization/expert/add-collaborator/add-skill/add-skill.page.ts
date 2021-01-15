@@ -48,32 +48,24 @@ export class AddSkillPage {
       "expertInOrganization": [this.dataService.orgUser],
       "isGloballyExpert": false
     }
-    this.http.get(this.globals.userExistSkill+newSkill.name+"/"+this.user).subscribe(
-      res_1 =>{
-        if(res_1==false){
-          this.http.post(this.globals.userAddSkillCollaborator+this.user,newSkill,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
-            async res => {
-              console.log('Successfully created new skill');	
-              const alert = await this.alertCtrl.create({
-                cssClass: 'my-custom-class',
-                header: 'Agiunta',
-                message: 'Skill Creata.',
-                buttons: ['OK']
-              });
-            
-              await alert.present();
-            }, 
-            err => { 
-              console.log(err);
-              console.log('oops some error in skill'); 
-            }
-          );
+    this.http.put(this.globals.userAddSkillCollaborator+this.dataService.orgUser+"/"+this.user+"/"+newSkill.name,{ headers: new HttpHeaders(), responseType: 'json'}).subscribe(
+      async res => {
+        if(res==true){
+          console.log('Successfully created new skill');
         }else{
-          console.log("skill already exist");
-          this.skill_already_exists = this.skill+" : skill already exist";
+          console.log('Successfully update new skill');
         }
-      },err_1=>{
-        console.log(err_1);
+        const alert = await this.alertCtrl.create({
+          cssClass: 'my-custom-class',
+          header: 'Aggiunta',
+          message: "Skill Aggiunta",
+          buttons: ['OK']
+        });
+        await alert.present();
+      }, 
+      err => { 
+        console.log(err);
+        console.log('oops some error in skill'); 
       }
     );
     this.menuCtrl.enable(true);

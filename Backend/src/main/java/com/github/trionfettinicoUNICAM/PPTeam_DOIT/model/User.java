@@ -35,7 +35,11 @@ public class User {
      * @param skill the skill to add
      */
     public void addSkill(Skill skill) {
-        //TODO aggiunger controllo se skill è gia presente
+        skills.stream().filter(it->it.equals(skill)).findAny().ifPresent(userSkill->
+                skill.getExpertInOrganization().forEach(
+                        org->userSkill.getExpertInOrganization().add(org)
+                )
+        );
         skills.add(Objects.requireNonNull(skill, "skill is null"));
     }
 

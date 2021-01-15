@@ -7,6 +7,8 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class SimpleUsersManager implements UsersManager {
     //TODO applicare controlli e condizioni sui metodi
@@ -45,17 +47,37 @@ public class SimpleUsersManager implements UsersManager {
     }
 
     @Override
-    public boolean existSkill(String newSkill, String userMail) {
+    public boolean existSkill(Skill newSkill, String userMail) {
         for (Skill skill : repository.findById(userMail).get().getSkills()) {
-            if(skill.getName().toLowerCase().trim().equals(newSkill.trim().toLowerCase()))
+            if(skill.equals(newSkill))
                 return true;
         }
         return false;
     }
 
     @Override
+    public boolean hasSkillExpertFor(Skill newSkill, String userMail, String organizationName) {
+        Optional<User> user = repository.findById(userMail);
+        Skill userSkill = null;
+        if(user.isPresent()){
+            for (Skill skill : user.get().getSkills()) {
+                if(skill.equals(newSkill))
+                    userSkill = skill;
+            }
+            return userSkill != null && userSkill.isExpertFor(organizationName);
+        }
+        return false;
+    }
+
+
+    @Override
     public boolean addCollaborator(String userEmail,Skill skill) {
-        repository.findById(userEmail).get().addSkill(skill);
-        return true;
+        Optional<User> user = repository.findById(userEmail);
+        if(user.isPresent()) {
+            user.get().addSkill(skill);
+            repository.save(user.get());
+            return true;
+        }
+        return false;
     }
 }

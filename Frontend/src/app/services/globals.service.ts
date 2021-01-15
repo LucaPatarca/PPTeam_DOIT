@@ -12,6 +12,7 @@ export class GlobalsService {
   public userExistApiUrl = this.UserApiUrl + "exist/";
   public userExistSkill = this.UserApiUrl + "existSkill/";
   public userAddSkillCollaborator = this.UserApiUrl+"addSkillCollaborator/"
+  public getUserSkills = this.UserApiUrl+"getUserSkills/";
 
 
   public createProjectApiUrl = this.projectApiUrl + "createNew/";

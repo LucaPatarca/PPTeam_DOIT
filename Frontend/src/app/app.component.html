@@ -31,6 +31,11 @@
               <ion-label>List of organizations</ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-menu-toggle *ngIf="dataService.isLog" auto-hide="false">
+            <ion-item (click)="viewSkill()">
+              <ion-label>View Skill</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
           <ion-menu-toggle *ngIf="dataService.isLog && !dataService.isLogOrg" auto-hide="false">
             <ion-item (click)="selectOrganizationCreator()">
               <ion-label>Select OrganizationC</ion-label>

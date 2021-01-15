@@ -8,6 +8,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @RestController
 @RequestMapping("api/users")
 public class UsersController {
@@ -22,18 +24,24 @@ public class UsersController {
     }
 
     @PreAuthorize("permitAll")
-    @GetMapping("/existSkill/{skill}/{userEmail}")
-    public boolean existSkill( @PathVariable String skill,@PathVariable String userEmail){
-        return usersManager.existSkill(skill,userEmail);
+    @GetMapping("/getUserSkills/{userEmail}")
+    public Set<Skill> getUserSkill(@PathVariable String userEmail){
+        return usersManager.getUserInstance(userEmail).getSkills();
     }
 
     @PreAuthorize("permitAll")
-    @PostMapping(value = "/addSkillCollaborator/{userEmail}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public boolean addCollaborator(@PathVariable String userEmail, @RequestBody Skill skill){
-        if(usersManager.existSkill(skill.getName(),userEmail))
+    @GetMapping("/existSkill/{skill}/{userEmail}")
+    public boolean existSkill( @PathVariable String skill,@PathVariable String userEmail){
+        return usersManager.existSkill(new Skill(skill),userEmail);
+    }
+
+    @PreAuthorize("permitAll")
+    @PutMapping("/addSkillCollaborator/{userOrganization}/{userEmail}/{skillName}")
+    public boolean addCollaborator(@PathVariable String userOrganization, @PathVariable String userEmail, @PathVariable String skillName){
+        Skill skill = new Skill(skillName, userOrganization);
+        if(usersManager.hasSkillExpertFor(skill,userEmail,userOrganization))
             return false;
-        usersManager.addCollaborator(userEmail,skill);
-        return true;
+        return usersManager.addCollaborator(userEmail,skill);
     }
 
     @PreAuthorize("permitAll")

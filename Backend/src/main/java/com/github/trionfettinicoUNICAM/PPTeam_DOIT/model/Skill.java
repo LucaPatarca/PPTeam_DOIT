@@ -23,12 +23,20 @@ public class Skill {
         this.isGloballyExpert = isExpert;
     }
 
-    public Skill(String name, Set<String> expertInOrganization, boolean isGloballyExpert) {
+    public Skill(String name, String userOrganizationName) {
         this.name = name;
-        this.expertInOrganization = expertInOrganization;
-        this.isGloballyExpert = isGloballyExpert;
+        this.expertInOrganization = new HashSet<>();
+        this.expertInOrganization.add(userOrganizationName);
+        this.isGloballyExpert = false;
     }
 
+    public Skill(String name) {
+        this.name = name;
+        this.expertInOrganization = new HashSet<>();
+        this.isGloballyExpert = false;
+    }
+
+    //per spring boot
     public Skill(){
         this.name = "";
         this.expertInOrganization = new HashSet<>();

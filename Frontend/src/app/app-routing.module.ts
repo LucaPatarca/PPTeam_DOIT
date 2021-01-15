@@ -64,6 +64,10 @@ const routes: Routes = [
     path: 'add-skill',
     loadChildren: () => import('./tabs/organization/expert/add-collaborator/add-skill/add-skill.module').then( m => m.AddSkillPageModule)
   },
+  {
+    path: 'view-skill',
+    loadChildren: () => import('./tabs/user/view-skill/view-skill.module').then( m => m.ViewSkillPageModule)
+  },
 
 
   

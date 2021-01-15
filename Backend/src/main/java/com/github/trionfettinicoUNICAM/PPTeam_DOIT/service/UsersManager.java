@@ -10,7 +10,8 @@ public interface UsersManager {
     boolean deleteUser(String mail);
     boolean updateUser(User user);
     boolean exists(String userMail);
-    boolean existSkill(String skill, String userMail);
+    boolean existSkill(Skill skill, String userMail);
+    boolean hasSkillExpertFor(Skill skill, String userMail, String organizationName);
     boolean addCollaborator(String userEmail,Skill skill);
 
 }

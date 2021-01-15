@@ -103,4 +103,8 @@ export class AppComponent {
     await alert.present();
     this.navCtrl.navigateRoot(['/home']);
   }
+
+  viewSkill(){
+    this.navCtrl.navigateForward(['view-skill'], { queryParams: { 'refresh': 1 } });
+  }
 }
