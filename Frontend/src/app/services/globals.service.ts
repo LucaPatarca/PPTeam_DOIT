@@ -29,6 +29,7 @@ export class GlobalsService {
   public existOrganizationApiUrl = this.organizationApiUrl + "exist/";
   public getOrganizationUserCreatorApiUrl = this.organizationApiUrl+"listCreatorOrg/"; 
   public getOrganizationMember = this.organizationApiUrl+"getUsers/";
+  public getUserSkills = this.UserApiUrl+"getUserSkills/";
 
 
   public defaultOrganizationName = "org";
