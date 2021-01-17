@@ -1,0 +1,35 @@
+<ion-header>
+ <ion-toolbar>
+  <ion-buttons slot="start">
+    <ion-back-button (click)="onBack()"></ion-back-button>
+  </ion-buttons>
+  <ion-title>VIEW PROJECT</ion-title>
+ </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <ion-refresher slot="fixed" (ionRefresh)="reload($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-card>
+    <ion-item>
+      <ion-label>
+        <h2 text-capitalize>{{project.name}}</h2>
+        <p>{{project.description}}</p>
+        <p>organization : {{project.organizationName}}</p>
+        <p>creator : {{project.creatorMail}}</p>
+        <p>status : {{isClosed}}</p>
+          <p>neededskills : </p>
+        <p  *ngFor="let neededskill of project.neededskills">{{neededskill}}</p>
+          <p>candidates : </p>
+        <p  *ngFor="let candidate of project.candidates">{{candidate}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+</ion-content>
+
+<ion-button *ngIf="project.creatorMail==data.userMail" (click)="modify()">modify</ion-button>
+
+<ion-button *ngIf="project.creatorMail==data.userMail" (click)="delete()" type="submit">delete</ion-button>

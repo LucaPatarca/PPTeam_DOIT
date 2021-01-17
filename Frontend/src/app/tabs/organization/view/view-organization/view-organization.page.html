@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="onBack()"></ion-back-button>
+    </ion-buttons>
+   <ion-title>VIEW ORGANIZATION</ion-title>
+  </ion-toolbar>
+ </ion-header>
+ 
+ <ion-content fullscreen>
+ 
+  <ion-card>
+   <ion-item>
+     <ion-label>
+       <h2 text-capitalize>{{organization.name}}</h2>
+       <p>{{organization.description}}</p>
+       <p>creator : {{organization.creatorMail}}</p>
+       <p>member : </p>
+        <p  *ngFor="let memberMail of organization.membersMails">{{memberMail}}</p>
+     </ion-label>
+   </ion-item>
+  </ion-card>
+ </ion-content>
+ <ion-button *ngIf="organization.creatorMail==data.userMail" (click)="modifyOrganization()">modify</ion-button>
+ <ion-button *ngIf="organization.creatorMail==data.userMail && data.getIsLogOrg()" (click)="addExpert()" >Add Expert</ion-button>
+ <ion-button *ngIf="organization.creatorMail==data.userMail" (click)="deleteOrganization()" >delete</ion-button>

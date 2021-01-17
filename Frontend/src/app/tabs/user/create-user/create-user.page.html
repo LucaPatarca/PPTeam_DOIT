@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="onBack()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>createUser</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content padding class="form-content">
+  <form [formGroup]="validations_form" (ngSubmit)="onSubmit()">
+  <ion-item>
+      <ion-label position="floating" color="primary">Name</ion-label>
+      <ion-input type="text" formControlName="name" [(ngModel)]="name"></ion-input>
+  </ion-item>
+  <ng-container *ngFor="let validation of validation_messages.name">
+    <div class="error-message" *ngIf="validations_form.get('name').hasError(validation.type) && (validations_form.get('name').dirty || validations_form.get('name').touched)">
+      {{ validation.message }}
+    </div>
+  </ng-container>
+  <ion-item>
+    <ion-label position="floating" color="primary">Email</ion-label>
+    <ion-input type="text" formControlName="email" [(ngModel)]="email"></ion-input>
+  </ion-item>
+  <ng-container *ngFor="let validation of validation_messages.email">
+    <div class="error-message" *ngIf="validations_form.get('email').hasError(validation.type) && (validations_form.get('email').dirty || validations_form.get('email').touched)">
+      {{ validation.message }}
+    </div>
+  </ng-container>
+    <ion-button color="primary" class="submit-btn" expand="block" type="submit" [disabled]="!validations_form.valid">Submit data</ion-button>
+  </form>
+  <div class="row error-email">
+     <div class="col">
+         <div class="text-center">
+             <h5 style="text-align: center;">{{email_already_exists}}</h5>
+         </div>
+     </div>
+ </div>
+ 
+</ion-content>
