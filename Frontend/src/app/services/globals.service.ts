@@ -30,11 +30,10 @@ export class GlobalsService {
   public getOrganizationUserCreatorApiUrl = this.organizationApiUrl+"listCreatorOrg/"; 
   public getOrganizationMember = this.organizationApiUrl+"getUsers/";
   public getUserSkills = this.UserApiUrl+"getUserSkills/";
+  public modifyOrganizationApiUrl = this.organizationApiUrl+"modify/";
 
 
   public defaultOrganizationName = "org";
-
-
 
   public userMail:string = "mail";
 
