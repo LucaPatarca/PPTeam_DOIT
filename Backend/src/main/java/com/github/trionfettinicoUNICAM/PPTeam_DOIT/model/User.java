@@ -1,10 +1,12 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * Represents a registered user inside the application. It has the ability to join a project's team
@@ -26,6 +28,9 @@ public class User {
         setMail(mail);
         setName(name);
         skills = new HashSet<>();
+    }
+
+    public User() {
     }
 
     /**
@@ -93,16 +98,6 @@ public class User {
         this.name = name;
     }
 
-    public void setGloballyExpert(Skill skill){
-        Optional<Skill> optionalSkill = this.getSkills().stream().filter(it->it.equals(skill)).findAny();
-        if(optionalSkill.isPresent()){
-            optionalSkill.get().setGloballyExpert(true);
-        } else{
-            skill.setGloballyExpert(true);
-            this.addSkill(skill);
-        }
-    }
-
     public void setExpert(Skill skill, String organizationId){
         Optional<Skill> optionalSkill = this.getSkills().stream().filter(it->it.equals(skill)).findAny();
         if(optionalSkill.isPresent()){
@@ -111,5 +106,18 @@ public class User {
             skill.getExpertInOrganization().add(organizationId);
             this.addSkill(skill);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(mail, user.mail) && Objects.equals(name, user.name) && Objects.equals(skills, user.skills);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mail, name, skills);
     }
 }

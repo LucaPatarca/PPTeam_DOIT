@@ -1,5 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import org.junit.jupiter.api.AfterEach;
@@ -30,7 +31,7 @@ class SimpleOrganizationsManagerTest {
     }
 
     @Test
-    void getOrganizationInstance() {
+    void getOrganizationInstance() throws EntityNotFoundException {
         Organization found = manager.getOrganizationInstance(organization.getId());
         assertEquals(organization, found);
     }
@@ -38,5 +39,41 @@ class SimpleOrganizationsManagerTest {
     @Test
     void createNewOrganization() {
         assertNotNull(organization);
+    }
+
+    @Test
+    void deleteOrganization() {
+    }
+
+    @Test
+    void updateOrganization() {
+    }
+
+    @Test
+    void getUsers() {
+    }
+
+    @Test
+    void existsName() {
+    }
+
+    @Test
+    void exists() {
+    }
+
+    @Test
+    void findByUser() {
+    }
+
+    @Test
+    void findByCreator() {
+    }
+
+    @Test
+    void getPage() {
+    }
+
+    @Test
+    void addCollaborator() {
     }
 }

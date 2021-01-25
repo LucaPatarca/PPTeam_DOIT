@@ -1,7 +1,10 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
-import org.bson.types.ObjectId;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicProjectInformation;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -16,7 +19,7 @@ public interface ProjectsManager {
      * @param projectID the unique name of the wanted project
      * @return an instance of the project
      */
-    Project getProjectInstance(String projectID);
+    Project getProjectInstance(String projectID) throws EntityNotFoundException;
 
     /**
      * Creates a new empty (with an empty team and no experts) project. The new project is associated
@@ -25,7 +28,7 @@ public interface ProjectsManager {
      * @return the newly created Project
      * @throws IllegalArgumentException if the {@link User} is not part of the organization
      */
-    Project createNewProject(Project project);
+    Project createNewProject(Project project) throws EntityNotFoundException;
 
     /**
      * Closes the project identified by the given ID. The project is NOT deleted from the system,
@@ -34,7 +37,7 @@ public interface ProjectsManager {
      * @return true if the project has been deleted, false instead
      * @see ProjectsManager#deleteProject(String)
      */
-    boolean closeProject(String projectID);
+    boolean closeProject(String projectID) throws EntityNotFoundException;
 
     /**
      * Deletes a project from the system.
@@ -48,9 +51,9 @@ public interface ProjectsManager {
      * @param project the project to be saved
      * @return true if the project is stored successfully, false instead.
      */
-    Project updateProject(Project project);
+    Project updateProject(Project project) throws EntityNotFoundException;
 
-    Page<Project> getPage(int page, int size);
+    Page<BasicProjectInformation> getPage(int page, int size);
 
     boolean exists(String projectID);
 

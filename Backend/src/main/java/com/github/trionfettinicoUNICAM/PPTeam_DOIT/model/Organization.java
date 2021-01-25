@@ -1,10 +1,11 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Represents a group of {@link User}s who works together on a list of {@link Project}s. An organization
@@ -18,8 +19,8 @@ public class Organization {
     @Id
     private String id;
     private String name;
-    private Set<String> membersMails;
     private String description;
+    private Set<String> membersMails;
     private String creatorMail;
 
     public Organization(String name, String description, String creatorMail) {

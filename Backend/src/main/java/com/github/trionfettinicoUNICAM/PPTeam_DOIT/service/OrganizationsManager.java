@@ -1,9 +1,10 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicOrganizationInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
-import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -17,10 +18,9 @@ public interface OrganizationsManager {
 
     /**
      * Retrieves the organization with the given ID and returns an instance of it.
-     * @param organizationName the organization's unique name
      * @return an instance of the organization
      */
-    Organization getOrganizationInstance(String organizationId);
+    Organization getOrganizationInstance(String organizationId) throws EntityNotFoundException;
 
     /**
      * Creates a new {@link Organization} with the given parameters
@@ -31,7 +31,6 @@ public interface OrganizationsManager {
 
     /**
      * Removes an {@link Organization} from the system.
-     * @param organizationName the organization's unique name
      * @return true if the organization is successfully removed, false instead
      */
     boolean deleteOrganization(String organizationId);
@@ -41,9 +40,9 @@ public interface OrganizationsManager {
      * @param organization the organization to be saved
      * @return true if the organization is stored successfully, false instead.
      */
-    Organization updateOrganization(Organization organization);
+    Organization updateOrganization(Organization organization) throws EntityNotFoundException;
 
-    List<User> getUsers(String organizationId);
+    List<User> getUsers(String organizationId) throws EntityNotFoundException;
 
     boolean existsName(String organizationName);
 
@@ -51,10 +50,10 @@ public interface OrganizationsManager {
 
     List<Organization> findByUser(String userMail);
 
-    List<Organization> findCreator(String userMail);
+    List<Organization> findByCreator(String userMail);
 
-    Page<Organization> getPage(int page, int i);
+    Page<BasicOrganizationInformation> getPage(int page, int i);
 
-    boolean addCollaborator(String organizationId, String userMail, Skill skill);
+    void addCollaborator(String organizationId, String userMail, Skill skill) throws EntityNotFoundException;
 
 }

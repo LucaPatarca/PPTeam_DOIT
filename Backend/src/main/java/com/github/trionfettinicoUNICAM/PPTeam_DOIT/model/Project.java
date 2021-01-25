@@ -1,10 +1,11 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -13,7 +14,7 @@ import java.util.*;
 public class Project {
     @Id
     private String id;
-    private String name;
+    private String title;
     private String description;
     private String organizationId;
     private String creatorMail;
@@ -22,11 +23,11 @@ public class Project {
     private Set<Role> team;
     private Set<Role> candidates;
 
-    public Project(String organizationId, String creatorMail, String name, String description) throws IllegalArgumentException {
+    public Project(String organizationId, String creatorMail, String title, String description) throws IllegalArgumentException {
         Objects.requireNonNull(creatorMail, "Creator is Null");
         Objects.requireNonNull(organizationId, "Organization is Null");
         this.candidates = new HashSet<>();
-        setName(name);
+        setTitle(title);
         setDescription(description);
         this.team = new HashSet<>();
         this.isClosed = false;
@@ -47,14 +48,14 @@ public class Project {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) throws IllegalStateException, IllegalArgumentException {
+    public void setTitle(String title) throws IllegalStateException, IllegalArgumentException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(name.length() == 0) throw new IllegalArgumentException("Name is empty");
-        this.name = name;
+        if(title.length() == 0) throw new IllegalArgumentException("Name is empty");
+        this.title = title;
     }
 
     public String getDescription() {
@@ -194,10 +195,10 @@ public class Project {
         if (this == object) return true;
         if (object == null || getClass() != object.getClass()) return false;
         Project that = (Project) object;
-        return name.equals(that.name) && description.equals(that.description) && organizationId.equals(that.organizationId) && creatorMail.equals(that.creatorMail);
+        return title.equals(that.title) && description.equals(that.description) && organizationId.equals(that.organizationId) && creatorMail.equals(that.creatorMail);
     }
 
     public int hashCode() {
-        return Objects.hash(super.hashCode(), name, description, organizationId, creatorMail);
+        return Objects.hash(super.hashCode(), title, description, organizationId, creatorMail);
     }
 }
