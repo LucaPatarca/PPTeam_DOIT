@@ -6,11 +6,11 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 
 
-public interface UsersManager {
-    User getUserInstance(String userMail) throws EntityNotFoundException;
-    User createUser(User user) throws IdConflictException;
-    boolean deleteUser(String mail) throws EntityNotFoundException;
-    User updateUser(User user) throws EntityNotFoundException;
+public interface UsersManager extends EntityManager<User, String>,BasicJsonInformation<User>{
+    User getInstance(String userMail) throws EntityNotFoundException;
+    User create(User user) throws IdConflictException;
+    boolean delete(String mail) throws EntityNotFoundException;
+    User update(User user) throws EntityNotFoundException;
     boolean exists(String userMail);
     boolean existSkill(Skill skill, String userMail) throws EntityNotFoundException;
     boolean hasSkillExpertFor(Skill skill, String userMail, String organizationId) throws EntityNotFoundException;

@@ -2,7 +2,7 @@ import { NavController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from './../../../../services/globals.service';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { User } from 'src/app/model/user';
 
 @Component({
@@ -25,7 +25,7 @@ export class AddCollaboratorPage {
   }
 
   loadUser(event?){
-    this.http.get(this.globals.getOrganizationMember+this.data.orgUser)
+    this.http.get(this.globals.getOrganizationMember+this.data.selectedOrganization)
     .subscribe(res => {
       const toAdd:User[] = res as User[];
       toAdd.forEach(user=>this.users.push(user));

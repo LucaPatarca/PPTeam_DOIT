@@ -1,8 +1,8 @@
 import { Organization } from './../../../../model/organization';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MenuController, AlertController, NavController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { MenuController, AlertController, NavController, ToastController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 
@@ -12,60 +12,65 @@ import { GlobalsService } from 'src/app/services/globals.service';
   styleUrls: ['./view-organization.page.scss'],
 })
 export class ViewOrganizationPage {
-  organization:Organization;
+  organization: Organization;
 
   constructor(
-    private route:ActivatedRoute, 
-    private nav:NavController,
-    public data:DataService,
-    private menuCtrl:MenuController, 
-    private http:HttpClient,
-    private globals:GlobalsService,
-    private alertCtrl:AlertController,
-    ) { 
+    private route: ActivatedRoute,
+    private nav: NavController,
+    public data: DataService,
+    private menuCtrl: MenuController,
+    private http: HttpClient,
+    private globals: GlobalsService,
+    private toastCtrl: ToastController,
+    private alertCtrl: AlertController,
+  ) {
     const id = this.route.snapshot.params["id"];
-    this.organization = this.data.getOrganizationt(id);
+    this.organization = this.data.getOrganization(id);
+  }
+
+  ionViewWillEnter() {
     this.menuCtrl.enable(false);
   }
 
-  onBack(){
-    this.menuCtrl.enable(true);
+  goBack() {
     this.nav.navigateBack(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
   }
 
-  deleteOrganization(){
-    this.http.delete(this.globals.organizationApiUrl+this.organization.id).subscribe(
+  deleteOrganization() {
+    this.http.delete(this.globals.organizationApiUrl + this.organization.id).subscribe(
       async res => {
-        if(this.organization.creatorMail==this.data.userMail){
-          this.data.quitFromOrg();
+        if (this.organization.creatorMail == this.data.user.mail) {
+          this.data.quitFromOrganization();
         }
         console.log("organization removed successfully");
-        this.data.removeOrganizationt(this.organization);
-        const alert = await this.alertCtrl.create({
-          cssClass: 'my-custom-class',
-          header: 'Cancellata',
-          message: 'Organizzazione Cancellata.',
-          buttons: ['OK']
+        this.data.removeOrganization(this.organization);
+
+        const toast = await this.toastCtrl.create({
+          message: res == true ? 'Organizzazione Cancellata.' : 'Organizzazione Non Cancellata',
+          duration: 2000
         });
-      
-        await alert.present();
+        toast.present();
       },
-      err => {
-        console.log("error on delete organization: "+err);
+      async err => {
+        const toast = await this.toastCtrl.create({
+          message: err.error,
+          duration: 2000
+        });
+        toast.present();
       },
     );
-    this.onBack();
+    this.goBack();
   }
 
-  modifyOrganization(){
-    this.nav.navigateForward(['/modify-organization', {"id":this.organization.id}]);
+  modifyOrganization() {
+    this.nav.navigateForward(['/modify-organization', { "id": this.organization.id }]);
   }
 
-  async addExpert(){
+  async addExpert() {
     const alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
       header: 'Scegli',
-      message: 'Che tipo di esperto ?',
+      message: 'Che tipo di esperto?',
       buttons: [
         {
           text: 'Interno',
@@ -75,14 +80,14 @@ export class ViewOrganizationPage {
         }, {
           text: 'Esterno',
           handler: () => {
-            console.log('Confirm Okay');
+            this.nav.navigateForward(["/add-expert"]);
           }
         }
       ]
     });
-  
-    await alert.present();
-   }
+
+    alert.present();
+  }
 
 }
 

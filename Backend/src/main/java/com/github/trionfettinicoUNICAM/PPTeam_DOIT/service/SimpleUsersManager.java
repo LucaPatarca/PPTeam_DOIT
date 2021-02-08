@@ -7,6 +7,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,44 +20,48 @@ public class SimpleUsersManager implements UsersManager {
     private OrganizationRepository organizationRepository;
 
     @Override
-    public User getUserInstance(String userMail) throws EntityNotFoundException {
-        return userRepository.findById(userMail).orElseThrow(()->
-                new EntityNotFoundException("Nessun utente trovato con la mail: "+userMail));
+    public User getInstance(String mail) throws EntityNotFoundException {
+        if(mail.isBlank()) throw new IllegalArgumentException("Il campo 'mail' è vuoto");
+        return userRepository.findById(mail).orElseThrow(()->
+                new EntityNotFoundException("Nessun utente trovato con la mail: "+mail));
     }
 
     @Override
-    public User createUser(User user) throws IdConflictException {
+    public User create(User user) throws IdConflictException {
         if(userRepository.existsById(user.getMail()))
             throw new IdConflictException("Esiste già un utente con questa mail");
         return userRepository.save(user);
     }
 
     @Override
-    public boolean deleteUser(String mail) throws EntityNotFoundException {
+    public boolean delete(String mail) throws EntityNotFoundException {
+        if(mail.isBlank()) throw new IllegalArgumentException("Il campo 'mail' è vuoto");
         if(!exists(mail))
-            throw new EntityNotFoundException("Nessun utente trovato con la mail: "+mail);
+            throw new EntityNotFoundException("Nessun utente con la mail: "+mail);
         userRepository.deleteById(mail);
         return !userRepository.existsById(mail);
     }
 
     @Override
-    public User updateUser(User user) throws EntityNotFoundException {
+    public User update(User user) throws EntityNotFoundException {
         if(!exists(user.getMail()))
             throw new EntityNotFoundException("Nessun utente trovato con la mail: "+user.getMail());
         return userRepository.save(user);
     }
 
     @Override
-    public boolean exists(String userMail) {
+    public boolean exists(String mail) {
+        if(mail.isBlank()) throw new IllegalArgumentException("Il campo 'mail' è vuoto");
         if(this.userRepository.count()==0)
             return false;
-        return userRepository.existsById(userMail);
+        return userRepository.existsById(mail);
     }
 
     @Override
-    public boolean existSkill(Skill newSkill, String userMail) throws EntityNotFoundException {
-        User user = userRepository.findById(userMail).orElseThrow(()->
-                new EntityNotFoundException("Nessun utente trovato con la mail: "+userMail));
+    public boolean existSkill(Skill newSkill, String mail) throws EntityNotFoundException {
+        if(mail.isBlank()) throw new IllegalArgumentException("Il campo 'mail' è vuoto");
+        User user = userRepository.findById(mail).orElseThrow(()->
+                new EntityNotFoundException("Nessun utente trovato con la mail: "+mail));
         for (Skill skill : user.getSkills()) {
             if(skill.equals(newSkill))
                 return true;
@@ -65,14 +70,26 @@ public class SimpleUsersManager implements UsersManager {
     }
 
     @Override
-    public boolean hasSkillExpertFor(Skill newSkill, String userMail, String organizationId) throws EntityNotFoundException {
-        User user = userRepository.findById(userMail).orElseThrow(()->
-                new EntityNotFoundException("Nessun utente trovato con la mail: "+userMail));
+    public boolean hasSkillExpertFor(Skill newSkill, String mail, String organizationId) throws EntityNotFoundException {
+        if(mail.isBlank()) throw new IllegalArgumentException("Il campo 'mail' è vuoto");
+        if(organizationId.isBlank()) throw new IllegalArgumentException("Il campo 'organizationId' è vuoto");
+        User user = userRepository.findById(mail).orElseThrow(()->
+                new EntityNotFoundException("Nessun utente trovato con la mail: "+mail));
         Skill userSkill = null;
         for (Skill skill : user.getSkills()) {
             if(skill.equals(newSkill))
                 userSkill = skill;
         }
         return userSkill != null && userSkill.isExpertFor(organizationId);
+    }
+
+    @Override
+    public Page<String> getPage(int page, int size) {
+        return null;
+    }
+
+    @Override
+    public String getBasicJsonInformation(User object) {
+        return null;
     }
 }

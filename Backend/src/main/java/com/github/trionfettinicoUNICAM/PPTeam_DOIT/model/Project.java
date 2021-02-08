@@ -24,8 +24,6 @@ public class Project {
     private Set<Role> candidates;
 
     public Project(String organizationId, String creatorMail, String title, String description) throws IllegalArgumentException {
-        Objects.requireNonNull(creatorMail, "Creator is Null");
-        Objects.requireNonNull(organizationId, "Organization is Null");
         this.candidates = new HashSet<>();
         setTitle(title);
         setDescription(description);
@@ -54,7 +52,7 @@ public class Project {
 
     public void setTitle(String title) throws IllegalStateException, IllegalArgumentException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(title.length() == 0) throw new IllegalArgumentException("Name is empty");
+        if(title.isBlank()) throw new IllegalArgumentException("Name is empty");
         this.title = title;
     }
 
@@ -64,7 +62,7 @@ public class Project {
 
     public void setDescription(String description) throws IllegalStateException, IllegalArgumentException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(description.length() == 0) throw new IllegalArgumentException("Description is empty");
+        if(description.isBlank()) throw new IllegalArgumentException("Description is empty");
         this.description=description;
     }
 
@@ -74,6 +72,7 @@ public class Project {
 
     public void setOrganizationId(String organizationId) throws IllegalStateException, IllegalArgumentException {
         if(isClosed) throw new IllegalStateException("Project is closed");
+        if(organizationId.isBlank()) throw new IllegalArgumentException("Id is empty");
         this.organizationId=organizationId;
     }
 
@@ -83,7 +82,7 @@ public class Project {
 
     public void setCreatorMail(String creatorMail) throws IllegalStateException, IllegalArgumentException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(creatorMail.length() == 0) throw new IllegalArgumentException("CreatorMail is empty");
+        if(creatorMail.isBlank()) throw new IllegalArgumentException("CreatorMail is empty");
         this.creatorMail=creatorMail;
     }
 
@@ -161,6 +160,7 @@ public class Project {
      * Marks this project as closed. After this operation no one can apply to this project
      */
     public void close() {
+        // TODO: 04/02/2021 aggiungere il controlle se è già chiuso, in caso lancio illegal state
         isClosed=true;
     }
 

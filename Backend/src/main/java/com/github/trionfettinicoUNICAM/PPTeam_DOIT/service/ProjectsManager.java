@@ -1,11 +1,11 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicProjectInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -13,13 +13,13 @@ import java.util.List;
  * This interface is responsible for managing all projects of the application,
  * it knows how to get every project by it's ID and can perform basic operations on them.
  */
-public interface ProjectsManager {
+public interface ProjectsManager extends EntityManager<Project, String>,BasicJsonInformation<Project> {
     /**
      * Retrieves the project associated with the given ID and returns an instance of it.
      * @param projectID the unique name of the wanted project
      * @return an instance of the project
      */
-    Project getProjectInstance(String projectID) throws EntityNotFoundException;
+    Project getInstance(String projectID) throws EntityNotFoundException;
 
     /**
      * Creates a new empty (with an empty team and no experts) project. The new project is associated
@@ -28,7 +28,7 @@ public interface ProjectsManager {
      * @return the newly created Project
      * @throws IllegalArgumentException if the {@link User} is not part of the organization
      */
-    Project createNewProject(Project project) throws EntityNotFoundException;
+    Project create(Project project) throws EntityNotFoundException;
 
     /**
      * Closes the project identified by the given ID. The project is NOT deleted from the system,
@@ -44,16 +44,16 @@ public interface ProjectsManager {
      * @param projectID the unique name of the project to delete
      * @return true if the project has been deleted, false instead
      */
-    boolean deleteProject(String projectID);
+    boolean delete(String projectID);
 
     /**
      * Updates the {@link Project} passed as parameter and saves it.
      * @param project the project to be saved
      * @return true if the project is stored successfully, false instead.
      */
-    Project updateProject(Project project) throws EntityNotFoundException;
+    Project update(Project project) throws EntityNotFoundException;
 
-    Page<BasicProjectInformation> getPage(int page, int size);
+    Page<String> getPage(int page, int size);
 
     boolean exists(String projectID);
 

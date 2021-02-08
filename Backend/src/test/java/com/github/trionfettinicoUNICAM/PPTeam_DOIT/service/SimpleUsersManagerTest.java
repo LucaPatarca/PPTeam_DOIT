@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 class SimpleUsersManagerTest {
 
-    @Test
+    /*@Test
     void getUserInstance() {
     }
 
@@ -34,5 +34,5 @@ class SimpleUsersManagerTest {
 
     @Test
     void addCollaborator() {
-    }
+    }*/
 }

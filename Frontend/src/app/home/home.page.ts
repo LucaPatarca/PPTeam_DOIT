@@ -1,9 +1,7 @@
 import { DataService } from 'src/app/services/data.service';
-import { MenuController } from '@ionic/angular';
-import { Component, OnInit } from '@angular/core';
-import { Title }     from '@angular/platform-browser';
-
-
+import { MenuController, Platform } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { exit } from 'process';
 
 @Component({
   selector: 'app-home',
@@ -12,16 +10,18 @@ import { Title }     from '@angular/platform-browser';
 })
 export class HomePage {
 
-  
   constructor(
-    private titleService: Title,
-    private menuCtrl:MenuController,
-    private dataService:DataService
-    ) {
-    // cambio il titolo del pagine
-    this.titleService.setTitle("home");
-    //attivo il menu 
+    private menuCtrl: MenuController,
+    private dataService: DataService,
+    private platform: Platform,
+  ) {
+    this.platform.backButton.subscribe(() => {
+      exit();
+    });
+  }
+
+  ionViewWillEnter() {
     this.menuCtrl.enable(true);
   }
-  
+
 }

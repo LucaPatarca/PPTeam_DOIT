@@ -1,7 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicOrganizationInformation;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
@@ -14,33 +14,33 @@ import java.util.List;
  * it knows how to get every organization by it's ID and can can create new organizations or 
  * delete old ones.
  */
-public interface OrganizationsManager {
+public interface OrganizationsManager extends EntityManager<Organization, String>,BasicJsonInformation<Organization>{
 
     /**
      * Retrieves the organization with the given ID and returns an instance of it.
      * @return an instance of the organization
      */
-    Organization getOrganizationInstance(String organizationId) throws EntityNotFoundException;
+    Organization getInstance(String organizationId) throws EntityNotFoundException;
 
     /**
      * Creates a new {@link Organization} with the given parameters
      * @param  organization the organization
      * @return the newly created organization
      */
-    Organization createNewOrganization(Organization organization);
+    Organization create(Organization organization) throws EntityNotFoundException, IdConflictException;
 
     /**
      * Removes an {@link Organization} from the system.
      * @return true if the organization is successfully removed, false instead
      */
-    boolean deleteOrganization(String organizationId);
+    boolean delete(String organizationId);
 
     /**
      * Updates the {@link Organization} passed as parameter and saves it.
      * @param organization the organization to be saved
      * @return true if the organization is stored successfully, false instead.
      */
-    Organization updateOrganization(Organization organization) throws EntityNotFoundException;
+    Organization update(Organization organization) throws EntityNotFoundException;
 
     List<User> getUsers(String organizationId) throws EntityNotFoundException;
 
@@ -52,8 +52,12 @@ public interface OrganizationsManager {
 
     List<Organization> findByCreator(String userMail);
 
-    Page<BasicOrganizationInformation> getPage(int page, int i);
+    Page<String> getPage(int page, int i);
 
     void addCollaborator(String organizationId, String userMail, Skill skill) throws EntityNotFoundException;
+
+    boolean removeMember(String organizationId, String memberMail) throws EntityNotFoundException;
+
+    boolean addMember(String organizationId, String memberMail) throws EntityNotFoundException;
 
 }

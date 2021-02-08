@@ -1,128 +1,121 @@
 import { Organization } from '../model/organization';
 import { Injectable } from '@angular/core';
 import { Project } from '../model/project';
+import { User } from '../model/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  public listProject:Project[];
-  public listOrganization:Organization[];
-  public listOrganizationCreator:Organization[];
-  public userMail:String;
-  public isLog:boolean;
-  public orgUser:String;
-  public isLogOrg:boolean;
+
+  public user:User;
+  public selectedOrganization:Organization;
+  public projects:Project[];
+  public organizations:Organization[];
+  public userOrganizations:Organization[];
 
   constructor() {
-    this.listProject = new Array();
-    this.listOrganization = new Array();
-    this.listOrganizationCreator = new Array();
-    this.userMail="";
-    this.orgUser="";
-    this.isLog=false;
-    this.isLogOrg=false;
+    this.projects = new Array();
+    this.organizations = new Array();
+    this.userOrganizations = new Array();
+    this.user=null;
+    this.selectedOrganization=null;
   }
 
-  public getUser():String{
-    return this.userMail;
+  public getUser():User{
+    return this.user;
   }
 
-  public userIsLog():boolean{
-    
-    return this.isLog;
+  public isUserLogged():boolean{
+    return this.user!=null;
   }
 
-  public setUser(user:String){
-    this.userMail = user;
-    this.isLog = true;
+  public setUser(user:User){
+    this.user = user;
   }
 
-  public removeUser(){
-    this.userMail = "";
-    this.isLog = false;
-    this.quitFromOrg();
+  public logout(){
+    this.user = null;
+    this.quitFromOrganization();
   }
 
   public addProject(project:Project){
-    this.listProject = this.listProject.concat(project);
+    this.projects = this.projects.concat(project);
   }
 
-  public getIsLogOrg():boolean{
-    return this.isLogOrg;
+  public selectOrganization(organization: Organization){
+    this.selectedOrganization = organization;
+  }
+
+  public isOrganizationSelected():boolean{
+    return this.selectedOrganization != null;
+  }
+
+  public quitFromOrganization(){
+    this.selectedOrganization = null;
   }
 
   public getProject(id:string) : Project{
-    return this.listProject.find(it=>it.id==id);
+    return this.projects.find(it=>it.id==id);
   }
 
-  public setOrgUser(orgId:string){
-    this.orgUser = orgId;
-    this.isLogOrg = true;
-  }
-
-  public quitFromOrg(){
-    this.orgUser = "";
-    this.isLogOrg =false;
-  }
-
-  public updateProject(oldID:string, project:Project){
-    const index = this.listProject.findIndex(it=>it.id==oldID);
+  public updateProject(project:Project){
+    const index = this.projects.findIndex(it=>it.id==project.id);
     if(index > -1)
-      this.listProject[index]=project;
+      this.projects[index]=project;
   }
 
   public removeProject(project:Project){
-    const index = this.listProject.findIndex(it=>it.id==project.id);
+    const index = this.projects.findIndex(it=>it.id==project.id);
     if(index > -1)
-      this.listProject.splice(index,1);
+      this.projects = this.projects.splice(index,1);
   }
 
   public clearProject(){
-    this.listProject=new Array();
+    this.projects=new Array();
   }
 
   public addOrganization(organization:Organization){
-    this.listOrganization = this.listOrganization.concat(organization);
+    this.organizations = this.organizations.concat(organization);
   }
 
-  public addOrganizationCreator(organization:Organization){
-    this.listOrganizationCreator = this.listOrganizationCreator.concat(organization);
+  public addUserOrganization(organization:Organization){
+    this.userOrganizations = this.userOrganizations.concat(organization);
   }
 
-  public getOrganizationt(orgId:string) : Organization{
-    return this.listOrganization.find(it=>it.id==orgId);
+  public getOrganization(orgId:string) : Organization{
+    return this.organizations.find(it=>it.id==orgId);
   }
 
-  public updateOrganization(oldName:string, organization:Organization){
-    const index = this.listOrganization.findIndex(it=>it.name==oldName);
+  public updateOrganization(organization:Organization){
+    const index = this.organizations.findIndex(it=>it.name==organization.id);
     if(index > -1)
-      this.listOrganization[index]=organization;
+      this.organizations[index]=organization;
   }
 
-  public removeOrganizationt(organization:Organization){
-    const index = this.listOrganization.findIndex(it=>it.name==organization.name);
+  public removeOrganization(organization:Organization){
+    const index = this.organizations.findIndex(it=>it.name==organization.name);
     if(index > -1)
-      this.listOrganization.splice(index,1);
+      this.organizations = this.organizations.splice(index,1);
   }
 
-  public clearOrganization(){
-    this.listOrganization=new Array();
+  public clearOrganizations(){
+    this.organizations=new Array();
   }
 
-  public clearOrganizationCreator(){
-    this.listOrganizationCreator=new Array();
+  public clearUserOrganizations(){
+    this.userOrganizations=new Array();
   }
 
-  public isOrganizationEmpty():boolean{
-      return this.listOrganization.length==0;
+  public isOrganizationsEmpty():boolean{
+      return this.organizations.length==0;
   }
 
-  public isOrganizationCreatorEmpty():boolean{
-    return this.listOrganizationCreator.length==0;
+  public isUserOrganizationsEmpty():boolean{
+    return this.userOrganizations.length==0;
   }
 
-  public isProjectEmpty():boolean{
-    return this.listProject.length==0;
+  public isProjectsEmpty():boolean{
+    return this.projects.length==0;
   }
 }

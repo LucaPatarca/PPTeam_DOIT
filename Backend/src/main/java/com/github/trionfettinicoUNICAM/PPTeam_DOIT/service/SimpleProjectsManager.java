@@ -1,7 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicProjectInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
@@ -29,13 +28,14 @@ public class SimpleProjectsManager implements ProjectsManager{
     private UserRepository userRepository;
 
     @Override
-    public Project getProjectInstance(String projectID) throws EntityNotFoundException {
+    public Project getInstance(String projectID) throws EntityNotFoundException {
+        if(projectID.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
         return projectRepository.findById(projectID).orElseThrow(()->
                 new EntityNotFoundException("Nessun progetto trovato con l'ID: "+projectID));
     }
 
     @Override
-    public Project createNewProject(Project project) throws EntityNotFoundException {
+    public Project create(Project project) throws EntityNotFoundException {
         Organization organization = organizationRepository.findById(project.getOrganizationId()).orElseThrow(()->
                 new EntityNotFoundException("L'organizzazione con ID '"+project.getOrganizationId()+"' " +
                         "passata nel progetto con ID '"+project.getId()+"' non esiste")
@@ -47,48 +47,58 @@ public class SimpleProjectsManager implements ProjectsManager{
 
     @Override
     public boolean closeProject(String projectID) throws EntityNotFoundException {
-        Project toClose = getProjectInstance(projectID);
+        if(projectID.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
+        Project toClose = getInstance(projectID);
         toClose.close();
         projectRepository.save(toClose);
-        return getProjectInstance(projectID).isClosed();
+        return getInstance(projectID).isClosed();
     }
 
     @Override
-    public boolean deleteProject(String projectID) {
+    public boolean delete(String projectID) {
+        if(projectID.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
+        // TODO: 04/02/2021 se il progetto non esiste lancio illegal argument
         projectRepository.deleteById(projectID);
         return !exists(projectID);
     }
 
     @Override
-    public Project updateProject(Project project) {
+    public Project update(Project project) {
+        // TODO: 04/02/2021 se il progetto non esiste lancio illegal argument
         return projectRepository.save(project);
     }
 
     @Override
-    public Page<BasicProjectInformation> getPage(int page, int size) {
+    public Page<String> getPage(int page, int size) {
         Page<Project> projectPage = projectRepository.findAll(PageRequest.of(page, size));
-        List<BasicProjectInformation> basicProjectInformationList = new java.util.ArrayList<>(Collections.emptyList());
+        List<String> basicProjectInformationList = new java.util.ArrayList<>(Collections.emptyList());
         for(Project project : projectPage){
-            User creator = userRepository.findById(project.getCreatorMail()).orElseThrow(IllegalArgumentException::new);
-            Organization organization = organizationRepository.findById(project.getOrganizationId()).orElseThrow(IllegalArgumentException::new);
-            basicProjectInformationList.add(new BasicProjectInformation(project,organization,creator));
+            basicProjectInformationList.add(getBasicJsonInformation(project));
         }
         return new PageImpl<>(basicProjectInformationList);
     }
 
     @Override
+    public String getBasicJsonInformation(Project object) {
+        return null;
+    }
+
+    @Override
     public boolean exists(String projectID) {
+        if(projectID.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
         return projectRepository.existsById(projectID);
     }
 
     @Override
     public boolean existsSignature(String projectSignature) {
+        if(projectSignature.isBlank()) throw new IllegalArgumentException("Il campo 'projectSignature' è vuoto");
         return projectRepository.findAll().stream().anyMatch(it->
                 (it.getOrganizationId()+"."+it.getTitle()).equals(projectSignature));
     }
 
     @Override
     public List<Project> findByOrganizationId(String organizationId) {
+        if(organizationId.isBlank()) throw new IllegalArgumentException("Il campo 'organizationID' è vuoto");
         return projectRepository.findByOrganizationId(organizationId);
     }
 }

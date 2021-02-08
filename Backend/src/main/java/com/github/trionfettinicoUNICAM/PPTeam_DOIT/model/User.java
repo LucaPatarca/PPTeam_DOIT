@@ -85,7 +85,7 @@ public class User {
     }
 
     public void setMail(String mail) throws IllegalArgumentException {
-        if(mail.length() == 0) throw new IllegalArgumentException("Mail is empty");
+        if(mail.isBlank()) throw new IllegalArgumentException("Mail is empty");
         this.mail = mail;
     }
 
@@ -94,7 +94,7 @@ public class User {
     }
 
     public void setName(String name) throws IllegalArgumentException {
-        if(name.length() == 0) throw new IllegalArgumentException("Name is empty");
+        if(name.isBlank()) throw new IllegalArgumentException("Name is empty");
         this.name = name;
     }
 

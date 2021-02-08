@@ -1,57 +1,259 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
+import org.junit.jupiter.api.*;
+import org.springframework.data.domain.Page;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class OrganizationsControllerTest extends ControllerTest{
 
+    private Organization organization1;
+    private Organization organization2;
+    private User user1;
+    private User user2;
+    private User user3;
+
     @Test
-    void getOrganization() {
+    @Order(2)
+    void getOrganization() throws Exception {
+        String uri = "/api/organizations/"+organization1.getId();
+        get(uri,200,organization1,Organization.class);
+
+        uri = "/api/organizations/"+organization2.getId();
+        get(uri,200,organization2,Organization.class);
+
+        uri = "/api/organizations/noOrganization";
+        get(uri,404,"Nessuna organizzazione");
     }
 
     @Test
-    void getPage() {
+    @Order(2)
+    void getPage() throws Exception {
+        // TODO: 02/02/2021 cambiare in String e confrontare con delle stringhe create apposta
+        String uri = "/api/organizations/list/0";
+        String content = get(uri,200,"content");
+        Page<String> page = toObjectPage(content, String.class);
+        assertEquals(2,page.getTotalElements());
+        assertTrue(page.toList().get(0).contains("'name':'name1','description':'description','creatorMail':'test1@test.com','creatorName':'name1'"));
+        assertTrue(page.toList().get(1).contains("'name':'name2','description':'description','creatorMail':'tes2@test.com','creatorName':'name2'"));
     }
 
     @Test
     @Order(1)
-    void createOrganization() {
+    void createOrganization() throws Exception {
+        //creates local entities
+        user1 = new User("test1@test.com","name1");
+        user2 = new User("tes2@test.com","name2");
+        user3 = new User("tes3@test.com","name3");
+        organization1 = new Organization("name1","description", user1.getMail());
+        organization2 = new Organization("name2","description", user2.getMail());
+        organization1.addMember(user3.getMail());
+        organization2.addMember(user3.getMail());
+
+        //tries to create a new organization with non existing creator
+        String uri = "/api/organizations/createNew";
+        post(uri, organization1,404,"Nessun utente");
+
+        //creates the new users
+        post("/api/users/createNew", user1,200, user1,User.class);
+        post("/api/users/createNew", user2,200, user2,User.class);
+
+        //tries to create a new organization with non existing members
+        post(uri,organization1,404,"Nessun utente");
+        post(uri,organization2,404,"Nessun utente");
+
+        post("/api/users/createNew", user3,200, user3,User.class);
+
+        //creates and tests organization1
+        String content = post(uri, organization1,200,null);
+        Organization responseOrganization = toObject(content,Organization.class);
+        organization1.setId(responseOrganization.getId());
+        assertEquals(organization1,responseOrganization);
+
+        post(uri, organization1,409, null);
+
+        //creates and tests organization2
+        content = post(uri, organization2,200,null);
+        responseOrganization = toObject(content,Organization.class);
+        organization2.setId(responseOrganization.getId());
+        assertEquals(organization2,responseOrganization);
+
+        post(uri, organization2,409, null);
+    }
+
+    @Test
+    @Order(99)
+    void deleteOrganization() throws Exception {
+        String uri = "/api/organizations/"+ organization1.getId();
+        delete(uri,200,"true");
+        delete(uri,200, "false");
+
+        uri = "/api/organizations/"+ organization2.getId();
+        delete(uri,200,"true");
+        delete(uri,200, "false");
+
+        delete("/api/users/"+ user1.getMail(),200,"true");
+        delete("/api/users/"+ user2.getMail(),200,"true");
+        delete("/api/users/"+ user3.getMail(),200,"true");
+    }
+
+    @Test
+    @Order(2)
+    void getByUser() throws Exception {
+        String uri = "/api/organizations/byUser/"+user1.getMail();
+        String content = get(uri,200,null);
+        List<Organization> list = new ArrayList<>(toObjectSet(content,Organization.class));
+        assertEquals(1,list.size());
+        assertTrue(list.contains(organization1));
+        assertFalse(list.contains(organization2));
+
+        uri = "/api/organizations/byUser/"+user2.getMail();
+        content = get(uri,200,null);
+        list = new ArrayList<>(toObjectSet(content,Organization.class));
+        assertEquals(1,list.size());
+        assertTrue(list.contains(organization2));
+        assertFalse(list.contains(organization1));
+
+        uri = "/api/organizations/byUser/"+user3.getMail();
+        content = get(uri,200,null);
+        list = new ArrayList<>(toObjectSet(content,Organization.class));
+        assertEquals(2,list.size());
+        assertTrue(list.contains(organization2));
+        assertTrue(list.contains(organization1));
+    }
+
+    @Test
+    @Order(2)
+    void getUsers() throws Exception {
+        String uri = "/api/organizations/getUsers/"+organization1.getId();
+        List<User> list = new ArrayList<>(toObjectSet(get(uri,200,null),User.class));
+        assertTrue(list.contains(user1));
+        assertTrue(list.contains(user3));
+        assertFalse(list.contains(user2));
+
+        uri = "/api/organizations/getUsers/"+organization2.getId();
+        list = new ArrayList<>(toObjectSet(get(uri,200,null),User.class));
+        assertTrue(list.contains(user2));
+        assertTrue(list.contains(user3));
+        assertFalse(list.contains(user1));
+    }
+
+    @Test
+    @Order(2)
+    void addAndRemoveCollaborator() throws Exception {
+        User user4 = new User("test4@test.com", "test4");
+        String uri = "/api/organizations/addCollaborator/"+ organization1.getId()+"/"+ user4.getMail();
+        Skill skill = new Skill("skillName");
+
+        post(uri, skill, 404, "Nessun utente");
+
+        post("/api/users/createNew", user4,200, user4,User.class);
+
+        post(uri, skill, 200, null);
+
+        String content = get("/api/organizations/" + organization1.getId(), 200, null);
+        Organization org = toObject(content, Organization.class);
+        assertTrue(org.getMembersMails().contains(user4.getMail()));
+
+        content = get("/api/users/"+user4.getMail(), 200, null);
+        User user = toObject(content, User.class);
+        assertTrue(user.getSkills().contains(skill));
+        assertTrue(user.getSkills().stream().filter(it->it.equals(skill)).findAny().get().isExpertFor(organization1.getId()));
+
+        uri = "/api/organizations/removeMember/"+ organization1.getId()+"/"+ user4.getMail();
+        post(uri,"", 200, null);
+
+        content = get("/api/organizations/" + organization1.getId(), 200, null);
+        org = toObject(content, Organization.class);
+        assertFalse(org.getMembersMails().contains(user4.getMail()));
+
+        content = get("/api/users/"+user4.getMail(), 200, null);
+        user = toObject(content, User.class);
+        assertTrue(user.getSkills().contains(skill));
+        assertFalse(user.getSkills().stream().filter(it->it.equals(skill)).findAny().get().isExpertFor(organization1.getId()));
+
+
+        delete("/api/users/"+ user4.getMail(),200,"true");
+    }
+
+    @Test
+    @Order(2)
+    void addAndRemoveMember() throws Exception {
+        User user4 = new User("test4@test.com", "test4");
+        String uri = "/api/organizations/addMember/"+ organization1.getId()+"/"+ user4.getMail();
+
+        post(uri, "", 404, "Nessun utente");
+
+        post("/api/users/createNew", user4,200, user4,User.class);
+
+        post(uri, "", 200, "true");
+        String content = get("/api/organizations/" + organization1.getId(), 200, null);
+        Organization org = toObject(content, Organization.class);
+        assertTrue(org.getMembersMails().contains(user4.getMail()));
+
+        uri = "/api/organizations/removeMember/"+ organization1.getId()+"/"+ user4.getMail();
+        post(uri,"", 200, null);
+        content = get("/api/organizations/" + organization1.getId(), 200, null);
+        org = toObject(content, Organization.class);
+        assertFalse(org.getMembersMails().contains(user4.getMail()));
+
+        delete("/api/users/"+ user4.getMail(),200,"true");
+    }
+
+    @Test
+    @Order(2)
+    void findByCreator() throws Exception {
+        String uri = "/api/organizations/findByCreator/"+user1.getMail();
+        String content = get(uri,200,null);
+        List<Organization> list = new ArrayList<>(toObjectSet(content,Organization.class));
+        assertEquals(1,list.size());
+        assertTrue(list.contains(organization1));
+        assertFalse(list.contains(organization2));
+
+        uri = "/api/organizations/findByCreator/"+user2.getMail();
+        content = get(uri,200,null);
+        list = new ArrayList<>(toObjectSet(content,Organization.class));
+        assertEquals(1,list.size());
+        assertTrue(list.contains(organization2));
+        assertFalse(list.contains(organization1));
+
+        uri = "/api/organizations/findByCreator/"+user3.getMail();
+        content = get(uri,200,null);
+        list = new ArrayList<>(toObjectSet(content,Organization.class));
+        assertEquals(0,list.size());
+        assertFalse(list.contains(organization2));
+        assertFalse(list.contains(organization1));
+    }
+
+    @Test
+    @Order(2)
+    void existsOrganization() throws Exception {
+        String baseUri = "/api/organizations/exist/";
+        get(baseUri+organization1.getId(),200, "true");
+        get(baseUri+organization2.getId(),200, "true");
+        get(baseUri+"noOrganization",200, "false");
 
     }
 
     @Test
-    void deleteOrganization() {
-    }
-
-    @Test
-    void getByUser() {
-    }
-
-    @Test
-    void getUsers() {
-    }
-
-    @Test
-    void addCollaborator() {
-    }
-
-    @Test
-    void addMember() {
-    }
-
-    @Test
-    void removeMember() {
-    }
-
-    @Test
-    void listOfOrganizationOfUser() {
-    }
-
-    @Test
-    void existsOrganization() {
-    }
-
-    @Test
-    void modifyOrganization() {
+    @Order(2)
+    void modifyOrganization() throws Exception {
+        String uri = "/api/organizations/modify";
+        Organization organization = new Organization("name", "description", "test@test.com");
+        organization.setId("fakeId");
+        put(uri,organization,404,"Nessuna organizzazione");
+        String oldDescription = organization1.getDescription();
+        organization1.setDescription("nuova descrizione");
+        put(uri,organization1,200,organization1,Organization.class);
+        organization1.setDescription(oldDescription);
+        put(uri,organization1,200,organization1,Organization.class);
     }
 }

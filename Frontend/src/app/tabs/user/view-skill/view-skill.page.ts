@@ -13,46 +13,40 @@ import { GlobalsService } from 'src/app/services/globals.service';
 })
 export class ViewSkillPage {
 
-  listSkills:Skill[] = new Array();
+  listSkills: Skill[] = new Array();
   page = 0;
-  textNoSkill="Nessuna skill disponibile";  
+  textNoSkill = "Nessuna skill disponibile";
 
   constructor(
-    private titleService: Title,
     private http: HttpClient,
     public data: DataService,
-    public menuCtrl:MenuController,
-    private navCtrl:NavController,
-    private globals:GlobalsService,
-    private alertCtrl:AlertController
-    ) {
+    public menuCtrl: MenuController,
+    private navCtrl: NavController,
+    private globals: GlobalsService
+  ) {
     this.loadSkill();
-    this.titleService.setTitle("viewSkill");
   }
 
   // metodo per richiedere una pagina di elementi
-  loadSkill(event?){
-    this.http.get(this.globals.getUserSkills+this.data.userMail)
-    .subscribe(res => {
-      const toAdd:Skill[] = res as Skill[];
-      toAdd.forEach(skill=>this.listSkills.push(skill));
-      if(event){
-        event.target.complete();
-      }
-    }, 
-    err => { 
-      console.log('oops some error in select org'); 
-    });
+  loadSkill(event?) {
+    this.http.get(this.globals.getUserSkills + this.data.user.mail)
+      .subscribe(
+        res => {
+          const toAdd: Skill[] = res as Skill[];
+          toAdd.forEach(skill => this.listSkills.push(skill));
+          if (event) {
+            event.target.complete();
+          }
+        },
+        err => {
+          console.log('oops some error in select org');
+        }
+      );
   }
 
-  loadMore(event: any){
-        this.page++;
-        this.loadSkill(event);
-  }
-
-  onBack(){
-    this.menuCtrl.enable(true);
-    this.navCtrl.navigateBack(["/home"], { queryParams: { 'refresh': 1 } })
+  loadMore(event: any) {
+    this.page++;
+    this.loadSkill(event);
   }
 
 }

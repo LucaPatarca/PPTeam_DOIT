@@ -2,16 +2,21 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,6 +44,15 @@ public class ControllerTest {
     protected <T> Set<T> toObjectSet(String json, Class<T> clazz) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(json, objectMapper.getTypeFactory().constructCollectionType(Set.class,clazz));
+    }
+
+    protected <T> Page<T> toObjectPage(String json, Class<T> clazz) throws JsonProcessingException, JSONException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JSONObject jsonObject = new JSONObject(json);
+        assertTrue(jsonObject.has("content"));
+        List<T> list = objectMapper.readValue(jsonObject.getJSONArray("content").toString(),
+                objectMapper.getTypeFactory().constructCollectionType(List.class,clazz));
+        return new PageImpl<>(list);
     }
 
     protected String get(String uri, int expectedStatus, String expectedContent) throws Exception {
@@ -71,7 +85,8 @@ public class ControllerTest {
         int status = mvcResult.getResponse().getStatus();
         assertEquals(expectedStatus, status);
         String content = mvcResult.getResponse().getContentAsString();
-        assertTrue(content.contains(expectedContent));
+        if(expectedContent != null)
+            assertTrue(content.contains(expectedContent));
         return content;
     }
 

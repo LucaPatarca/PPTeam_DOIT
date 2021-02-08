@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button (click)="onBack()"></ion-back-button>
+      <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Create organization</ion-title>
+    <ion-title>Create Organization</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -29,12 +29,5 @@
   </ng-container>
     <ion-button color="primary" class="submit-btn" expand="block" type="submit" [disabled]="!validations_form.valid">Submit data</ion-button>
   </form>
-  <div class="row error-project">
-     <div class="col">
-         <div class="text-center">
-             <h5 style="text-align: center;">{{organization_already_exists}}</h5>
-         </div>
-     </div>
- </div>
  
 </ion-content>

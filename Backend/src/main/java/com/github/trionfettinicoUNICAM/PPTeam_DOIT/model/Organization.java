@@ -3,9 +3,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Represents a group of {@link User}s who works together on a list of {@link Project}s. An organization
@@ -13,8 +11,6 @@ import java.util.Set;
  */
 @Document(collection = "organization")
 public class Organization {
-
-    // TODO: 10/12/20 scrivere il javadoc di questi metodi (lasciati indietro perche comunque si spiegano gia bene da soli)
 
     @Id
     private String id;
@@ -30,6 +26,14 @@ public class Organization {
         this.membersMails = new HashSet<>();
         if(creatorMail.length() == 0) throw new IllegalArgumentException("creatorMail is empty");
         this.membersMails.add(creatorMail);
+    }
+
+    public Organization(){
+        this.name = "";
+        this.id = "";
+        this.description = "";
+        this.membersMails = new HashSet<>();
+        this.creatorMail = "";
     }
 
     public void addMember(String expertMail) {
@@ -57,6 +61,7 @@ public class Organization {
         Objects.requireNonNull(membersMails, "membersMails is null");
         for(String s: membersMails) if(s.length() == 0) throw new IllegalArgumentException("membersMails contain a empty memberMail");
         this.membersMails=membersMails;
+        List<String> lista = new ArrayList<>();
     }
 
     public String getName() {
@@ -64,7 +69,7 @@ public class Organization {
     }
 
     public void setName(String name) throws IllegalArgumentException {
-        if(name.length() == 0) throw new IllegalArgumentException("name is empty");
+        if(name.isBlank()) throw new IllegalArgumentException("name is empty");
         this.name=name;
     }
 
@@ -73,7 +78,7 @@ public class Organization {
     }
 
     public void setDescription(String description) throws IllegalArgumentException {
-        if(description.length() == 0) throw new IllegalArgumentException("description is empty");
+        if(description.isBlank()) throw new IllegalArgumentException("description is empty");
         this.description=description;
     }
 
@@ -82,7 +87,7 @@ public class Organization {
     }
 
     public void setCreatorMail(String creatorMail) throws IllegalArgumentException {
-        if(creatorMail.length() == 0) throw new IllegalArgumentException("creatorMail is empty");
+        if(creatorMail.isBlank()) throw new IllegalArgumentException("creatorMail is empty");
         this.creatorMail=creatorMail;
     }
 

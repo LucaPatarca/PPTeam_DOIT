@@ -26,10 +26,6 @@ export class AppComponent {
     private dataService:DataService,
     private alertCtrl:AlertController
   ) {
-    if(this.dataService.getUser()!="")
-      this.isLog = true;
-    else
-      this.isLog = false;
     this.initializeApp();
   }
 
@@ -76,7 +72,7 @@ export class AppComponent {
   }
 
   async quitFromOrg(){
-    this.dataService.quitFromOrg();
+    this.dataService.quitFromOrganization();
     const alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
       header: 'Log out',
@@ -92,7 +88,7 @@ export class AppComponent {
   }
 
   async logOutUser(){
-    this.dataService.removeUser();
+    this.dataService.logout();
     const alert = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
       header: 'Perfetto',
