@@ -246,7 +246,7 @@ class OrganizationsControllerTest extends ControllerTest{
     @Test
     @Order(2)
     void modifyOrganization() throws Exception {
-        String uri = "/api/organizations/modify";
+        String uri = "/api/organizations/update";
         Organization organization = new Organization("name", "description", "test@test.com");
         organization.setId("fakeId");
         put(uri,organization,404,"Nessuna organizzazione");

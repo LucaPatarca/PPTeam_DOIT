@@ -97,7 +97,7 @@ public class UsersControllerTest extends ControllerTest {
     @Order(2)
     void modifyUser() throws Exception {
         //should modify existing users
-        String uri = "/api/users/modify";
+        String uri = "/api/users/update";
         user.setName("newName");
         user.setExpert(new Skill("skill99"),"fakeOrgId");
         user.getSkills().remove(skill3);
