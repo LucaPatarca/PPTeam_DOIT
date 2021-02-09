@@ -60,48 +60,42 @@ public class ProjectsRestController implements ProjectsController {
     @Override
     @PreAuthorize("permitAll")
     @PostMapping("/addNeededSkill/{projectId}")
-    public boolean addNeededSkill(@PathVariable String projectId, @RequestBody String skillName){
-        // TODO: 21/01/2021 implementare
-        return false;
+    public boolean addNeededSkill(@PathVariable String projectId, @RequestBody String skillName) throws EntityNotFoundException{
+        return manager.addNeededSkill(projectId, skillName);
     }
 
     @Override
     @PreAuthorize("permitAll")
     @PostMapping("/removeNeededSkill/{projectId}")
-    public boolean removeNeededSkill(@PathVariable String projectId, @RequestBody String skillName){
-        // TODO: 21/01/2021 implementare
-        return false;
+    public boolean removeNeededSkill(@PathVariable String projectId, @RequestBody String skillName) throws EntityNotFoundException{
+        return manager.removeNeededSkill(projectId, skillName);
     }
 
     @Override
     @PreAuthorize("permitAll")
     @PostMapping("/submit/{projectId}/{userMail}")
-    public boolean submit(@PathVariable String projectId, @PathVariable String userMail, @RequestBody Role role){
-        // TODO: 21/01/2021 implementare
-        return false;
+    public boolean submit(@PathVariable String projectId, @PathVariable String userMail, @RequestBody Role role) throws EntityNotFoundException{
+        return manager.submit(projectId, userMail, role);
     }
 
     @Override
     @PreAuthorize("permitAll")
     @PostMapping("/acceptCandidate/{projectId}")
-    public boolean acceptCandidate(@PathVariable String projectId,@RequestBody Role userRole){
-        // TODO: 21/01/2021 implementare
-        return false;
+    public boolean acceptCandidate(@PathVariable String projectId,@RequestBody Role userRole) throws EntityNotFoundException{
+        return manager.acceptCandidate(projectId, userRole);
     }
 
     @Override
     @PreAuthorize("permitAll")
     @PostMapping("/rejectCandidate/{projectId}")
-    public boolean rejectCandidate(@PathVariable String projectId, @RequestBody Role userRole){
-        // TODO: 21/01/2021 implementare
-        return false;
+    public boolean rejectCandidate(@PathVariable String projectId, @RequestBody Role userRole) throws EntityNotFoundException{
+        return manager.rejectCandidate(projectId, userRole);
     }
 
     @Override
     @PreAuthorize("permitAll")
     @GetMapping("/getSubmissions/{userMail}")
-    public List<Role> getUserSubmissions(@PathVariable String userMail){
-        // TODO: 21/01/2021 implementare
-        return null;
+    public List<Role> getUserSubmissions(@PathVariable String userMail) throws EntityNotFoundException{
+        return manager.getUserSubmissions(userMail);
     }
 }

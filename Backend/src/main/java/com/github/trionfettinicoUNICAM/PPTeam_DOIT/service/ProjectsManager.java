@@ -3,6 +3,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Role;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.parameters.P;
@@ -60,4 +61,16 @@ public interface ProjectsManager extends EntityManager<Project, String>,BasicJso
     boolean existsSignature(String projectSignature);
 
     List<Project> findByOrganizationId(String organizationId);
+
+    boolean addNeededSkill(String projectId, String skillName) throws EntityNotFoundException;
+
+    boolean removeNeededSkill(String projectId, String skillName) throws EntityNotFoundException;
+
+    boolean submit(String projectId, String userMail, Role role) throws EntityNotFoundException;
+
+    boolean acceptCandidate(String projectId, Role userRole) throws EntityNotFoundException;
+
+    boolean rejectCandidate(String projectId, Role userRole) throws EntityNotFoundException;
+
+    List<Role> getUserSubmissions(String userMail) throws EntityNotFoundException;
 }

@@ -67,12 +67,4 @@ public class UsersRestController implements UsersController {
         return manager.existSkill(new Skill(skill),userEmail);
     }
 
-    @Override
-    @PreAuthorize("permitAll")
-    @PostMapping("/addCollaborator/{organizationId}/{userMail}/{skillName}")
-    public boolean addCollaborator(@PathVariable String organizationId, @PathVariable String userMail, @PathVariable String skillName) throws EntityNotFoundException {
-        // TODO: 08/02/2021 implementare
-        return false;
-    }
-
 }

@@ -11,7 +11,4 @@ public interface UsersController extends EntityController<User, String> {
     Set<Skill> getUserSkill(String userEmail) throws EntityNotFoundException;
 
     boolean existSkill(String skill, String userEmail) throws EntityNotFoundException;
-
-    boolean addCollaborator(String organizationId, String userMail, String skillName) throws EntityNotFoundException;
-
 }
