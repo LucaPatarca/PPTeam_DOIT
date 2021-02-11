@@ -11,7 +11,8 @@
   <form [formGroup]="validations_form" (ngSubmit)="save()">
     <ion-item>
       <ion-label position="floating" color="primary">Title</ion-label>
-      <ion-input type="text" formControlName="title" [(ngModel)]="title" placeholder={{organization.name}}></ion-input>
+      <ion-input type="text" formControlName="title" [(ngModel)]="title"
+        placeholder="{{organization != null ? organization.name : 'name'}}"></ion-input>
     </ion-item>
     <ng-container *ngFor="let validation of validation_messages.title">
       <div class="error-message"
@@ -22,7 +23,7 @@
     <ion-item>
       <ion-label position="floating" color="primary">Description</ion-label>
       <ion-input type="text" formControlName="description" [(ngModel)]="description"
-        placeholder={{organization.description}}></ion-input>
+        placeholder="{{ organization != null ? organization.description : 'description'}}"></ion-input>
     </ion-item>
     <ng-container *ngFor="let validation of validation_messages.description">
       <div class="error-message"

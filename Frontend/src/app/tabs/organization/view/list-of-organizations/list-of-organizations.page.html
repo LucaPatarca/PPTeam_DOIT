@@ -8,30 +8,50 @@
         <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>List of Organizations</ion-title>
+    <ion-title>Organizations</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
 
-  <div class="row">
+  <ion-refresher slot="fixed" (ionRefresh)="reloadOrganizations($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- quando il caricamento è completato ma non ci sono organizzazioni disponibili -->
+  <div class="row" *ngIf="(organizations.length == 0) && !loading">
     <div class="col">
       <div class="text-center">
-        <h5 *ngIf="data.isOrganizationEmpty()" style="text-align: center;">{{textNoOrganizations}}</h5>
+        <h5 style="text-align: center;">{{textNoOrganizations}}</h5>
       </div>
     </div>
   </div>
+
   <!-- per ogni elemento presente in organizations creo una ion-card-->
-  <ion-card *ngFor="let organization of data.listOrganization">
-    <ion-item (click)="viewOrganization(organization.id)" routerDirection="forward">
+  <div *ngIf="!loading">
+    <ion-card *ngFor="let organization of organizations">
+      <ion-item (click)="viewOrganization(organization.id)" routerDirection="forward">
+        <ion-label>
+          <h2 text-capitalize>{{organization.name}}</h2>
+          <p>{{organization.description}}</p>
+        </ion-label>
+      </ion-item>
+    </ion-card>
+  </div>
+
+  <!-- mentre sta caricando le prime organizzazioni -->
+  <div *ngIf="loading">
+    <ion-card *ngFor="let item of [].constructor(10)">
+    <ion-item>
       <ion-label>
-        <h2 text-capitalize>{{organization.name}}</h2>
-        <p>{{organization.description}}</p>
+        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
       </ion-label>
     </ion-item>
   </ion-card>
+  </div>
 
-  <!-- comando per creare uno scroll infinito-->
+  <!-- per creare uno scroll infinito-->
   <ion-infinite-scroll threshold="5%" (ionInfinite)="loadMore($event)">
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more organizations ...">
     </ion-infinite-scroll-content>

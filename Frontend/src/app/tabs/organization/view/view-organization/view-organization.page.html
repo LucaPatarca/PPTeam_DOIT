@@ -3,24 +3,38 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-   <ion-title>View Organization</ion-title>
+    <ion-title *ngIf="organization!=null">{{organization.name}}</ion-title>
+    <ion-skeleton-text *ngIf="organization==null" animated style="width: 60%;"></ion-skeleton-text>
+    <ion-buttons slot="end">
+      <ion-button (click)="showActionSheet()">
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
- </ion-header>
- 
- <ion-content fullscreen>
- 
-  <ion-card>
-   <ion-item>
-     <ion-label>
-       <h2 text-capitalize>{{organization.name}}</h2>
-       <p>{{organization.description}}</p>
-       <p>creator : {{organization.creatorMail}}</p>
-       <p>member : </p>
-        <p  *ngFor="let memberMail of organization.membersMails">{{memberMail}}</p>
-     </ion-label>
-   </ion-item>
+</ion-header>
+
+<ion-content fullscreen>
+  
+  <ion-refresher slot="fixed" (ionRefresh)="reload($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <!-- Elemento mostrato a fine caricamento -->
+  <ion-card *ngIf="organization != null" style="padding: 8px;">
+    <p>{{organization.description}}</p>
+    <p>Creator : {{organization.creatorMail}}</p>
+    <p>Members : </p>
+    <p *ngFor="let memberMail of organization.membersMails">{{memberMail}}</p>
   </ion-card>
- </ion-content>
- <ion-button *ngIf="organization.creatorMail==data.userMail" (click)="modifyOrganization()">modify</ion-button>
- <ion-button *ngIf="organization.creatorMail==data.userMail && data.getIsLogOrg()" (click)="addExpert()" >Add Expert</ion-button>
- <ion-button *ngIf="organization.creatorMail==data.userMail" (click)="deleteOrganization()" >delete</ion-button>
+
+  <!-- Elemento mostrato durante il caricamento -->
+  <ion-card *ngIf="organization == null">
+    <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+    <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+  </ion-card>
+
+</ion-content>

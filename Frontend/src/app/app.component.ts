@@ -1,6 +1,6 @@
 import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
-import { MenuController, NavController, AlertController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 
 
 import { Platform } from '@ionic/angular';
@@ -21,10 +21,9 @@ export class AppComponent {
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private menuCtrl:MenuController,
     private navCtrl:NavController,
     private dataService:DataService,
-    private alertCtrl:AlertController
+    private toastCtrl:ToastController
   ) {
     this.initializeApp();
   }
@@ -39,12 +38,10 @@ export class AppComponent {
   
 
   createUser(){
-    this.menuCtrl.enable(false);
     this.navCtrl.navigateForward(['/create-user'], { queryParams: { 'refresh': 1 } });
   }
 
   logInUser(){
-    this.menuCtrl.enable(false);
     this.navCtrl.navigateForward(['/login-user'], { queryParams: { 'refresh': 1 } });
   }
 
@@ -53,7 +50,6 @@ export class AppComponent {
   }
 
   createOrganization(){
-    this.menuCtrl.enable(false);
     this.navCtrl.navigateForward(['/create-organization'], { queryParams: { 'refresh': 1 } });
   }
 
@@ -62,25 +58,22 @@ export class AppComponent {
   }
 
   createProject(){
-    this.menuCtrl.enable(false);
     this.navCtrl.navigateForward(['/create-project'], { queryParams: { 'refresh': 1 } });
   }
 
   selectOrganizationCreator(){
-    this.menuCtrl.enable(false);
     this.navCtrl.navigateForward(['select-organization'], { queryParams: { 'refresh': 1 } });
   }
 
   async quitFromOrg(){
+    const orgName = this.dataService.getSelectedOrganization().name;
     this.dataService.quitFromOrganization();
-    const alert = await this.alertCtrl.create({
-      cssClass: 'my-custom-class',
-      header: 'Log out',
-      message: 'LogOut da Organizzazione.',
-      buttons: ['OK']
+    const toast = await this.toastCtrl.create({
+      message: 'Logout da '+orgName+' eseguito',
+      duration: 2000
     });
   
-    await alert.present();
+    toast.present();
   }
 
   home(){
@@ -89,14 +82,12 @@ export class AppComponent {
 
   async logOutUser(){
     this.dataService.logout();
-    const alert = await this.alertCtrl.create({
-      cssClass: 'my-custom-class',
-      header: 'Perfetto',
-      message: 'LogOut eseguito.',
-      buttons: ['OK']
+    const toast = await this.toastCtrl.create({
+      message: 'Logout eseguito',
+      duration: 2000
     });
   
-    await alert.present();
+    toast.present();
     this.navCtrl.navigateRoot(['/home']);
   }
 

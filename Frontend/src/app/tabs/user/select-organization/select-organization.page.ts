@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { MenuController, NavController, AlertController, ToastController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
+import { RestService } from 'src/app/services/rest.service';
 
 @Component({
   selector: 'app-select-organization',
@@ -11,60 +12,59 @@ import { GlobalsService } from 'src/app/services/globals.service';
   styleUrls: ['./select-organization.page.scss'],
 })
 export class SelectOrganizationPage {
-  listOrganization: Organization[] = new Array();
+  organizations: Organization[] = new Array();
   page = 0;
   textNoOrganizations = "Nessuna Organizzazione disponibile";
+  loading: boolean;
 
   constructor(
-    private http: HttpClient,
     public data: DataService,
     public menuCtrl: MenuController,
     private navCtrl: NavController,
-    private globals: GlobalsService,
-    private toastCtrl: ToastController,
+    private restService: RestService,
   ) {
-    this.loadOrganizations();
+    this.loading = true;
+    this.organizations = new Array();
+    this.loadOrganizations().then(
+      ()=>{
+        this.loading = false;
+      }
+    );
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.menuCtrl.enable(true);
   }
 
   // metodo per richiedere una pagina di elementi
-  loadOrganizations(event?) {
-    this.http.get(this.globals.getOrganizationUserCreatorApiUrl + this.data.getUser().mail)
-      .subscribe(
-        res => {
-          this.data.addUserOrganization(res as Organization);
-          if (event) {
-            event.target.complete();
-          }
-        },
-        err => {
-          console.log('oops some error in select org');
-        }
-      );
+  async loadOrganizations() {
+    const newOrganizations = await this.restService.getUserOrganizations(this.data.user.mail);
+    this.organizations = this.organizations.concat(newOrganizations);
   }
 
-  loadMore(event: any) {
+  async loadMore(event: any) {
     this.page++;
-    this.loadOrganizations(event);
+    this.loadOrganizations().then(
+      ()=>{
+        if(event){
+          event.target.complete();
+        }
+      }
+    );
   }
 
+  async reload(event?){
+    this.page = 0;
+    const newOrganizations = await this.restService.getUserOrganizations(this.data.user.mail);
+    this.organizations = newOrganizations;
+    event.target.complete();
+  }
 
   // metodo per aprire la visualizzazione di una pagina (gli si passa un organization)
   async selectOrg(organization: Organization) {
     this.data.selectOrganization(organization);
-    const toast = await this.toastCtrl.create({
-      message: 'Organizzazione Selezionata.',
-      duration: 2000
-    });
-    toast.present();
+    this.restService.presentToast("Organizzazione "+ organization.name + " selezionata");
 
-    this.goBack();
-  }
-
-  goBack() {
     this.navCtrl.navigateBack(["/home"], { queryParams: { 'refresh': 1 } })
   }
 

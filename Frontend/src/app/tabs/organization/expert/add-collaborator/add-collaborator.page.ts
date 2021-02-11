@@ -1,9 +1,8 @@
 import { NavController } from '@ionic/angular';
-import { DataService } from 'src/app/services/data.service';
-import { GlobalsService } from './../../../../services/globals.service';
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { User } from 'src/app/model/user';
+import { RestService } from 'src/app/services/rest.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-add-collaborator',
@@ -13,29 +12,26 @@ import { User } from 'src/app/model/user';
 export class AddCollaboratorPage {
 
   users:User[];
+  organizationId: string;
 
   constructor(
-    private http:HttpClient,
-    private globals:GlobalsService,
-    private data:DataService,
-    private navCtrl:NavController
+    private restService: RestService,
+    private navCtrl:NavController,
+    private route: ActivatedRoute,
   ) { 
     this.users = new Array();
+    this.organizationId = this.route.snapshot.params["id"];
     this.loadUser();
   }
 
-  loadUser(event?){
-    this.http.get(this.globals.getOrganizationMember+this.data.selectedOrganization)
-    .subscribe(res => {
-      const toAdd:User[] = res as User[];
-      toAdd.forEach(user=>this.users.push(user));
-      if(event){
-        event.target.complete();
-      }
-    });
+  async loadUser(event?){
+    this.users = await this.restService.getOrganizationMembers(this.organizationId);
+    if(event){
+      event.target.complete();
+    }
   }
 
   addSkill(user:User){
-    this.navCtrl.navigateForward(["/add-skill",{"userMail":user.mail}]);
+    this.navCtrl.navigateForward(["/add-skill",{"userMail":user.mail, "organizationId": this.organizationId}]);
   }
 }

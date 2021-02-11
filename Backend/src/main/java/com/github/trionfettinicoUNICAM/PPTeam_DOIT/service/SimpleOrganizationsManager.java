@@ -108,13 +108,14 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
         return organizationRepository.findByCreatorMail(userMail);
     }
 
-
-    @Override
-    public Page<String> getPage(int page, int size) {
+    public Page<BasicOrganizationInformation> getPage(int page, int size) throws EntityNotFoundException {
         Page<Organization> projectPage = organizationRepository.findAll(PageRequest.of(page, size));
-        List<String> basicOrganizationInformation = new java.util.ArrayList<>(Collections.emptyList());
+        List<BasicOrganizationInformation> basicOrganizationInformation = new java.util.ArrayList<>(Collections.emptyList());
         for(Organization organization : projectPage){
-            basicOrganizationInformation.add(getBasicJsonInformation(organization));
+            User creator = userRepository.findById(organization.getCreatorMail())
+                    .orElseThrow(()->
+                            new EntityNotFoundException("Nessun utente trovato con la mail: "+organization.getCreatorMail()));
+            basicOrganizationInformation.add(new BasicOrganizationInformation(organization,creator));
         }
         return new PageImpl<>(basicOrganizationInformation);
     }
@@ -159,27 +160,5 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
         organization.addMember(memberMail);
         Organization savedOrg = organizationRepository.save(organization);
         return organization.equals(savedOrg);
-    }
-
-    @Override
-    public String getBasicJsonInformation(Organization object) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("{");
-        builder.append("'id':");
-        builder.append("'" + object.getId() + "',");
-        builder.append("'name':");
-        builder.append("'" + object.getName() + "',");
-        builder.append("'description':");
-        builder.append("'" + object.getDescription() + "',");
-        builder.append("'creatorMail':");
-        builder.append("'" + object.getCreatorMail() + "',");
-        builder.append("'creatorName':");
-        Optional<User> optionalUser = userRepository.findById(object.getCreatorMail());
-        if(optionalUser.isPresent())
-            builder.append("'" + optionalUser.get().getName() + "'");
-        else
-            builder.append("'No user found'");
-        builder.append("}");
-        return builder.toString();
     }
 }

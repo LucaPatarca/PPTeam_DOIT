@@ -5,6 +5,7 @@ import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { RestService } from 'src/app/services/rest.service';
 
 @Component({
   selector: 'app-add-skill',
@@ -13,7 +14,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AddSkillPage {
 
-  user: String;
+  userMail: string;
+  organizationId: string;
   validations_form: FormGroup;
   skill: string;
 
@@ -21,12 +23,11 @@ export class AddSkillPage {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private dataService: DataService,
-    private http: HttpClient,
-    private globals: GlobalsService,
-    private toastCtrl: ToastController,
-    private navCtrl: NavController
+    private restService: RestService,
+    private navCtrl: NavController,
   ) {
-    this.user = this.route.snapshot.params["userMail"];
+    this.userMail = this.route.snapshot.params["userMail"];
+    this.organizationId = this.route.snapshot.params["organizationId"];
     this.validations_form = this.formBuilder.group({
       skill: ['', Validators.required],
     });
@@ -41,28 +42,12 @@ export class AddSkillPage {
   addSkill() {
     const newSkill = {
       "name": this.skill,
-      "expertInOrganization": [this.dataService.selectedOrganization.id],
+      "expertInOrganization": [this.organizationId],
       "isGloballyExpert": false
     }
 
-    this.http.put(this.globals.userAddSkillCollaborator + this.dataService.selectedOrganization + "/" + this.user + "/" + newSkill.name, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
-      async res => {
-        const toast = await this.toastCtrl.create({
-          message: "Skill Aggiunta",
-          duration: 2000
-        });
-        toast.present();
-
-        this.navCtrl.navigateRoot(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
-      },
-      async err => {
-        const toast = await this.toastCtrl.create({
-          message: "Skill Aggiunta",
-          duration: 2000
-        });
-        toast.present();
-      }
-    );
+    this.restService.addCollaborator(this.organizationId,this.userMail,newSkill);
+    this.navCtrl.navigateRoot(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
   }
 
 }

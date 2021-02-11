@@ -1,10 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MenuController, NavController, ToastController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 import { Organization } from 'src/app/model/organization';
 import { DataService } from 'src/app/services/data.service';
-import { GlobalsService } from 'src/app/services/globals.service';
+import { RestService } from 'src/app/services/rest.service';
 
 @Component({
   selector: 'app-create-organization',
@@ -28,11 +27,9 @@ export class CreateOrganizationPage {
 
   constructor(private menuCtrl: MenuController,
     public formBuilder: FormBuilder,
-    private http: HttpClient,
     private dataService: DataService,
+    private restService: RestService,
     private navCtrl: NavController,
-    private globals: GlobalsService,
-    private toastCtrl: ToastController
   ) {
     this.validations_form = this.formBuilder.group({
       name: ['', Validators.required],
@@ -40,41 +37,20 @@ export class CreateOrganizationPage {
     });
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.menuCtrl.enable(false);
   }
 
-  createOrganization() {
-    // metodo per effettuare una chiamata post
-    const newOrganization = {
-      "name": this.name,
-      "description": this.description,
-      "expertsMails": [],
-      "membersMails": [],
-      "creatorMail": this.dataService.getUser(),
-      "collaboratorsMails": {},
-    }
-
-    this.http.post(this.globals.createOrganizationApiUrl, newOrganization, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
-      async res => {
-        console.log('Successfully created new organization');
-        this.dataService.addOrganization(res as Organization);
-        const toast = await this.toastCtrl.create({
-          message: 'Organizzazione Creata.',
-          duration: 2000
-        });
-        toast.present();
-
-        this.navCtrl.navigateRoot(["/home"], { queryParams: { 'refresh': 1 } });
-      },
-      async err => {
-        const toast = await this.toastCtrl.create({
-          message: err.error,
-          duration: 2000
-        });
-        toast.present();
-      }
+  async createOrganization() {
+    const newOrganization = new Organization(
+      this.name,
+      this.description,
+      this.dataService.getUser().mail
     );
+
+    this.restService.createOrganization(newOrganization);
+
+    this.navCtrl.navigateRoot(["/home"], { queryParams: { 'refresh': 1 } });
   }
 
 }

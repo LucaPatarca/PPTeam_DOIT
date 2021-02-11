@@ -23,11 +23,10 @@ export class ListOfProjectsPage {
     private navCtrl: NavController,
     private globals: GlobalsService
   ) {
-    this.data.clearProject();
     this.loadProjects();
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.menuCtrl.enable(true);
   }
 
@@ -37,7 +36,6 @@ export class ListOfProjectsPage {
       .subscribe(
         res => {
           const toAdd: Project[] = res['content'] as Project[];
-          toAdd.forEach(project => this.data.addProject(project));
           if (event) {
             event.target.complete();
           }

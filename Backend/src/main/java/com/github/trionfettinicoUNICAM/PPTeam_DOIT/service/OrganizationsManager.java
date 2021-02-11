@@ -2,6 +2,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicOrganizationInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
@@ -14,7 +15,7 @@ import java.util.List;
  * it knows how to get every organization by it's ID and can can create new organizations or 
  * delete old ones.
  */
-public interface OrganizationsManager extends EntityManager<Organization, String>,BasicJsonInformation<Organization>{
+public interface OrganizationsManager extends EntityManager<Organization, String>{
 
     /**
      * Retrieves the organization with the given ID and returns an instance of it.
@@ -52,7 +53,7 @@ public interface OrganizationsManager extends EntityManager<Organization, String
 
     List<Organization> findByCreator(String userMail);
 
-    Page<String> getPage(int page, int i);
+    Page<BasicOrganizationInformation> getPage(int page, int i) throws EntityNotFoundException;
 
     void addCollaborator(String organizationId, String userMail, Skill skill) throws EntityNotFoundException;
 

@@ -82,14 +82,4 @@ public class SimpleUsersManager implements UsersManager {
         }
         return userSkill != null && userSkill.isExpertFor(organizationId);
     }
-
-    @Override
-    public Page<String> getPage(int page, int size) {
-        return null;
-    }
-
-    @Override
-    public String getBasicJsonInformation(User object) {
-        return null;
-    }
 }

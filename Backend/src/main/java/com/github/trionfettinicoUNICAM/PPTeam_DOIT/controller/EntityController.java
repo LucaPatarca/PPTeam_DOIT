@@ -16,6 +16,4 @@ public interface EntityController <T,I>{
 
     boolean exists(I id);
 
-    Page<String> getPage(int page);
-
 }

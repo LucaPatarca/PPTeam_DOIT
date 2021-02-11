@@ -37,12 +37,8 @@ public class Organization {
     }
 
     public void addMember(String expertMail) {
-        if(expertMail.length() == 0) throw new IllegalArgumentException("expertMail is empty");
-        if(!membersMails.contains(expertMail)){
-            membersMails.add(expertMail);
-        }else{
-            throw new IllegalArgumentException("expert mail is already contained");
-        }
+        if(expertMail.isBlank()) throw new IllegalArgumentException("expertMail is empty");
+        membersMails.add(expertMail);
     }
 
     public void removeMember(String userMail) {

@@ -68,16 +68,12 @@ public class SimpleProjectsManager implements ProjectsManager{
 
     @Override
     public Page<String> getPage(int page, int size) {
-        Page<Project> projectPage = projectRepository.findAll(PageRequest.of(page, size));
-        List<String> basicProjectInformationList = new java.util.ArrayList<>(Collections.emptyList());
-        for(Project project : projectPage){
-            basicProjectInformationList.add(getBasicJsonInformation(project));
-        }
-        return new PageImpl<>(basicProjectInformationList);
-    }
-
-    @Override
-    public String getBasicJsonInformation(Project object) {
+//        Page<Project> projectPage = projectRepository.findAll(PageRequest.of(page, size));
+//        List<String> basicProjectInformationList = new java.util.ArrayList<>(Collections.emptyList());
+//        for(Project project : projectPage){
+//            basicProjectInformationList.add(getBasicJsonInformation(project));
+//        }
+//        return new PageImpl<>(basicProjectInformationList);
         return null;
     }
 

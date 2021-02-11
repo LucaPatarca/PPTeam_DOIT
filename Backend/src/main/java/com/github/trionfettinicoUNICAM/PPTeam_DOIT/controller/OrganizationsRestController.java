@@ -2,6 +2,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicOrganizationInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
@@ -40,16 +41,16 @@ public class OrganizationsRestController implements OrganizationsController {
     @PreAuthorize("permitAll")
     @DeleteMapping(value = "/{organizationID}")
     public boolean delete(@PathVariable String organizationID) throws EntityNotFoundException { return manager.delete(organizationID); }
+    // TODO: 10/02/2021  non rimuove le skill da collaboratore
 
     @Override
     @PreAuthorize("permitAll")
     @GetMapping("/exist/{organizationID}")
     public boolean exists(@PathVariable String organizationID) { return manager.exists(organizationID); }
 
-    @Override
     @PreAuthorize("permitAll")
     @GetMapping("/list/{page}")
-    public Page<String> getPage(@PathVariable int page){
+    public Page<BasicOrganizationInformation> getPage(@PathVariable int page) throws EntityNotFoundException {
         return manager.getPage(page, 10);
     }
 

@@ -6,7 +6,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
 
 
-public interface UsersManager extends EntityManager<User, String>,BasicJsonInformation<User>{
+public interface UsersManager extends EntityManager<User, String>{
     User getInstance(String userMail) throws EntityNotFoundException;
     User create(User user) throws IdConflictException;
     boolean delete(String mail) throws EntityNotFoundException;

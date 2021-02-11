@@ -45,7 +45,6 @@ public class UsersRestController implements UsersController {
     @GetMapping("/exist/{userID}")
     public boolean exists(@PathVariable String userID) { return manager.exists(userID); }
 
-    @Override
     @PreAuthorize("permitAll")
     @GetMapping("/list/{page}")
     public Page<String> getPage(@PathVariable int page) {

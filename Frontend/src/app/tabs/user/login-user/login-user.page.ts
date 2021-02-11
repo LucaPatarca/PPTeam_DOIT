@@ -1,10 +1,8 @@
 import { DataService } from 'src/app/services/data.service';
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MenuController, NavController, ToastController } from '@ionic/angular';
-import { GlobalsService } from 'src/app/services/globals.service';
-import { AlertController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
+import { RestService } from 'src/app/services/rest.service';
 
 
 
@@ -26,11 +24,9 @@ export class LoginUserPage {
 
   constructor(private menuCtrl: MenuController,
     public formBuilder: FormBuilder,
-    private http: HttpClient,
-    private globals: GlobalsService,
     private navCtrl: NavController,
     private dataService: DataService,
-    private toastCtrl: ToastController,
+    private restService: RestService,
   ) {
     this.validations_form = this.formBuilder.group({
       email: ['', Validators.compose([
@@ -40,42 +36,17 @@ export class LoginUserPage {
     });
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.menuCtrl.enable(false);
   }
 
   onSubmit() {
-    this.http.get(this.globals.userExistApiUrl + this.email).subscribe(
-      async res => {
-        if (res == true) {
-          this.dataService.setUser(this.email);
-
-          const toast = await this.toastCtrl.create({
-            message: 'Accesso eseguito come ' + this.email,
-            duration: 2000
-          });
-          toast.present();
-
-          this.goBack();
-        } else {
-          const toast = await this.toastCtrl.create({
-            message: "l'email non esiste",
-            duration: 2000
-          });
-          toast.present();
-        }
-      },
-      async err => {
-        const toast = await this.toastCtrl.create({
-          message: err.error,
-          duration: 2000
-        });
-        toast.present();
+    this.restService.getUser(this.email).then(
+      user=>{
+        this.dataService.setUser(user);
+        this.restService.presentToast("Accesso eseguito come "+user.name);
       }
     );
-  }
-
-  goBack() {
     this.navCtrl.navigateBack(['/home'], { queryParams: { 'refresh': 1 } });
   }
 

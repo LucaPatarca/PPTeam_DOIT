@@ -43,10 +43,9 @@ export class ModifyProjectPage {
       description: [Validators.required],
     });
     const id = this.route.snapshot.params['id'];
-    this.project = dataService.getProject(id);
   }
 
-  ionViewWillEnter() {
+  ionViewDidlEnter() {
     this.menuCtrl.enable(false);
   }
 
@@ -57,7 +56,6 @@ export class ModifyProjectPage {
       .subscribe(
         async res => {
           console.log('Successfully saved Project with Id: ' + this.project.id);
-          this.dataService.updateProject(res as Project);
           const toast = await this.toastCtrl.create({
             message: 'Progetto Modificato.',
             duration: 2000

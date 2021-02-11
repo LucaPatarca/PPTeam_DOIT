@@ -1,8 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MenuController, NavController } from '@ionic/angular';
-import { DataService } from 'src/app/services/data.service';
-import { GlobalsService } from 'src/app/services/globals.service';
+import { OrganizationInformation } from 'src/app/model/organization-information';
+import { RestService } from 'src/app/services/rest.service';
 
 @Component({
   selector: 'app-list-of-organizations',
@@ -12,31 +11,42 @@ import { GlobalsService } from 'src/app/services/globals.service';
 export class ListOfOrganizationsPage {
   page = 0;
   textNoOrganizations = "Nessuna Organizzazione disponibile";
+  organizations: Array<OrganizationInformation>;
+  loading: boolean;
 
   constructor(
-    private http: HttpClient,
-    public data: DataService,
     public menuCtrl: MenuController,
     private navCtrl: NavController,
-    private globals: GlobalsService
+    private restService: RestService,
   ) {
-    this.data.clearOrganizations();
-    this.loadOrganizations();
+    this.organizations = new Array();
+    this.loading = true;
+    this.loadOrganizations().then(
+      ()=>{
+        this.loading = false;
+      }
+    );
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.menuCtrl.enable(true);
   }
 
   // metodo per richiedere una pagina di elementi
-  loadOrganizations(event?) {
-    this.http.get(this.globals.listOfOrganizationsApiUrl + this.page)
-      .subscribe(res => {
-        this.data.addOrganization(res['content']);
-        if (event) {
-          event.target.complete();
-        }
-      });
+  async loadOrganizations(event?) {
+    const newOrganizations = await this.restService.getOrganizationPage(this.page);
+    this.organizations = this.organizations.concat(newOrganizations);
+    if (event) {
+      event.target.complete();
+    }
+  }
+
+  async reloadOrganizations(event?){
+    this.page = 0;
+    const newOrganizations = await this.restService.getOrganizationPage(this.page);
+    this.organizations = newOrganizations;
+    event.target.complete();
+    
   }
 
   loadMore(event: any) {

@@ -13,52 +13,52 @@
           </ion-menu-toggle>
           <ion-menu-toggle auto-hide="false">
             <ion-item (click)="listProjects()">
-              <ion-label>List of projects</ion-label>
+              <ion-label>Projects List</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle *ngIf="dataService.isLog && dataService.isLogOrg" auto-hide="false">
+          <ion-menu-toggle *ngIf="dataService.isUserLogged() && dataService.isOrganizationSelected()" auto-hide="false">
             <ion-item (click)="createProject()">
-              <ion-label>Create project</ion-label>
+              <ion-label>Create Project</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle *ngIf="dataService.isLog && !dataService.isLogOrg" auto-hide="false">
+          <ion-menu-toggle *ngIf="dataService.isUserLogged() && !dataService.isOrganizationSelected()" auto-hide="false">
             <ion-item (click)="createOrganization()">
-              <ion-label>Create organization</ion-label>
+              <ion-label>Create Organization</ion-label>
             </ion-item>
           </ion-menu-toggle>
           <ion-menu-toggle auto-hide="false">
             <ion-item (click)="listOrganizations()">
-              <ion-label>List of organizations</ion-label>
+              <ion-label>Organizations List</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle *ngIf="dataService.isLog" auto-hide="false">
+          <ion-menu-toggle *ngIf="dataService.isUserLogged()" auto-hide="false">
             <ion-item (click)="viewSkill()">
-              <ion-label>View Skill</ion-label>
+              <ion-label>User Skills</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle *ngIf="dataService.isLog && !dataService.isLogOrg" auto-hide="false">
+          <ion-menu-toggle *ngIf="dataService.isUserLogged() && !dataService.isOrganizationSelected()" auto-hide="false">
             <ion-item (click)="selectOrganizationCreator()">
-              <ion-label>Select OrganizationC</ion-label>
+              <ion-label>Select Organization</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle *ngIf="dataService.isLog && dataService.isLogOrg" auto-hide="false">
+          <ion-menu-toggle *ngIf="dataService.isUserLogged() && dataService.isOrganizationSelected()" auto-hide="false">
             <ion-item (click)="quitFromOrg()">
-              <ion-label>Quit from OrganizationC</ion-label>
+              <ion-label>Quit from Organization</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle *ngIf="!dataService.isLog" auto-hide="false">
+          <ion-menu-toggle *ngIf="!dataService.isUserLogged()" auto-hide="false">
             <ion-item (click)="createUser()">
-              <ion-label>Create User</ion-label>
+              <ion-label>Register</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle *ngIf="!dataService.isLog" auto-hide="false">
+          <ion-menu-toggle *ngIf="!dataService.isUserLogged()" auto-hide="false">
             <ion-item (click)="logInUser()">
-              <ion-label>LogIn User</ion-label>
+              <ion-label>Login</ion-label>
             </ion-item>
           </ion-menu-toggle>
-          <ion-menu-toggle *ngIf="dataService.isLog" auto-hide="false">
+          <ion-menu-toggle *ngIf="dataService.isUserLogged()" auto-hide="false">
             <ion-item (click)="logOutUser()">
-              <ion-label>LogOut User</ion-label>
+              <ion-label>Logout</ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>

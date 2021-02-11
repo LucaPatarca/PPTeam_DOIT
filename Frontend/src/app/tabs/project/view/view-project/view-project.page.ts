@@ -28,7 +28,6 @@ export class ViewProjectPage {
     private toastCtrl: ToastController
   ) {
     const id = this.route.snapshot.params["id"];
-    this.project = this.data.getProject(id);
     if (this.project.closed) {
       this.isClosed = "closed";
     } else {
@@ -36,7 +35,7 @@ export class ViewProjectPage {
     }
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.menuCtrl.enable(false);
   }
 
@@ -53,7 +52,6 @@ export class ViewProjectPage {
       .subscribe(
         async res => {
           console.log('Delete successful Project with Id: ' + this.project.id);
-          this.data.removeProject(this.project);
           const toast = await this.toastCtrl.create({
             message: 'Progetto Cancellato',
             duration: 2000
@@ -76,7 +74,6 @@ export class ViewProjectPage {
       res => {
         if (res != null) {
           const reloadedProject: Project = res as Project;
-          this.data.updateProject(reloadedProject);
           this.project = reloadedProject;
           if (this.project.closed) {
             this.isClosed = "closed";

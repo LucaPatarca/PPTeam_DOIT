@@ -20,7 +20,7 @@ export class HomePage {
     });
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.menuCtrl.enable(true);
   }
 

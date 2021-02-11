@@ -45,7 +45,6 @@ public class ProjectsRestController implements ProjectsController {
     @GetMapping("/exist/{projectID}")
     public boolean exists(@PathVariable String projectID) { return manager.exists(projectID); }
 
-    @Override
     @PreAuthorize("permitAll")
     @GetMapping("/list/{page}")
     public Page<String> getPage(@PathVariable int page) { return manager.getPage(page, 10); }

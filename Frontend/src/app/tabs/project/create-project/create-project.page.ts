@@ -41,7 +41,7 @@ export class CreateProjectPage {
     });
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.menuCtrl.enable(false);
   }
 
@@ -62,7 +62,6 @@ export class CreateProjectPage {
       async res => {
         console.log('Successfully created new project');
         this.menuCtrl.enable(true);
-        this.dataService.addProject(res as Project);
         const toast = await this.toastCtrl.create({
           message: 'Progetto Creato',
           duration: 2000

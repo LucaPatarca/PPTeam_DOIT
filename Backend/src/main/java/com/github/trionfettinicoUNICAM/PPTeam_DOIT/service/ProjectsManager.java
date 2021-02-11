@@ -14,7 +14,7 @@ import java.util.List;
  * This interface is responsible for managing all projects of the application,
  * it knows how to get every project by it's ID and can perform basic operations on them.
  */
-public interface ProjectsManager extends EntityManager<Project, String>,BasicJsonInformation<Project> {
+public interface ProjectsManager extends EntityManager<Project, String> {
     /**
      * Retrieves the project associated with the given ID and returns an instance of it.
      * @param projectID the unique name of the wanted project

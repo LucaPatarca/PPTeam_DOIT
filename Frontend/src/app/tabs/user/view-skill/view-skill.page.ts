@@ -5,6 +5,7 @@ import { AlertController, MenuController, NavController } from '@ionic/angular';
 import { Skill } from 'src/app/model/skill';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
+import { RestService } from 'src/app/services/rest.service';
 
 @Component({
   selector: 'app-view-skill',
@@ -13,40 +14,46 @@ import { GlobalsService } from 'src/app/services/globals.service';
 })
 export class ViewSkillPage {
 
-  listSkills: Skill[] = new Array();
+  skills: Skill[];
   page = 0;
   textNoSkill = "Nessuna skill disponibile";
+  loading: boolean;
 
   constructor(
-    private http: HttpClient,
     public data: DataService,
     public menuCtrl: MenuController,
-    private navCtrl: NavController,
-    private globals: GlobalsService
+    private restService: RestService,
   ) {
-    this.loadSkill();
+    this.loading = true;
+    this.skills = new Array()
+    this.loadSkills().then(
+      ()=>{
+        this.loading = false;
+      }
+    );
   }
 
   // metodo per richiedere una pagina di elementi
-  loadSkill(event?) {
-    this.http.get(this.globals.getUserSkills + this.data.user.mail)
-      .subscribe(
-        res => {
-          const toAdd: Skill[] = res as Skill[];
-          toAdd.forEach(skill => this.listSkills.push(skill));
-          if (event) {
-            event.target.complete();
-          }
-        },
-        err => {
-          console.log('oops some error in select org');
-        }
-      );
+  async loadSkills(event?) {
+    const newSkills = await  this.restService.getUserSkills(this.data.user.mail);
+    this.skills = this.skills.concat(newSkills);
   }
 
-  loadMore(event: any) {
-    this.page++;
-    this.loadSkill(event);
+  async loadMore(event: any) {
+    if(!this.loading){
+      this.page++;
+      await this.loadSkills(event);
+      if (event) {
+        event.target.complete();
+      }
+    }
+  }
+
+  async reload(event?){
+    this.page=0;
+    const newSkills = await this.restService.getUserSkills(this.data.user.mail);
+    this.skills = newSkills;
+    event.target.complete();
   }
 
 }

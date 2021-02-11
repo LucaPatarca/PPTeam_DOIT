@@ -1,10 +1,9 @@
 import { Organization } from './../../../../model/organization';
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MenuController, AlertController, NavController, ToastController } from '@ionic/angular';
+import { MenuController, NavController, ActionSheetController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
-import { GlobalsService } from 'src/app/services/globals.service';
+import { RestService } from 'src/app/services/rest.service';
 
 @Component({
   selector: 'app-view-organization',
@@ -13,80 +12,102 @@ import { GlobalsService } from 'src/app/services/globals.service';
 })
 export class ViewOrganizationPage {
   organization: Organization;
+  id: string;
 
   constructor(
     private route: ActivatedRoute,
     private nav: NavController,
     public data: DataService,
     private menuCtrl: MenuController,
-    private http: HttpClient,
-    private globals: GlobalsService,
-    private toastCtrl: ToastController,
-    private alertCtrl: AlertController,
+    private restService: RestService,
+    private actionSheetCtrl: ActionSheetController,
   ) {
-    const id = this.route.snapshot.params["id"];
-    this.organization = this.data.getOrganization(id);
+    this.id = this.route.snapshot.params["id"];
+    this.organization = null;
   }
 
-  ionViewWillEnter() {
+  ionViewDidEnter() {
     this.menuCtrl.enable(false);
+    this.loadOrganization();
+  }
+
+  async loadOrganization() {
+    this.organization = await this.restService.getOrganization(this.id);
+
+  }
+
+  async reload(event?) {
+    await this.loadOrganization();
+    event.target.complete();
   }
 
   goBack() {
     this.nav.navigateBack(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
   }
 
-  deleteOrganization() {
-    this.http.delete(this.globals.organizationApiUrl + this.organization.id).subscribe(
-      async res => {
-        if (this.organization.creatorMail == this.data.user.mail) {
-          this.data.quitFromOrganization();
-        }
-        console.log("organization removed successfully");
-        this.data.removeOrganization(this.organization);
-
-        const toast = await this.toastCtrl.create({
-          message: res == true ? 'Organizzazione Cancellata.' : 'Organizzazione Non Cancellata',
-          duration: 2000
-        });
-        toast.present();
-      },
-      async err => {
-        const toast = await this.toastCtrl.create({
-          message: err.error,
-          duration: 2000
-        });
-        toast.present();
-      },
-    );
-    this.goBack();
-  }
-
-  modifyOrganization() {
-    this.nav.navigateForward(['/modify-organization', { "id": this.organization.id }]);
-  }
-
-  async addExpert() {
-    const alert = await this.alertCtrl.create({
+  async showActionSheet() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Organization',
       cssClass: 'my-custom-class',
-      header: 'Scegli',
-      message: 'Che tipo di esperto?',
-      buttons: [
+      buttons: this.getButtons()
+    });
+    await actionSheet.present();
+  }
+
+  getButtons(): Array<Object> {
+    var buttons = new Array();
+
+    // azioni per i membri
+    if (this.data.hasMemberPermission(this.organization)) {
+      buttons = buttons.concat([
         {
-          text: 'Interno',
+          text: 'Edit',
+          icon: 'create-outline',
           handler: () => {
-            this.nav.navigateForward(["/add-collaborator"]);
+            this.nav.navigateForward(['/modify-organization', { "id": this.organization.id }]);
+          }
+        }
+      ]);
+    }
+
+    // azioni per il cratore
+    if (this.data.hasCreatorPermission(this.organization)) {
+      buttons = buttons.concat([
+        {
+          text: 'Delete',
+          role: 'destructive',
+          icon: 'trash',
+          handler: () => {
+            this.restService.deleteOrganization(this.organization);
+            this.goBack();
           }
         }, {
-          text: 'Esterno',
+          text: 'Add Expert',
+          icon: 'person-add-outline',
           handler: () => {
-            this.nav.navigateForward(["/add-expert"]);
+            this.nav.navigateForward(["/add-expert", { "id": this.organization.id }]);
+          }
+        }, {
+          text: 'Add Collaborator',
+          icon: 'person-add-outline',
+          handler: () => {
+            this.nav.navigateForward(["/add-collaborator", { "id": this.organization.id }]);
           }
         }
-      ]
-    });
+      ]);
+    }
 
-    alert.present();
+    // azioni per tutti
+    buttons = buttons.concat([
+      {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => { }
+      }
+    ]);
+
+    return buttons;
   }
 
 }
