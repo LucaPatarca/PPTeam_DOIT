@@ -1,16 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class SimpleOrganizationsManagerTest {

@@ -1,10 +1,11 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
-import { MenuController, NavController, ToastController } from '@ionic/angular';
+import { ActionSheetController, MenuController, NavController, ToastController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Project } from 'src/app/model/project';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
+import { RestService } from 'src/app/services/rest.service';
 
 
 @Component({
@@ -14,33 +15,37 @@ import { GlobalsService } from 'src/app/services/globals.service';
 })
 
 export class ViewProjectPage {
-  isClosed: string;
+  private id: string;
   project: Project;
-  emptyNeededskills: String;
-  emptyCandidates: String;
+  loading: boolean;
+
   constructor(
     private route: ActivatedRoute,
     private menuCtrl: MenuController,
     public nav: NavController,
-    private http: HttpClient,
+    private restService: RestService,
     public data: DataService,
-    private globals: GlobalsService,
-    private toastCtrl: ToastController
+    private actionSheetCtrl: ActionSheetController,
   ) {
-    const id = this.route.snapshot.params["id"];
-    if (this.project.closed) {
-      this.isClosed = "closed";
-    } else {
-      this.isClosed = "opened";
-    }
+    this.id = this.route.snapshot.params["id"];
+    this.loading = true;
+    this.load().then(
+      ()=> {
+        this.loading = false;
+      }
+    )
   }
 
   ionViewDidEnter() {
     this.menuCtrl.enable(false);
   }
 
+  async load() {
+    this.project = await this.restService.getProject(this.id);
+  }
+
   goBack() {
-    this.nav.navigateBack(["/list-of-projects"], { queryParams: { 'refresh': 1 } })
+    this.nav.navigateBack(["/list-of-projects"], { queryParams: { 'refresh': 1 } });
   }
 
   modify() {
@@ -48,47 +53,73 @@ export class ViewProjectPage {
   }
 
   delete() {
-    this.http.delete(this.globals.projectApiUrl + this.project.id)
-      .subscribe(
-        async res => {
-          console.log('Delete successful Project with Id: ' + this.project.id);
-          const toast = await this.toastCtrl.create({
-            message: 'Progetto Cancellato',
-            duration: 2000
-          });
-          toast.present();
-        },
-        async err => {
-          const toast = await this.toastCtrl.create({
-            message: err.error,
-            duration: 2000
-          });
-          toast.present();
-        }
-      );
+    this.restService.deleteProject(this.id);
     this.goBack();
   }
 
-  public reload(event?) {
-    this.http.get(this.globals.projectApiUrl + this.project.id).subscribe(
-      res => {
-        if (res != null) {
-          const reloadedProject: Project = res as Project;
-          this.project = reloadedProject;
-          if (this.project.closed) {
-            this.isClosed = "closed";
-          } else {
-            this.isClosed = "opened";
-          }
-        }
-      },
-      err => {
-        console.log(err);
-      }
-    );
+  public async reload(event?) {
+    const newProject = await this.restService.getProject(this.id);
+    this.project = newProject; 
     event.target.complete();
   }
 
+  async showActionSheet() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Project',
+      cssClass: 'my-custom-class',
+      buttons: this.getButtons()
+    });
+    await actionSheet.present();
+  }
+  
+  getButtons(): Array<Object> {
+    var buttons = new Array();
+
+    // azioni per i membri dell'organizzazione
+    // TODO da implementare perche non ho l'organizzazione
+
+    // azioni per il creatore dell'organizzazione
+    // TODO da implementare perche non ho l'organizzazione
+
+    // azioni per il creatore del progetto
+    if (this.data.hasProjectCreatorPermission(this.project)) {
+      buttons = buttons.concat([
+        {
+          text: 'Delete',
+          role: 'destructive',
+          icon: 'trash',
+          handler: () => {
+            this.restService.deleteProject(this.project.id);
+            this.goBack();
+          }
+        }, {
+          text: 'Close',
+          icon: 'close-outline',
+          handler: () => {
+            this.restService.closeProject(this.project.id);
+          }
+        }, {
+          text: 'Edit',
+          icon: 'create-outline',
+          handler: () => {
+            this.nav.navigateForward(["/modify-project", { "id": this.project.id }]);
+          }
+        }
+      ]);
+    }
+
+    // azioni per tutti
+    buttons = buttons.concat([
+      {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => { }
+      }
+    ]);
+
+    return buttons;
+  }
 
 }
 

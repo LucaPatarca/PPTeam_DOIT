@@ -15,15 +15,15 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 })
 export class AppComponent {
 
-  isLog:boolean;
+  isLog: boolean;
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private navCtrl:NavController,
-    private dataService:DataService,
-    private toastCtrl:ToastController
+    private navCtrl: NavController,
+    public dataService: DataService,
+    private toastCtrl: ToastController
   ) {
     this.initializeApp();
   }
@@ -35,63 +35,63 @@ export class AppComponent {
     });
   }
 
-  
 
-  createUser(){
+
+  createUser() {
     this.navCtrl.navigateForward(['/create-user'], { queryParams: { 'refresh': 1 } });
   }
 
-  logInUser(){
+  logInUser() {
     this.navCtrl.navigateForward(['/login-user'], { queryParams: { 'refresh': 1 } });
   }
 
-  listOrganizations(){
+  listOrganizations() {
     this.navCtrl.navigateRoot(['/list-of-organizations'], { queryParams: { 'refresh': 1 } });
   }
 
-  createOrganization(){
+  createOrganization() {
     this.navCtrl.navigateForward(['/create-organization'], { queryParams: { 'refresh': 1 } });
   }
 
-  listProjects(){
+  listProjects() {
     this.navCtrl.navigateRoot(['/list-of-projects'], { queryParams: { 'refresh': 1 } });
   }
 
-  createProject(){
+  createProject() {
     this.navCtrl.navigateForward(['/create-project'], { queryParams: { 'refresh': 1 } });
   }
 
-  selectOrganizationCreator(){
+  selectOrganizationCreator() {
     this.navCtrl.navigateForward(['select-organization'], { queryParams: { 'refresh': 1 } });
   }
 
-  async quitFromOrg(){
+  async quitFromOrg() {
     const orgName = this.dataService.getSelectedOrganization().name;
     this.dataService.quitFromOrganization();
     const toast = await this.toastCtrl.create({
-      message: 'Logout da '+orgName+' eseguito',
+      message: 'Logout da ' + orgName + ' eseguito',
       duration: 2000
     });
-  
+
     toast.present();
   }
 
-  home(){
+  home() {
     this.navCtrl.navigateRoot(['/home'], { queryParams: { 'refresh': 1 } });
   }
 
-  async logOutUser(){
+  async logOutUser() {
     this.dataService.logout();
     const toast = await this.toastCtrl.create({
       message: 'Logout eseguito',
       duration: 2000
     });
-  
+
     toast.present();
     this.navCtrl.navigateRoot(['/home']);
   }
 
-  viewSkill(){
+  viewSkill() {
     this.navCtrl.navigateForward(['view-skill'], { queryParams: { 'refresh': 1 } });
   }
 }

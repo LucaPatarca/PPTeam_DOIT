@@ -11,12 +11,14 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class SimpleProjectsManager implements ProjectsManager{
     //TODO migliorare i controlli e le condizioni sui metodi
+
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -26,14 +28,15 @@ public class SimpleProjectsManager implements ProjectsManager{
     private UserRepository userRepository;
 
     @Override
-    public Project getInstance(String projectID) throws EntityNotFoundException {
-        if(projectID.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
+    public Project getInstance(@NotNull @NotBlank String projectID) throws EntityNotFoundException {
+        //if(projectID.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
         return projectRepository.findById(projectID).orElseThrow(()->
                 new EntityNotFoundException("Nessun progetto trovato con l'ID: "+projectID));
     }
 
     @Override
     public Project create(Project project) throws EntityNotFoundException {
+        // TODO: 11/02/2021 estrarre questi controlli per farli anche su update
         Organization organization = organizationRepository.findById(project.getOrganizationId()).orElseThrow(()->
                 new EntityNotFoundException("L'organizzazione con ID '"+project.getOrganizationId()+"' " +
                         "passata nel progetto con ID '"+project.getId()+"' non esiste")
@@ -47,6 +50,7 @@ public class SimpleProjectsManager implements ProjectsManager{
     public boolean closeProject(String projectID) throws EntityNotFoundException {
         if(projectID.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
         Project toClose = getInstance(projectID);
+        if(toClose.isClosed() ) return false;
         toClose.close();
         projectRepository.save(toClose);
         return getInstance(projectID).isClosed();
@@ -67,14 +71,17 @@ public class SimpleProjectsManager implements ProjectsManager{
     }
 
     @Override
-    public Page<String> getPage(int page, int size) {
-//        Page<Project> projectPage = projectRepository.findAll(PageRequest.of(page, size));
-//        List<String> basicProjectInformationList = new java.util.ArrayList<>(Collections.emptyList());
-//        for(Project project : projectPage){
-//            basicProjectInformationList.add(getBasicJsonInformation(project));
-//        }
-//        return new PageImpl<>(basicProjectInformationList);
-        return null;
+    public Page<BasicProjectInformation> getPage(int page, int size) throws EntityNotFoundException {
+        Page<Project> projectPage = projectRepository.findAll(PageRequest.of(page, size));
+        List<BasicProjectInformation> basicProjectInformationList = new java.util.ArrayList<>(Collections.emptyList());
+        for(Project project : projectPage){
+            Organization organization = organizationRepository.findById(project.getOrganizationId())
+                    .orElseThrow(()->new EntityNotFoundException("Nessuna organizzazione con l'ID: "+project.getOrganizationId()));
+            UserEntity creator = userRepository.findById(project.getCreatorMail())
+                    .orElseThrow(()->new EntityNotFoundException("Nessun utente con la mail: "+project.getCreatorMail()));
+            basicProjectInformationList.add(new BasicProjectInformation(project,organization,creator));
+        }
+        return new PageImpl<>(basicProjectInformationList);
     }
 
     @Override
@@ -124,7 +131,7 @@ public class SimpleProjectsManager implements ProjectsManager{
         if(Objects.isNull(role)) throw new IllegalArgumentException("Il campo 'role' è nullo");
         Project project = projectRepository.findById(projectId).orElseThrow(()->
                 new EntityNotFoundException("Nessun progetto trovato con l'id: "+projectId));
-        User user = userRepository.findById(userMail).orElseThrow(()->
+        UserEntity user = userRepository.findById(userMail).orElseThrow(()->
                 new EntityNotFoundException("Nessun utente trovato con l'email: "+userMail));
         project.submit(user, role.getSkill(), role.isAsExpert());
         return projectRepository.save(project).getCandidates().contains(role);
@@ -132,7 +139,6 @@ public class SimpleProjectsManager implements ProjectsManager{
 
     @Override
     public boolean acceptCandidate(String projectId, Role userRole) throws EntityNotFoundException {
-        //TODO 09/02/2021 controllare il contenuto di role
         if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");
         if(Objects.isNull(userRole)) throw new IllegalArgumentException("Il campo 'userRole' è nullo");
         Project project = projectRepository.findById(projectId).orElseThrow(()->
@@ -143,7 +149,6 @@ public class SimpleProjectsManager implements ProjectsManager{
 
     @Override
     public boolean rejectCandidate(String projectId, Role userRole) throws EntityNotFoundException {
-        //TODO 09/02/2021 controllare il contenuto di role
         if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");
         if(Objects.isNull(userRole)) throw new IllegalArgumentException("Il campo 'userRole' è nullo");
         Project project = projectRepository.findById(projectId).orElseThrow(()->

@@ -1,6 +1,7 @@
 import { Organization } from '../model/organization';
 import { Injectable } from '@angular/core';
 import { User } from '../model/user';
+import { Project } from '../model/project';
 
 @Injectable({
   providedIn: 'root'
@@ -50,13 +51,18 @@ export class DataService {
     this.selectedOrganization = null;
   }
 
-  hasMemberPermission(organization: Organization): boolean{
-    if(organization == null || organization == undefined) return false;
+  hasMemberPermission(organization: Organization): boolean {
+    if (organization == null || organization == undefined) return false;
     return organization.membersMails.includes(this.user.mail);
-}
+  }
 
-hasCreatorPermission(organization: Organization): boolean{
-    if(organization == null || organization == undefined) return false;
+  hasOrganizationCreatorPermission(organization: Organization): boolean {
+    if (organization == null || organization == undefined) return false;
     return organization.creatorMail == this.user.mail;
-}
+  }
+
+  hasProjectCreatorPermission(project: Project){
+    if(project == null || project == undefined) return false;
+    return project.creatorMail == this.user.mail;
+  }
 }

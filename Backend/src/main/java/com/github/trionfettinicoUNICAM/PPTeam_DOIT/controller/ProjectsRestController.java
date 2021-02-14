@@ -2,6 +2,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicProjectInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Role;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.ProjectsManager;
@@ -28,7 +29,9 @@ public class ProjectsRestController implements ProjectsController {
     @Override
     @PreAuthorize("permitAll")
     @PostMapping(value = "/createNew", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Project create(@RequestBody Project project) throws EntityNotFoundException, IdConflictException { return manager.create(project); }
+    public Project create(@RequestBody Project project) throws EntityNotFoundException, IdConflictException {
+        return manager.create(project);
+    }
 
     @Override
     @PreAuthorize("permitAll")
@@ -47,7 +50,7 @@ public class ProjectsRestController implements ProjectsController {
 
     @PreAuthorize("permitAll")
     @GetMapping("/list/{page}")
-    public Page<String> getPage(@PathVariable int page) { return manager.getPage(page, 10); }
+    public Page<BasicProjectInformation> getPage(@PathVariable int page) throws EntityNotFoundException { return manager.getPage(page, 10); }
 
     @Override
     @PreAuthorize("permitAll")

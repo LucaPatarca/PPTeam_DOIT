@@ -10,7 +10,7 @@ public class BasicProjectInformation {
     private final String creatorName;
     private final boolean closed;
 
-    public BasicProjectInformation(Project project, Organization organization, User creator){
+    public BasicProjectInformation(Project project, Organization organization, UserEntity creator){
         if(!project.getOrganizationId().equals(organization.getId())) throw new IllegalArgumentException("l'organizzazione non corrisponde con il progetto");
         if(!project.getCreatorMail().equals(creator.getMail())) throw new IllegalArgumentException("l'utente non corrisponde con il creatore del progetto");
         this.id = project.getId();

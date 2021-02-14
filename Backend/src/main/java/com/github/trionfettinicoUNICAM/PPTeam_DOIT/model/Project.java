@@ -24,6 +24,7 @@ public class Project {
     private Set<Role> candidates;
 
     public Project(String organizationId, String creatorMail, String title, String description) throws IllegalArgumentException {
+        // TODO: 11/02/2021 controllare campi nulli (dentro ai vari setter)
         this.candidates = new HashSet<>();
         setTitle(title);
         setDescription(description);
@@ -99,7 +100,7 @@ public class Project {
     }
 
     /**
-     * To be successful each project needs a set of {@link Skill}s, {@link User}s can than use
+     * To be successful each project needs a set of {@link Skill}s, {@link UserEntity}s can than use
      * their skills to work for the project.
      * @return all the needed skills for this project grouped by name, each one associated
      * with it's count.
@@ -133,7 +134,7 @@ public class Project {
     }
 
     /**
-     * When a {@link User} apply to a {@link Project} he is put on a list
+     * When a {@link UserEntity} apply to a {@link Project} he is put on a list
      * waiting to be accepted (or rejected) by the project's {@link Organization}.
      * This method returns the set of candidates.
      * @return the set of candidates.
@@ -155,10 +156,12 @@ public class Project {
     public void acceptCandidate(Role role) throws RuntimeException {
         if(isClosed) throw new IllegalStateException("Project is closed");
         if(!team.add(Objects.requireNonNull(role, "role is null"))) throw new RuntimeException("unable to add role to team");
+        candidates.remove(role);
+        // TODO: 11/02/2021 controlla candidato inesistente
     }
 
     /**
-     * Rejects the {@link Role} of a {@link User} who applied for this project.
+     * Rejects the {@link Role} of a {@link UserEntity} who applied for this project.
      * @param role the role to be rejected
      */
     public void rejectCandidate(Role role) throws IllegalStateException {
@@ -175,7 +178,7 @@ public class Project {
     }
 
     /**
-     * Adds the {@link User} to the list of candidates of this project. A user can submit
+     * Adds the {@link UserEntity} to the list of candidates of this project. A user can submit
      * to the same project more than once but only for different {@link Skill}s.
      * @param user the user who wants to apply to this project
      * @param skill the skill of the user
@@ -183,7 +186,8 @@ public class Project {
      * @throws IllegalArgumentException if the user does not have this {@link Skill} or if
      * the skill is not needed for this project
      */
-    public boolean submit(User user, Skill skill,boolean asExpert) throws IllegalStateException {
+    public boolean submit(UserEntity user, Skill skill, boolean asExpert) throws IllegalStateException {
+        // TODO: 11/02/2021 controlla che non è già nel team
         if(isClosed) throw new IllegalStateException("Project is closed");
         Role role = new Role(Objects.requireNonNull(skill, "skill is null"), Objects.requireNonNull(user, "user is null").getMail(),asExpert);
         if(!candidates.contains(role)) {
@@ -193,10 +197,10 @@ public class Project {
     }
 
     /**
-     * Removes the {@link User} from the list of candidates of this project
+     * Removes the {@link UserEntity} from the list of candidates of this project
      * @param user the user who wants to be removed from the list of candidates
      */
-    public void removeSubmission(User user) throws IllegalStateException {
+    public void removeSubmission(UserEntity user) throws IllegalStateException {
         if(isClosed) throw new IllegalStateException("Project is closed");
         candidates.removeIf(role -> role.getUserMail().equals(Objects.requireNonNull(user, "user is null").getMail()));
     }

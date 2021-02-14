@@ -13,7 +13,7 @@ import java.util.Set;
  * and to do so, it needs a list of {@link Skill}s.
  */
 @Document(collection = "user")
-public class User {
+public class UserEntity {
 
     // TODO: 10/12/20 scrivere il javadoc di questi metodi (lasciati indietro perche comunque si spiegano gia bene da soli)
 
@@ -23,14 +23,15 @@ public class User {
     private String mail;
     private String name;
     private Set<Skill> skills;
+    private String secret;
 
-    public User(String mail, String name) throws IllegalArgumentException {
+    public UserEntity(String mail, String name) throws IllegalArgumentException {
         setMail(mail);
         setName(name);
         skills = new HashSet<>();
     }
 
-    public User() {
+    public UserEntity() {
     }
 
     /**
@@ -76,7 +77,7 @@ public class User {
     }
 
     /**
-     * The {@link User} mail is unique for each user so a user can be identified by it's mail.
+     * The {@link UserEntity} mail is unique for each user so a user can be identified by it's mail.
      * @return the user's mail
      */
     @Id
@@ -108,11 +109,19 @@ public class User {
         }
     }
 
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
+        UserEntity user = (UserEntity) o;
         return Objects.equals(mail, user.mail) && Objects.equals(name, user.name) && Objects.equals(skills, user.skills);
     }
 

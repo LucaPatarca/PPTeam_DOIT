@@ -5,8 +5,9 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicOrganizationInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.OrganizationsManager;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.PermissionComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
@@ -22,26 +23,31 @@ public class OrganizationsRestController implements OrganizationsController {
     @Autowired
     private OrganizationsManager manager;
 
-    @Override
-    @PreAuthorize("permitAll")
-    @GetMapping("/{organizationID}")
-    public Organization getInstance(@PathVariable String organizationID) throws EntityNotFoundException { return manager.getInstance(organizationID); }
+    @Autowired
+    private PermissionComponent permissionComponent;
 
     @Override
     @PreAuthorize("permitAll")
+    @GetMapping("/{organizationID}")
+    public Organization getInstance(@PathVariable String organizationID) throws EntityNotFoundException {
+        return manager.getInstance( organizationID);
+    }
+
+    @Override
+    @PreAuthorize("isAuthenticated()")
     @PostMapping(value = "/createNew", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Organization create(@RequestBody Organization organization) throws EntityNotFoundException, IdConflictException { return manager.create(organization); }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.isOrganizationCreator(authentication, #organization.id)")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Organization update(@RequestBody Organization organization) throws EntityNotFoundException { return manager.update(organization); }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.isOrganizationCreator(authentication, #organizationID)")
     @DeleteMapping(value = "/{organizationID}")
     public boolean delete(@PathVariable String organizationID) throws EntityNotFoundException { return manager.delete(organizationID); }
-    // TODO: 10/02/2021  non rimuove le skill da collaboratore
+    // FIXME: 10/02/2021  non rimuove le skill da collaboratore
 
     @Override
     @PreAuthorize("permitAll")
@@ -57,33 +63,33 @@ public class OrganizationsRestController implements OrganizationsController {
     @Override
     @PreAuthorize("permitAll")
     @GetMapping("/byUser/{userMail}")
-    public List<Organization> getByUser(@PathVariable String userMail){
+    public List<Organization> getByUser(@PathVariable("userMail") String userMail){
         return manager.findByUser(userMail);
     }
 
     @Override
     @PreAuthorize("permitAll")
     @GetMapping("/getUsers/{organizationId}")
-    public List<User> getUsers(@PathVariable String organizationId) throws EntityNotFoundException {
+    public List<UserEntity> getUsers(@PathVariable String organizationId) throws EntityNotFoundException {
         return manager.getUsers(organizationId);
     }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.canAddCollaborator(authentication, #organizationId, #userMail, #skill)")
     @PostMapping("/addCollaborator/{organizationId}/{userMail}")
     public void addCollaborator(@PathVariable String organizationId,@PathVariable String userMail, @RequestBody Skill skill) throws EntityNotFoundException {
         manager.addCollaborator(organizationId, userMail, skill);
     }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/addMember/{organizationId}/{userMail}")
     public boolean addMember(@PathVariable String organizationId, @PathVariable String userMail) throws EntityNotFoundException {
         return manager.addMember(organizationId,userMail);
     }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/removeMember/{organizationId}/{userMail}")
     public boolean removeMember(@PathVariable String organizationId, @PathVariable String userMail) throws EntityNotFoundException {
         return manager.removeMember(organizationId,userMail);

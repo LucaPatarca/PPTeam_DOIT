@@ -6,8 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.*;
 
 /**
- * Represents a group of {@link User}s who works together on a list of {@link Project}s. An organization
- * can be created by any {@link User}.
+ * Represents a group of {@link UserEntity}s who works together on a list of {@link Project}s. An organization
+ * can be created by any {@link UserEntity}.
  */
 @Document(collection = "organization")
 public class Organization {

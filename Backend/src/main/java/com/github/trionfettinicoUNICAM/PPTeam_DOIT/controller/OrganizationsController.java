@@ -3,7 +3,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface OrganizationsController extends EntityController<Organization, 
 
     List<Organization> getByUser(String userMail);
 
-    List<User> getUsers(String organizationId) throws EntityNotFoundException;
+    List<UserEntity> getUsers(String organizationId) throws EntityNotFoundException;
 
     void addCollaborator(String organizationId, String userMail, Skill skill) throws EntityNotFoundException;
 

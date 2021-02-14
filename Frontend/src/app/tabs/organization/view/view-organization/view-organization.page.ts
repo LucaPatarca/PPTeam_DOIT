@@ -71,7 +71,7 @@ export class ViewOrganizationPage {
     }
 
     // azioni per il cratore
-    if (this.data.hasCreatorPermission(this.organization)) {
+    if (this.data.hasOrganizationCreatorPermission(this.organization)) {
       buttons = buttons.concat([
         {
           text: 'Delete',

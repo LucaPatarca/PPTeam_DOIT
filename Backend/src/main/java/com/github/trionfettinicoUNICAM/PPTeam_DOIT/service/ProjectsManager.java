@@ -1,12 +1,8 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Role;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.parameters.P;
 
 import java.util.List;
 
@@ -27,7 +23,7 @@ public interface ProjectsManager extends EntityManager<Project, String> {
      * with the given {@link Organization}.
      * @param  project the project
      * @return the newly created Project
-     * @throws IllegalArgumentException if the {@link User} is not part of the organization
+     * @throws IllegalArgumentException if the {@link UserEntity} is not part of the organization
      */
     Project create(Project project) throws EntityNotFoundException;
 
@@ -54,7 +50,7 @@ public interface ProjectsManager extends EntityManager<Project, String> {
      */
     Project update(Project project) throws EntityNotFoundException;
 
-    Page<String> getPage(int page, int size);
+    Page<BasicProjectInformation> getPage(int page, int size) throws EntityNotFoundException;
 
     boolean exists(String projectID);
 

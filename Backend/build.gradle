@@ -13,6 +13,9 @@ repositories {
 }
 
 dependencies {
+	//compile 'com.auth0:auth0-spring-security-api:1.1.0'
+	compile "com.auth0:java-jwt:3.4.0"
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'

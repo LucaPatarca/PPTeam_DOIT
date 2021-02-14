@@ -18,7 +18,7 @@ export class ModifyOrganizationPage {
   title: string;
   description: string;
   validation_messages = {
-    'name': [
+    'title': [
       { type: 'required', message: 'Name is required.' }
     ],
     'description': [
@@ -44,6 +44,7 @@ export class ModifyOrganizationPage {
   ionViewDidEnter() {
     this.menuCtrl.enable(false);
     this.loadOrganization();
+    //todo non era meglio se prendevi l'organizzazione direttamente dalla schermata precedente coglione?!
   }
 
   async loadOrganization(){
@@ -51,6 +52,7 @@ export class ModifyOrganizationPage {
       this.organization = await this.restService.getOrganization(this.id);
     } catch(e){
       console.log(e);
+      //todo gestire
     }
     
   }

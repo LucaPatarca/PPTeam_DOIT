@@ -6,6 +6,7 @@ import { Project } from 'src/app/model/project';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RestService } from 'src/app/services/rest.service';
 
 @Component({
   selector: 'app-modify-project',
@@ -18,10 +19,10 @@ export class ModifyProjectPage {
   title: string;
   description: string;
   validation_messages = {
-    'name': [
+    'title': [
       { type: 'required', message: 'Name is required.' }
     ],
-    'email': [
+    'description': [
       { type: 'required', message: 'Email is required.' },
       { type: 'pattern', message: 'Please enter a valid email.' }
     ],
@@ -32,10 +33,7 @@ export class ModifyProjectPage {
     public nav: NavController,
     private menuCtrl: MenuController,
     public formBuilder: FormBuilder,
-    private http: HttpClient,
-    private dataService: DataService,
-    private globals: GlobalsService,
-    private toastCtrl: ToastController
+    private restService: RestService,
   ) {
     this.validations_form = this.formBuilder.group({
 
@@ -43,6 +41,12 @@ export class ModifyProjectPage {
       description: [Validators.required],
     });
     const id = this.route.snapshot.params['id'];
+    this.project = new Project("Title", "Description", "", "");
+    restService.getProject(id).then(
+      project=>{
+        this.project = project;
+      }
+    )
   }
 
   ionViewDidlEnter() {
@@ -50,28 +54,10 @@ export class ModifyProjectPage {
   }
 
   save() {
-    this.project.name = this.title;
+    this.project.title = this.title;
     this.project.description = this.description;
-    this.http.put(this.globals.modifyProjectApiUrl, this.project, { headers: new HttpHeaders(), responseType: 'json' })
-      .subscribe(
-        async res => {
-          console.log('Successfully saved Project with Id: ' + this.project.id);
-          const toast = await this.toastCtrl.create({
-            message: 'Progetto Modificato.',
-            duration: 2000
-          });
-          toast.present();
+    this.restService.updateProject(this.project);
 
-          this.goBack(res['id']);
-        },
-        async err => {
-          const toast = await this.toastCtrl.create({
-            message: err.error,
-            duration: 2000
-          });
-          toast.present();
-        }
-      );
   }
 
   public goBack(id: string) {

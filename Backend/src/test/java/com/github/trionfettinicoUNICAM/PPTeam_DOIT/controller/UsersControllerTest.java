@@ -1,7 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
 import org.junit.jupiter.api.*;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class UsersControllerTest extends ControllerTest {
 
-    private User user;
+    private UserEntity user;
     private Skill skill1;
     private Skill skill2;
     private Skill skill3;
@@ -27,7 +27,7 @@ public class UsersControllerTest extends ControllerTest {
 
         //creates the new user
         String uri = "/api/users/createNew";
-        User user = new User("test@test.com","Test JUnit");
+        UserEntity user = new UserEntity("test@test.com","Test JUnit");
         skill1 = new Skill("skill1");
         skill2 = new Skill("skill2", "fakeOrgID");
         skill2.setLevel(3);
@@ -37,7 +37,7 @@ public class UsersControllerTest extends ControllerTest {
         user.addSkill(skill2);
         user.addSkill(skill3);
 
-        this.user = post(uri,user,200,user,User.class);
+        this.user = post(uri,user,200,user, UserEntity.class);
 
         //attempt to create the same user again
         post(uri,user,409,"Esiste già un utente con questa mail");
@@ -48,7 +48,7 @@ public class UsersControllerTest extends ControllerTest {
     void getUser() throws Exception {
         //should return the user if user exist
         String uri = "/api/users/"+user.getMail();
-        get(uri, 200,user,User.class);
+        get(uri, 200,user, UserEntity.class);
         //should return error 404 if user do not exist
         uri = "/api/users/noUser";
         get(uri,404,"Nessun utente");
@@ -101,9 +101,9 @@ public class UsersControllerTest extends ControllerTest {
         user.setName("newName");
         user.setExpert(new Skill("skill99"),"fakeOrgId");
         user.getSkills().remove(skill3);
-        put(uri,user,200,user,User.class);
+        put(uri,user,200,user, UserEntity.class);
         //should return 404 for non existing users
-        User user = new User("non.existing@user.com","non existing user");
+        UserEntity user = new UserEntity("non.existing@user.com","non existing user");
         put(uri,user,404,"Nessun utente");
     }
 

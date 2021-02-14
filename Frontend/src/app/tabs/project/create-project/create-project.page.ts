@@ -5,6 +5,7 @@ import { GlobalsService } from 'src/app/services/globals.service';
 import { DataService } from 'src/app/services/data.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Project } from 'src/app/model/project';
+import { RestService } from 'src/app/services/rest.service';
 
 
 
@@ -19,22 +20,21 @@ export class CreateProjectPage {
   title: string;
   description: string;
   validation_messages = {
-    'name': [
+    'title': [
       { type: 'required', message: 'Name is required.' }
     ],
-    'email': [
+    'description': [
       { type: 'required', message: 'Email is required.' },
       { type: 'pattern', message: 'Please enter a valid email.' }
     ],
   };
 
   constructor(private menuCtrl: MenuController,
-    private http: HttpClient,
     public formBuilder: FormBuilder,
     private navCtrl: NavController,
     public dataService: DataService,
-    private toastCtrl: ToastController,
-    private globals: GlobalsService) {
+    private restService: RestService,
+    ) {
     this.validations_form = this.formBuilder.group({
       title: ['', Validators.required],
       description: ['', Validators.required],
@@ -47,35 +47,16 @@ export class CreateProjectPage {
 
   createProject() {
     // metodo per effettuare una chiamata post
-    var newProject = {
-      "name": this.title,
-      "description": this.description,
-      "organizationId": this.dataService.selectedOrganization,
-      "creatorMail": this.dataService.getUser().mail,
-      "neededSkills": [],
-      "closed": false,
-      "team": [],
-      "candidates": []
-    };
-
-    this.http.post(this.globals.createProjectApiUrl, newProject, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
-      async res => {
-        console.log('Successfully created new project');
-        this.menuCtrl.enable(true);
-        const toast = await this.toastCtrl.create({
-          message: 'Progetto Creato',
-          duration: 2000
-        });
-        toast.present();
-
+    const project = new Project(
+      this.title,
+      this.description,
+      this.dataService.selectedOrganization.id,
+      this.dataService.user.mail,
+    );
+    
+    this.restService.createProject(project).then(
+      value=>{
         this.goToProjectsList();
-      },
-      async err => {
-        const toast = await this.toastCtrl.create({
-          message: err.error,
-          duration: 2000
-        });
-        toast.present();
       }
     );
   }

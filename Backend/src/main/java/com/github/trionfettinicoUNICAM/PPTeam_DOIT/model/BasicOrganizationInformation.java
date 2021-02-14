@@ -7,7 +7,7 @@ public class BasicOrganizationInformation {
     private final String creatorMail;
     private final String creatorName;
 
-    public BasicOrganizationInformation(Organization organization, User creator){
+    public BasicOrganizationInformation(Organization organization, UserEntity creator){
         if(!organization.getMembersMails().contains(creator.getMail())) throw new IllegalArgumentException("Il creatore non fa parte dell'organizzazione");
         this.id = organization.getId();
         this.name = organization.getName();

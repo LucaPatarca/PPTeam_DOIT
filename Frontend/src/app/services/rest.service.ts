@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
 import { Organization } from '../model/organization';
 import { OrganizationInformation } from '../model/organization-information';
+import { Project } from '../model/project';
+import { ProjectInformation } from '../model/project-information';
 import { Skill } from '../model/skill';
 import { User } from '../model/user';
 import { DataService } from './data.service';
@@ -45,7 +47,7 @@ export class RestService {
           this.presentToast("Skill Aggiunta");
           resolve();
         },
-        err=>{
+        err => {
           this.defaultErrorHandler(err);
           rejects(err);
         }
@@ -125,17 +127,84 @@ export class RestService {
 
   //Project methods
 
-  //User methods
+  async getProjectsPage(page: number): Promise<ProjectInformation[]> {
+    return new Promise((resolve, rejects) => {
+      this.http.get(this.globals.listOfProjectsApiUrl + page)
+        .subscribe(
+          res => {
+            resolve(res['content'] as ProjectInformation[]);
+          },
+          err => {
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
+        );
+    });
+  }
 
-  async createUser(user: User) : Promise<User>{
-    return new Promise((resolve, rejects)=>{
+  async createProject(project: Project): Promise<Project> {
+    return new Promise((resolve, rejects) => {
+      this.http.post(this.globals.createProjectApiUrl, project, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
+        res => {
+          this.presentToast('Progetto Creato');
+          resolve(res as Project);
+        },
+        err => {
+          this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
+  async deleteProject(id: string): Promise<boolean> {
+    return new Promise((resolve, rejects) => {
+      this.http.delete(this.globals.projectApiUrl + id)
+        .subscribe(
+          res => {
+            this.presentToast("Progetto cancellato");
+            resolve(res as boolean);
+          },
+          err => {
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
+        );
+    });
+  }
+
+  async getProject(id: string): Promise<Project> {
+    return new Promise((resolve, rejects) => {
+      this.http.get(this.globals.projectApiUrl + id)
+        .subscribe(
+          res => {
+            resolve(res as Project);
+          },
+          err => {
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
+        );
+    });
+  }
+
+  async closeProject(id: string): Promise<boolean>{
+    return new Promise((resolve,rejects)=>{
+      //TODO implementare
+    });
+  }
+
+  //User methodr
+
+  async createUser(user: User): Promise<User> {
+    return new Promise((resolve, rejects) => {
       this.http.post(this.globals.createUserApiUrl, user, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
-        res=>{
+        res => {
           const returnedUser = res as User;
           this.presentToast("Utente " + returnedUser.name + " creato con successo");
           resolve(returnedUser);
         },
-        err=>{
+        err => {
           this.defaultErrorHandler(err);
           rejects(err);
         }
@@ -143,14 +212,14 @@ export class RestService {
     });
   }
 
-  async getUser(mail: string): Promise<User>{
-    return new Promise((resolve, rejects)=>{
+  async getUser(mail: string): Promise<User> {
+    return new Promise((resolve, rejects) => {
       this.http.get(this.globals.userApiUrl + mail).subscribe(
-        res=>{
+        res => {
           const user = res as User;
           resolve(user);
         },
-        err=>{
+        err => {
           this.defaultErrorHandler(err);
           rejects(err);
         }
@@ -158,28 +227,44 @@ export class RestService {
     });
   }
 
-  async getUserOrganizations(mail: string): Promise<Organization[]>{
-    return new Promise((resolve, rejects)=>{
+  async getUserOrganizations(mail: string): Promise<Organization[]> {
+    return new Promise((resolve, rejects) => {
       this.http.get(this.globals.getOrganizationUserCreatorApiUrl + mail)
-      .subscribe(
-        res => {
-          resolve(res as Organization[]);
-        },
-        err => {
-          rejects(err);
-        }
-      );
+        .subscribe(
+          res => {
+            resolve(res as Organization[]);
+          },
+          err => {
+            rejects(err);
+          }
+        );
     });
   }
 
-  async getUserSkills(mail: string): Promise<Skill[]>{
-    return new Promise((resolve, rejects)=>{
+  async getUserSkills(mail: string): Promise<Skill[]> {
+    return new Promise((resolve, rejects) => {
       this.http.get(this.globals.getUserSkills + mail)
+        .subscribe(
+          res => {
+            resolve(res as Skill[]);
+          },
+          err => {
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
+        );
+    });
+  }
+
+  async updateProject(project: Project): Promise<Project>{
+    return new Promise((resolve, rejects)=>{
+      this.http.put(this.globals.modifyProjectApiUrl, project, { headers: new HttpHeaders(), responseType: 'json' })
       .subscribe(
         res => {
-          resolve(res as Skill[]);
+          this.presentToast('Progetto Modificato');
+          resolve(res as Project);
         },
-        err => {
+        async err => {
           this.defaultErrorHandler(err);
           rejects(err);
         }
@@ -198,6 +283,7 @@ export class RestService {
   }
 
   async defaultErrorHandler(err: any) {
-    this.presentToast(err.message);
+    console.log(err);
+    this.presentToast(err.error);
   }
 }

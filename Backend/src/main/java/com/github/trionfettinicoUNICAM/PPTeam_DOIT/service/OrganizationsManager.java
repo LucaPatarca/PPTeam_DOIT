@@ -5,9 +5,12 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicOrganizationInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
 import org.springframework.data.domain.Page;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -21,7 +24,7 @@ public interface OrganizationsManager extends EntityManager<Organization, String
      * Retrieves the organization with the given ID and returns an instance of it.
      * @return an instance of the organization
      */
-    Organization getInstance(String organizationId) throws EntityNotFoundException;
+    Organization getInstance(@Valid @NotNull @NotBlank String organizationId) throws EntityNotFoundException;
 
     /**
      * Creates a new {@link Organization} with the given parameters
@@ -43,7 +46,7 @@ public interface OrganizationsManager extends EntityManager<Organization, String
      */
     Organization update(Organization organization) throws EntityNotFoundException;
 
-    List<User> getUsers(String organizationId) throws EntityNotFoundException;
+    List<UserEntity> getUsers(String organizationId) throws EntityNotFoundException;
 
     boolean existsName(String organizationName);
 

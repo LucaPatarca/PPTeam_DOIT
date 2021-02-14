@@ -1,7 +1,6 @@
 import { DataService } from 'src/app/services/data.service';
 import { MenuController, Platform } from '@ionic/angular';
 import { Component } from '@angular/core';
-import { exit } from 'process';
 
 @Component({
   selector: 'app-home',
@@ -10,18 +9,25 @@ import { exit } from 'process';
 })
 export class HomePage {
 
+  HWBackSubscription: any;
+
   constructor(
     private menuCtrl: MenuController,
-    private dataService: DataService,
+    public dataService: DataService,
     private platform: Platform,
   ) {
-    this.platform.backButton.subscribe(() => {
-      exit();
-    });
+    
   }
 
   ionViewDidEnter() {
     this.menuCtrl.enable(true);
+    this.HWBackSubscription = this.platform.backButton.subscribe(() => {
+      navigator['app'].exitApp();
+    });
+  }
+
+  ionViewDidLeave(){
+    this.HWBackSubscription.unsubscribe();
   }
 
 }

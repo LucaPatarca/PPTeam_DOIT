@@ -1,4 +1,3 @@
-import { Organization } from './../model/organization';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -6,21 +5,21 @@ import { Injectable } from '@angular/core';
 })
 export class GlobalsService {
 
-  public serverUrl:string = "http://localhost:8080"
+  public serverUrl:string = "http://localhost:8080";
 
   public projectApiUrl:string = this.serverUrl+"/api/projects/";
   public organizationApiUrl:string = this.serverUrl+"/api/organizations/";
-
   public userApiUrl:string = this.serverUrl+"/api/users/";
+  
   public createUserApiUrl = this.userApiUrl + "createNew/";
   public userExistApiUrl = this.userApiUrl + "exist/";
   public userExistSkill = this.userApiUrl + "existSkill/";
-  public addCollaborator = this.organizationApiUrl+"addCollaborator/"
+  public addCollaborator = this.organizationApiUrl+"addCollaborator/";
 
 
   public createProjectApiUrl = this.projectApiUrl + "createNew/";
   public listOfProjectsApiUrl = this.projectApiUrl+"list/";
-  public modifyProjectApiUrl = this.projectApiUrl+"modify/";
+  public modifyProjectApiUrl = this.projectApiUrl+"update/";
   public existProjectApiUrl = this.projectApiUrl+"exist/";
 
 
@@ -30,7 +29,7 @@ export class GlobalsService {
   public getOrganizationUserCreatorApiUrl = this.organizationApiUrl+"byUser/"; 
   public getOrganizationMember = this.organizationApiUrl+"getUsers/";
   public getUserSkills = this.userApiUrl+"getUserSkills/";
-  public modifyOrganizationApiUrl = this.organizationApiUrl+"modify/";
+  public modifyOrganizationApiUrl = this.organizationApiUrl+"update/";
 
   public defaultOrganizationName = "org";
 
