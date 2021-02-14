@@ -4,6 +4,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundExcep
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.PermissionComponent;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.UsersManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,8 @@ public class UsersRestController implements UsersController {
 
     @Autowired
     private UsersManager manager;
+    @Autowired
+    private PermissionComponent permissionComponent;
 
     @Override
     @PreAuthorize("permitAll")
@@ -31,12 +34,12 @@ public class UsersRestController implements UsersController {
     public UserEntity create(@RequestBody UserEntity user) throws EntityNotFoundException, IdConflictException { return manager.create(user); }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.sameMail(authentication, #user.mail)")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserEntity update(@RequestBody UserEntity user) throws EntityNotFoundException { return manager.update(user); }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")
     @DeleteMapping(value = "/{userID}")
     public boolean delete(@PathVariable String userID) throws EntityNotFoundException { return manager.delete(userID); }
 

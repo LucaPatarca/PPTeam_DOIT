@@ -115,16 +115,6 @@ public class Project {
         this.neededSkills = neededSkills;
     }
 
-    public boolean addNeededSkill(Skill neededSkill) {
-        Objects.requireNonNull(neededSkill, "NeededSkill is Null");
-        return neededSkills.add(neededSkill);
-    }
-
-    public boolean removeNeededSkill(Skill neededSkill) {
-        Objects.requireNonNull(neededSkill, "NeededSkill is Null");
-        return neededSkills.remove(neededSkill);
-    }
-
     public Set<Role> getTeam() {
         return team;
     }

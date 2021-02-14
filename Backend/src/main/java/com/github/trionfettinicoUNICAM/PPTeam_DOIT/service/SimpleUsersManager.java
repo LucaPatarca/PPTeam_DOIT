@@ -8,6 +8,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationReposi
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +20,7 @@ public class SimpleUsersManager implements UsersManager {
     @Autowired
     private OrganizationRepository organizationRepository;
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UserEntity getInstance(String mail) throws EntityNotFoundException {

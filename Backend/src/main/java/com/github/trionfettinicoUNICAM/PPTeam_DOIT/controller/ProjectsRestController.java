@@ -27,19 +27,19 @@ public class ProjectsRestController implements ProjectsController {
     public Project getInstance(@PathVariable String projectID) throws EntityNotFoundException { return manager.getInstance(projectID); }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.sameMail(authentication, #project.creatorMail)")
     @PostMapping(value = "/createNew", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Project create(@RequestBody Project project) throws EntityNotFoundException, IdConflictException {
         return manager.create(project);
     }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.isProjectManager(authentication, #project.id)")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Project update(@RequestBody Project project) throws EntityNotFoundException { return manager.update(project); }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.isProjectManager(authentication, #project.id)")
     @DeleteMapping(value = "/{projectID}")
     public boolean delete(@PathVariable String projectID) throws EntityNotFoundException { return manager.delete(projectID); }
 
@@ -53,42 +53,28 @@ public class ProjectsRestController implements ProjectsController {
     public Page<BasicProjectInformation> getPage(@PathVariable int page) throws EntityNotFoundException { return manager.getPage(page, 10); }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.isProjectManager(authentication, #project.id)")
     @PutMapping(value = "/close/{projectID}")
     public boolean closeProject(@PathVariable String projectID) throws EntityNotFoundException {
         return manager.closeProject(projectID);
     }
 
     @Override
-    @PreAuthorize("permitAll")
-    @PostMapping("/addNeededSkill/{projectId}")
-    public boolean addNeededSkill(@PathVariable String projectId, @RequestBody String skillName) throws EntityNotFoundException{
-        return manager.addNeededSkill(projectId, skillName);
-    }
-
-    @Override
-    @PreAuthorize("permitAll")
-    @PostMapping("/removeNeededSkill/{projectId}")
-    public boolean removeNeededSkill(@PathVariable String projectId, @RequestBody String skillName) throws EntityNotFoundException{
-        return manager.removeNeededSkill(projectId, skillName);
-    }
-
-    @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.sameMail(authentication, #userMail)")
     @PostMapping("/submit/{projectId}/{userMail}")
     public boolean submit(@PathVariable String projectId, @PathVariable String userMail, @RequestBody Role role) throws EntityNotFoundException{
         return manager.submit(projectId, userMail, role);
     }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.isTeamManager(authentication, #project.id, #userRole.skill)")
     @PostMapping("/acceptCandidate/{projectId}")
     public boolean acceptCandidate(@PathVariable String projectId,@RequestBody Role userRole) throws EntityNotFoundException{
         return manager.acceptCandidate(projectId, userRole);
     }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("@permissionComponent.isTeamManager(authentication, #project.id, #userRole.skill)")
     @PostMapping("/rejectCandidate/{projectId}")
     public boolean rejectCandidate(@PathVariable String projectId, @RequestBody Role userRole) throws EntityNotFoundException{
         return manager.rejectCandidate(projectId, userRole);

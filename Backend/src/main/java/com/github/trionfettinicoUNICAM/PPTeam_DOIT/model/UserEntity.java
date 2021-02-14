@@ -1,5 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -23,6 +25,7 @@ public class UserEntity {
     private String mail;
     private String name;
     private Set<Skill> skills;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String secret;
 
     public UserEntity(String mail, String name) throws IllegalArgumentException {

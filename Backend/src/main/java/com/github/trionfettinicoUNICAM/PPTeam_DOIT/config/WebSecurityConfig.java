@@ -41,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // TODO: 14/02/2021 DISABILITARE IL CORS PRIMA DELLA CONSEGNA
         http.cors().and().csrf().disable().authorizeRequests()
                 .anyRequest().permitAll()
                 .and()
@@ -61,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
+    // TODO: 14/02/2021 scoprire se serve davvero e in caso cosa fa
 }
 
 

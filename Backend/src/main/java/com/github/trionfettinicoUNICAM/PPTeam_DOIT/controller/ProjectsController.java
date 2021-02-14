@@ -10,10 +10,6 @@ public interface ProjectsController extends EntityController<Project, String> {
 
     boolean closeProject(String projectID) throws EntityNotFoundException;
 
-    boolean addNeededSkill(String projectId, String skillName) throws EntityNotFoundException;
-
-    boolean removeNeededSkill(String projectId, String skillName) throws EntityNotFoundException;
-
     boolean submit(String projectId, String userMail, Role role) throws EntityNotFoundException;
 
     boolean acceptCandidate(String projectId, Role userRole) throws EntityNotFoundException;

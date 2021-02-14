@@ -104,26 +104,6 @@ public class SimpleProjectsManager implements ProjectsManager{
     }
 
     @Override
-    public boolean addNeededSkill(String projectId, String skillName) throws EntityNotFoundException {
-        if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");
-        if(skillName.isBlank()) throw new IllegalArgumentException("Il campo 'skillName' è vuoto");
-        Project project = projectRepository.findById(projectId).orElseThrow(()->
-                new EntityNotFoundException("Nessun progetto trovato con l'id: "+projectId));
-        project.addNeededSkill(new Skill(skillName));
-        return projectRepository.save(project).getNeededSkills().contains(new Skill(skillName));
-    }
-
-    @Override
-    public boolean removeNeededSkill(String projectId, String skillName) throws EntityNotFoundException {
-        if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");
-        if(skillName.isBlank()) throw new IllegalArgumentException("Il campo 'skillName' è vuoto");
-        Project project = projectRepository.findById(projectId).orElseThrow(()->
-                new EntityNotFoundException("Nessun progetto trovato con l'id: "+projectId));
-        project.removeNeededSkill(new Skill(skillName));
-        return !projectRepository.save(project).getNeededSkills().contains(new Skill(skillName));
-    }
-
-    @Override
     public boolean submit(String projectId, String userMail, Role role) throws EntityNotFoundException {
         //TODO 09/02/2021 controllare il contenuto di role
         if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");

@@ -50,6 +50,7 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
             throw new IdConflictException("Esiste gia un organizzazione con questo nome");
         if(!organization.getMembersMails().contains(organization.getCreatorMail()))
             organization.addMember(organization.getCreatorMail());
+        // TODO: 14/02/2021 indagare perche non ritorna l'id
         return organizationRepository.save(organization);
     }
 

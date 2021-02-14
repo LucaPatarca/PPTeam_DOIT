@@ -22,7 +22,6 @@ public class OrganizationsRestController implements OrganizationsController {
 
     @Autowired
     private OrganizationsManager manager;
-
     @Autowired
     private PermissionComponent permissionComponent;
 
@@ -34,17 +33,17 @@ public class OrganizationsRestController implements OrganizationsController {
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("@permissionComponent.sameMail(authentication, #organization.creatorMail)")
     @PostMapping(value = "/createNew", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Organization create(@RequestBody Organization organization) throws EntityNotFoundException, IdConflictException { return manager.create(organization); }
 
     @Override
-    @PreAuthorize("@permissionComponent.isOrganizationCreator(authentication, #organization.id)")
+    @PreAuthorize("@permissionComponent.isFounder(authentication, #organization.id)")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Organization update(@RequestBody Organization organization) throws EntityNotFoundException { return manager.update(organization); }
 
     @Override
-    @PreAuthorize("@permissionComponent.isOrganizationCreator(authentication, #organizationID)")
+    @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationID)")
     @DeleteMapping(value = "/{organizationID}")
     public boolean delete(@PathVariable String organizationID) throws EntityNotFoundException { return manager.delete(organizationID); }
     // FIXME: 10/02/2021  non rimuove le skill da collaboratore
@@ -75,21 +74,21 @@ public class OrganizationsRestController implements OrganizationsController {
     }
 
     @Override
-    @PreAuthorize("@permissionComponent.canAddCollaborator(authentication, #organizationId, #userMail, #skill)")
+    @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationId)")
     @PostMapping("/addCollaborator/{organizationId}/{userMail}")
     public void addCollaborator(@PathVariable String organizationId,@PathVariable String userMail, @RequestBody Skill skill) throws EntityNotFoundException {
         manager.addCollaborator(organizationId, userMail, skill);
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationId)")
     @PostMapping("/addMember/{organizationId}/{userMail}")
     public boolean addMember(@PathVariable String organizationId, @PathVariable String userMail) throws EntityNotFoundException {
         return manager.addMember(organizationId,userMail);
     }
 
     @Override
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationId)")
     @PostMapping("/removeMember/{organizationId}/{userMail}")
     public boolean removeMember(@PathVariable String organizationId, @PathVariable String userMail) throws EntityNotFoundException {
         return manager.removeMember(organizationId,userMail);

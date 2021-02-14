@@ -58,10 +58,6 @@ public interface ProjectsManager extends EntityManager<Project, String> {
 
     List<Project> findByOrganizationId(String organizationId);
 
-    boolean addNeededSkill(String projectId, String skillName) throws EntityNotFoundException;
-
-    boolean removeNeededSkill(String projectId, String skillName) throws EntityNotFoundException;
-
     boolean submit(String projectId, String userMail, Role role) throws EntityNotFoundException;
 
     boolean acceptCandidate(String projectId, Role userRole) throws EntityNotFoundException;
