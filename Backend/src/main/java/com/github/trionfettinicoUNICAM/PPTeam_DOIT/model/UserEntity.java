@@ -34,6 +34,12 @@ public class UserEntity {
         skills = new HashSet<>();
     }
 
+    public UserEntity(UserAdapter userAdapter){
+        this.setMail(userAdapter.getMail());
+        this.setName(userAdapter.getName());
+        this.setSkills(userAdapter.getSkills());
+    }
+
     public UserEntity() {
     }
 

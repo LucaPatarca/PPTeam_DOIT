@@ -2,7 +2,9 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.security;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserAdapter;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -46,6 +48,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try{
             UserEntity user = new ObjectMapper().readValue(request.getInputStream(), UserEntity.class);
+            response.addHeader("Access-Control-Expose-Headers", "Authorization");
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             user.getMail(),
@@ -65,5 +68,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
                 .sign(HMAC512(secret.getBytes()));
         response.addHeader(headerName, tokenPrefix + token);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(new UserEntity((UserAdapter) authResult.getPrincipal())));
     }
 }

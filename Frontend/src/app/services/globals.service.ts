@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class GlobalsService {
 
-  public serverUrl:string = "http://localhost:8080";
+  public serverUrl:string = "http://www.lucapatarca.cloud:8200";
 
   public projectApiUrl:string = this.serverUrl+"/api/projects/";
   public organizationApiUrl:string = this.serverUrl+"/api/organizations/";

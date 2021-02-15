@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { NavController, ToastController } from '@ionic/angular';
+import { ToastController } from '@ionic/angular';
 import { Organization } from '../model/organization';
 import { OrganizationInformation } from '../model/organization-information';
 import { Project } from '../model/project';
@@ -18,10 +18,10 @@ export class RestService {
   constructor(
     private http: HttpClient,
     private dataService: DataService,
-    private navCtrl: NavController,
     private globals: GlobalsService,
     private toastCtrl: ToastController
-  ) { }
+  ) { 
+  }
 
   //Organization methods
 
