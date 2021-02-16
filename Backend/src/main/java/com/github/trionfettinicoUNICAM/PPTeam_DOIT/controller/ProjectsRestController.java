@@ -39,7 +39,7 @@ public class ProjectsRestController implements ProjectsController {
     public Project update(@RequestBody Project project) throws EntityNotFoundException { return manager.update(project); }
 
     @Override
-    @PreAuthorize("@permissionComponent.isProjectManager(authentication, #project.id)")
+    @PreAuthorize("@permissionComponent.isProjectManager(authentication, #projectID)")
     @DeleteMapping(value = "/{projectID}")
     public boolean delete(@PathVariable String projectID) throws EntityNotFoundException { return manager.delete(projectID); }
 

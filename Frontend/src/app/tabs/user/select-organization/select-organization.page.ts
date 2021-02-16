@@ -1,9 +1,7 @@
 import { Organization } from 'src/app/model/organization';
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { MenuController, NavController, AlertController, ToastController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
-import { GlobalsService } from 'src/app/services/globals.service';
 import { RestService } from 'src/app/services/rest.service';
 import { User } from 'src/app/model/user';
 

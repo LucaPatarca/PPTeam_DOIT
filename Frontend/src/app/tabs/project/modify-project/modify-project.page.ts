@@ -1,10 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from "@angular/router";
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MenuController, NavController, ToastController } from '@ionic/angular';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
+import { MenuController, NavController } from '@ionic/angular';
 import { Project } from 'src/app/model/project';
-import { DataService } from 'src/app/services/data.service';
-import { GlobalsService } from 'src/app/services/globals.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestService } from 'src/app/services/rest.service';
 

@@ -14,8 +14,8 @@
 
 <ion-content fullscreen>
 
-  <p *ngIf="dataService.isUserLogged">{{dataService.getUserMail()}}</p>
-  <p *ngIf="dataService.isOrganizationSelected">{{dataService.getOrganizationName()}}</p>
+  <p *ngIf="dataService.isUserLogged()">{{dataService.getUserMail()}}</p>
+  <p *ngIf="dataService.isOrganizationSelected()">{{dataService.getOrganizationName()}}</p>
 
 
 </ion-content>

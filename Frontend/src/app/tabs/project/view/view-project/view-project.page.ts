@@ -1,10 +1,8 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { ActionSheetController, MenuController, NavController, ToastController } from '@ionic/angular';
-import { HttpClient } from '@angular/common/http';
 import { Project } from 'src/app/model/project';
 import { DataService } from 'src/app/services/data.service';
-import { GlobalsService } from 'src/app/services/globals.service';
 import { RestService } from 'src/app/services/rest.service';
 
 

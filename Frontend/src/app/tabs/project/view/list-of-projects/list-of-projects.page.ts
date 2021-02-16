@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MenuController, NavController } from '@ionic/angular';
+import { MenuController, NavController, Platform } from '@ionic/angular';
 import { RestService } from 'src/app/services/rest.service';
 import { ProjectInformation } from 'src/app/model/project-information';
 
@@ -13,11 +13,13 @@ export class ListOfProjectsPage {
   page = 0;
   projects: ProjectInformation[];
   loading: boolean;
+  HWBackSubscription: any;
 
   constructor(
     public menuCtrl: MenuController,
     private navCtrl: NavController,
     private restService: RestService,
+    private platform: Platform,
   ) {
     this.loading = true;
     this.projects = new Array();
@@ -28,6 +30,13 @@ export class ListOfProjectsPage {
 
   ionViewDidEnter() {
     this.menuCtrl.enable(true);
+    this.HWBackSubscription = this.platform.backButton.subscribe(() => {
+      navigator['app'].exitApp();
+    });
+  }
+
+  ionViewDidLeave(){
+    this.HWBackSubscription.unsubscribe();
   }
 
   // metodo per richiedere una pagina di elementi

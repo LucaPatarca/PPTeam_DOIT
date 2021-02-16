@@ -1,11 +1,9 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { AlertController, MenuController, NavController } from '@ionic/angular';
+
+import { Component } from '@angular/core';
+import { MenuController } from '@ionic/angular';
 import { Skill } from 'src/app/model/skill';
 import { User } from 'src/app/model/user';
 import { DataService } from 'src/app/services/data.service';
-import { GlobalsService } from 'src/app/services/globals.service';
 import { RestService } from 'src/app/services/rest.service';
 
 @Component({

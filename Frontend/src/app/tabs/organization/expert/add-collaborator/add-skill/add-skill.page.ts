@@ -1,6 +1,4 @@
-import { MenuController, NavController, ToastController } from '@ionic/angular';
-import { GlobalsService } from 'src/app/services/globals.service';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { NavController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';

@@ -52,7 +52,6 @@ export class LoginUserPage {
     user.secret = this.secret;
     this.restService.login(user).then(
       user=>{
-        this.dataService.loginUser(user);
         this.restService.presentToast("Accesso eseguito come "+(user as unknown as User).name);
       }
     );

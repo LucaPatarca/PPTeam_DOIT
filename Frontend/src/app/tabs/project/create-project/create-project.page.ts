@@ -1,8 +1,6 @@
 import { Organization } from './../../../model/organization';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { MenuController, NavController, ToastController } from '@ionic/angular';
-import { GlobalsService } from 'src/app/services/globals.service';
+import { MenuController, NavController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Project } from 'src/app/model/project';

@@ -8,9 +8,8 @@ import { ProjectInformation } from '../model/project-information';
 import { Skill } from '../model/skill';
 import { User } from '../model/user';
 import { DataService } from './data.service';
-import { GlobalsService } from './globals.service';
 import { Storage } from '@ionic/storage';
-import { tap, switchMap } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -24,7 +23,6 @@ export class RestService {
     private http: HttpClient,
     private dataService: DataService,
     private navCtrl: NavController,
-    private globals: GlobalsService,
     private toastCtrl: ToastController,
     private storage:Storage
   ) { 
@@ -42,7 +40,7 @@ export class RestService {
   async createOrganization(organization: Organization): Promise<Organization> {
     this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.post(this.globals.createOrganizationApiUrl, organization,this.config).subscribe(
+      this.http.post(environment.createOrganizationApiUrl, organization,this.config).subscribe(
         res => {
           this.presentToast("Organizzatione creata");
           resolve(res as unknown as Organization);
@@ -58,7 +56,7 @@ export class RestService {
   async addCollaborator(organizationId: string, userMail: string, skill: Skill): Promise<void> {
     this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.post(this.globals.addCollaborator + organizationId + "/" + userMail, skill,this.config).subscribe(
+      this.http.post(environment.addCollaborator + organizationId + "/" + userMail, skill,this.config).subscribe(
         res => {
           this.presentToast("Skill Aggiunta");
           resolve();
@@ -73,7 +71,7 @@ export class RestService {
 
   async getOrganizationMembers(organizationId: string): Promise<User[]> {
     return new Promise((resolve, rejects) => {
-      this.http.get(this.globals.getOrganizationMember + organizationId).subscribe(
+      this.http.get(environment.getOrganizationMember + organizationId).subscribe(
         res => {
           resolve(res as User[]);
         },
@@ -86,7 +84,7 @@ export class RestService {
 
   async getOrganizationPage(page: number): Promise<OrganizationInformation[]> {
     return new Promise((resolve, rejects) => {
-      this.http.get(this.globals.listOfOrganizationsApiUrl + page).subscribe(
+      this.http.get(environment.listOfOrganizationsApiUrl + page).subscribe(
         res => {
           resolve(res['content'] as OrganizationInformation[]);
         },
@@ -100,7 +98,7 @@ export class RestService {
   async modifyOrganization(organization: Organization): Promise<Organization> {
     this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.put(this.globals.modifyOrganizationApiUrl, organization, this.config)
+      this.http.put(environment.modifyOrganizationApiUrl, organization, this.config)
         .subscribe(
           res => {
             resolve(res as unknown as Organization);
@@ -113,13 +111,11 @@ export class RestService {
   async deleteOrganization(organization: Organization): Promise<boolean> {
     this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.delete(this.globals.organizationApiUrl + organization.id,this.config).subscribe(
+      this.http.delete(environment.organizationApiUrl + organization.id,this.config).subscribe(
         res => {
-          this.storage.get('user').then((val) => {
-            if (organization.creatorMail == val) {
-              this.storage.remove('organization');
-            }
-          });
+          if(this.dataService.getOrganizationName() == organization.name) {
+            this.dataService.logoutOrganization();
+          }
           this.presentToast((res as unknown as boolean) == true ? 'Organizzazione Cancellata.' : 'Organizzazione Non Cancellata');
           resolve(res  as unknown as boolean);
         },
@@ -133,7 +129,7 @@ export class RestService {
 
   async getOrganization(id: string): Promise<Organization> {
     return new Promise((resolve, rejects) => {
-      this.http.get(this.globals.organizationApiUrl + id).subscribe(
+      this.http.get(environment.organizationApiUrl + id).subscribe(
         res => {
           resolve(res as Organization);
         },
@@ -149,7 +145,7 @@ export class RestService {
 
   async getProjectsPage(page: number): Promise<ProjectInformation[]> {
     return new Promise((resolve, rejects) => {
-      this.http.get(this.globals.listOfProjectsApiUrl + page)
+      this.http.get(environment.listOfProjectsApiUrl + page)
         .subscribe(
           res => {
             resolve(res['content'] as ProjectInformation[]);
@@ -165,7 +161,7 @@ export class RestService {
   async createProject(project: Project): Promise<Project> {
     this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.post(this.globals.createProjectApiUrl, project, this.config).subscribe(
+      this.http.post(environment.createProjectApiUrl, project, this.config).subscribe(
         res => {
           this.presentToast('Progetto Creato');
           resolve(res as unknown as Project);
@@ -181,7 +177,7 @@ export class RestService {
   async deleteProject(id: string): Promise<boolean> {
     this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.delete(this.globals.projectApiUrl + id,this.config)
+      this.http.delete(environment.projectApiUrl + id,this.config)
         .subscribe(
           res => {
             this.presentToast("Progetto cancellato");
@@ -197,7 +193,7 @@ export class RestService {
 
   async getProject(id: string): Promise<Project> {
     return new Promise((resolve, rejects) => {
-      this.http.get(this.globals.projectApiUrl + id)
+      this.http.get(environment.projectApiUrl + id)
         .subscribe(
           res => {
             resolve(res as Project);
@@ -220,7 +216,7 @@ export class RestService {
 
   async createUser(user: User): Promise<User> {
     return new Promise((resolve, rejects) => {
-      this.http.post(this.globals.createUserApiUrl, user, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
+      this.http.post(environment.createUserApiUrl, user, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
         res => {
           const returnedUser = res as User;
           this.presentToast("Utente " + returnedUser.name + " creato con successo");
@@ -236,7 +232,7 @@ export class RestService {
 
   async getUser(mail: string): Promise<User> {
     return new Promise((resolve, rejects) => {
-      this.http.get(this.globals.userApiUrl + mail).subscribe(
+      this.http.get(environment.userApiUrl + mail).subscribe(
         res => {
           const user = res as User;
           resolve(user);
@@ -251,10 +247,9 @@ export class RestService {
 
   async login(user:User): Promise<User>{
     return new Promise((resolve, rejects) => {
-      this.http.post(this.globals.login,user,{observe:'response'}).subscribe(
+      this.http.post(environment.login,user,{observe:'response'}).subscribe(
         res => {
-          this.storage.set('token',res.headers.get('Authorization'));
-          this.storage.set('user',res.body as User);
+          this.dataService.loginUser(res.body as User, res.headers.get('Authorization'));
           resolve(res.body as User);
         },
         err => {
@@ -267,7 +262,7 @@ export class RestService {
 
   async getUserOrganizations(mail: string): Promise<Organization[]> {
     return new Promise((resolve, rejects) => {
-      this.http.get(this.globals.getOrganizationUserCreatorApiUrl + mail)
+      this.http.get(environment.getOrganizationUserCreatorApiUrl + mail)
         .subscribe(
           res => {
             resolve(res as Organization[]);
@@ -281,7 +276,7 @@ export class RestService {
 
   async getUserSkills(mail: string): Promise<Skill[]> {
     return new Promise((resolve, rejects) => {
-      this.http.get(this.globals.getUserSkills + mail)
+      this.http.get(environment.getUserSkills + mail)
         .subscribe(
           res => {
             resolve(res as Skill[]);
@@ -297,7 +292,7 @@ export class RestService {
   async updateProject(project: Project): Promise<Project>{
     this.refreshToken();
     return new Promise((resolve, rejects)=>{
-      this.http.put(this.globals.modifyProjectApiUrl, project, this.config)
+      this.http.put(environment.modifyProjectApiUrl, project, this.config)
       .subscribe(
         res => {
           this.presentToast('Progetto Modificato');
