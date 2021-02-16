@@ -83,6 +83,10 @@ export class DataService {
     return "";
   }
 
+  public updateOrganization(organization:Organization){
+    this.organization = organization;
+  }
+
   public isOrganizationSelected(): boolean {
     return this.organization != null;
   }

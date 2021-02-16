@@ -38,7 +38,7 @@ export class ModifyProjectPage {
       description: [Validators.required],
     });
     const id = this.route.snapshot.params['id'];
-    this.project = new Project("Title", "Description", "", "");
+    this.project = new Project("Title", "Description", "", "",new Array());
     restService.getProject(id).then(
       project=>{
         this.project = project;
@@ -54,7 +54,7 @@ export class ModifyProjectPage {
     this.project.title = this.title;
     this.project.description = this.description;
     this.restService.updateProject(this.project);
-
+    this.goBack(this.project.id);
   }
 
   public goBack(id: string) {

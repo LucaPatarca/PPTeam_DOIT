@@ -41,7 +41,7 @@ export class AddSkillPage {
     const newSkill = {
       "name": this.skill,
       "expertInOrganization": [this.organizationId],
-      "isGloballyExpert": false
+      "level": 1
     }
 
     this.restService.addCollaborator(this.organizationId,this.userMail,newSkill);

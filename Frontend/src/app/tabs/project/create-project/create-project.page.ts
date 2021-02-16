@@ -1,6 +1,7 @@
+import { Skill } from './../../../model/skill';
 import { Organization } from './../../../model/organization';
 import { Component } from '@angular/core';
-import { MenuController, NavController } from '@ionic/angular';
+import { MenuController, NavController, AlertController, ToastController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Project } from 'src/app/model/project';
@@ -15,10 +16,13 @@ import { User } from 'src/app/model/user';
   styleUrls: ['./create-project.page.scss'],
 })
 export class CreateProjectPage {
+  [x: string]: any;
 
   validations_form: FormGroup;
   title: string;
   description: string;
+  neededSkills:Skill[] = new Array();
+  skill:Skill = new Skill();
   validation_messages = {
     'title': [
       { type: 'required', message: 'Name is required.' }
@@ -32,8 +36,10 @@ export class CreateProjectPage {
   constructor(private menuCtrl: MenuController,
     public formBuilder: FormBuilder,
     private navCtrl: NavController,
+    private alertController:AlertController,
     public dataService: DataService,
     private restService: RestService,
+    private toastController:ToastController
     ) {
     this.validations_form = this.formBuilder.group({
       title: ['', Validators.required],
@@ -45,6 +51,58 @@ export class CreateProjectPage {
     this.menuCtrl.enable(false);
   }
 
+  async addComponent(){
+    const add = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Add Component !',
+      message: 'skill required',
+      inputs: [ 
+        {
+          name: 'skill',
+          placeholder: 'skill'
+        },
+        {
+          name: 'level',
+          placeholder: 'level'
+        },
+      ],
+      buttons: [
+        {
+          text: 'cancel',
+        }, {
+          text: 'add',
+          handler: async data => {
+            this.skill = new Skill();
+            if (data.skill==null || (data.skill as string).trim()=="") {
+              const toast = await this.toastController.create({
+                message: 'Campo skill non deve essere vuoto',
+                duration: 2000
+              });
+              toast.present();
+            } else {
+              try{
+                this.skill.name = data.skill;
+                this.skill.level = data.level as number;
+                if(this.skill.level>10||this.skill.level<1)
+                  throw new Error("");
+                this.skill.name = data.skill;
+                this.skill.level = data.level as number;
+                this.neededSkills.push(this.skill);
+              }catch{
+                const toast = await this.toastController.create({
+                  message: 'Campo level deve essere compreso tra 1 e 10',
+                  duration: 2000
+                });
+                toast.present();
+              }
+            }
+          }
+        }
+      ]
+    });
+    await add.present();
+  }
+
   createProject() {
     // metodo per effettuare una chiamata post
     const project = new Project(
@@ -52,6 +110,7 @@ export class CreateProjectPage {
       this.description,
       (this.dataService.getOrganization() as unknown as Organization).id,
       (this.dataService.getUser() as unknown as User).mail,
+      this.neededSkills,
     );
     
     this.restService.createProject(project).then(

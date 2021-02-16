@@ -33,6 +33,8 @@ export class ListOfProjectsPage {
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
+    this.projects = new Array();
+    this.loadProjects();
   }
 
   ionViewDidLeave(){

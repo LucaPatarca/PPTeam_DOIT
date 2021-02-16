@@ -101,6 +101,7 @@ export class RestService {
       this.http.put(environment.modifyOrganizationApiUrl, organization, this.config)
         .subscribe(
           res => {
+            this.dataService.updateOrganization(res as unknown as Organization  ); 
             resolve(res as unknown as Organization);
           },
           this.defaultErrorHandler

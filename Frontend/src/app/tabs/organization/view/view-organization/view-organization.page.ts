@@ -58,7 +58,7 @@ export class ViewOrganizationPage {
     var buttons = new Array();
 
     // azioni per i membri
-    if (this.dataService.hasMemberPermission(this.organization)) {
+    if (this.dataService.hasOrganizationCreatorPermission(this.organization)) {
       buttons = buttons.concat([
         {
           text: 'Edit',
