@@ -1,3 +1,4 @@
+import { Organization } from './../../../model/organization';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MenuController, NavController, ToastController } from '@ionic/angular';
@@ -6,6 +7,7 @@ import { DataService } from 'src/app/services/data.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Project } from 'src/app/model/project';
 import { RestService } from 'src/app/services/rest.service';
+import { User } from 'src/app/model/user';
 
 
 
@@ -50,8 +52,8 @@ export class CreateProjectPage {
     const project = new Project(
       this.title,
       this.description,
-      this.dataService.selectedOrganization.id,
-      this.dataService.user.mail,
+      (this.dataService.getOrganization() as unknown as Organization).id,
+      (this.dataService.getUser() as unknown as User).mail,
     );
     
     this.restService.createProject(project).then(

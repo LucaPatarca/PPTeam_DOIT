@@ -17,7 +17,7 @@ export class ViewOrganizationPage {
   constructor(
     private route: ActivatedRoute,
     private nav: NavController,
-    public data: DataService,
+    public dataService: DataService,
     private menuCtrl: MenuController,
     private restService: RestService,
     private actionSheetCtrl: ActionSheetController,
@@ -58,7 +58,7 @@ export class ViewOrganizationPage {
     var buttons = new Array();
 
     // azioni per i membri
-    if (this.data.hasMemberPermission(this.organization)) {
+    if (this.dataService.hasMemberPermission(this.organization)) {
       buttons = buttons.concat([
         {
           text: 'Edit',
@@ -71,7 +71,7 @@ export class ViewOrganizationPage {
     }
 
     // azioni per il cratore
-    if (this.data.hasOrganizationCreatorPermission(this.organization)) {
+    if (this.dataService.hasOrganizationCreatorPermission(this.organization)) {
       buttons = buttons.concat([
         {
           text: 'Delete',

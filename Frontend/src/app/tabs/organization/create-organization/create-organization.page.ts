@@ -20,8 +20,7 @@ export class CreateOrganizationPage {
       { type: 'required', message: 'name is required.' },
     ],
     'description': [
-      { type: 'required', message: 'Email is required.' },
-      { type: 'pattern', message: 'Please enter a valid email.' }
+      { type: 'required', message: 'description is required.' },
     ]
   };
 

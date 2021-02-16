@@ -11,11 +11,21 @@
   <form [formGroup]="validations_form" (ngSubmit)="onSubmit()">
     <ion-item>
       <ion-label position="floating" color="primary">Email</ion-label>
-      <ion-input type="text" formControlName="email" [(ngModel)]="email"></ion-input>
+      <ion-input type="text" formControlName="mail" [(ngModel)]="mail"></ion-input>
     </ion-item>
-    <ng-container *ngFor="let validation of validation_messages.email">
+    <ng-container *ngFor="let validation of validation_messages.mail">
       <div class="error-message"
-        *ngIf="validations_form.get('email').hasError(validation.type) && (validations_form.get('email').dirty || validations_form.get('email').touched)">
+        *ngIf="validations_form.get('mail').hasError(validation.type) && (validations_form.get('mail').dirty || validations_form.get('mail').touched)">
+        {{ validation.message }}
+      </div>
+    </ng-container>
+    <ion-item>
+      <ion-label position="floating" color="primary">Password</ion-label>
+      <ion-input type="password" formControlName="secret" [(ngModel)]="secret"></ion-input>    
+    </ion-item>
+    <ng-container *ngFor="let validation of validation_messages.secret">
+      <div class="error-message"
+        *ngIf="validations_form.get('secret').hasError(validation.type) && (validations_form.get('secret').dirty || validations_form.get('secret').touched)">
         {{ validation.message }}
       </div>
     </ng-container>

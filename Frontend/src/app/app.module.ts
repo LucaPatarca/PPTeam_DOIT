@@ -14,7 +14,8 @@ import { AppRoutingModule } from './app-routing.module';
 
 import {HttpClientModule} from "@angular/common/http";
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment'
+import { environment } from '../environments/environment';
+
 
 
 @NgModule({
@@ -34,7 +35,7 @@ import { environment } from '../environments/environment'
     FormBuilder,
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent]
 })

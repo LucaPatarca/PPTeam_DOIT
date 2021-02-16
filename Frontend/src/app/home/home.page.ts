@@ -2,6 +2,7 @@ import { DataService } from 'src/app/services/data.service';
 import { MenuController, Platform } from '@ionic/angular';
 import { Component } from '@angular/core';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -16,7 +17,6 @@ export class HomePage {
     public dataService: DataService,
     private platform: Platform,
   ) {
-    
   }
 
   ionViewDidEnter() {
@@ -24,6 +24,7 @@ export class HomePage {
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
+    
   }
 
   ionViewDidLeave(){

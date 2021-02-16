@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MenuController, NavController } from '@ionic/angular';
 import { RestService } from 'src/app/services/rest.service';
+import { User } from 'src/app/model/user';
 
 
 
@@ -14,12 +15,16 @@ import { RestService } from 'src/app/services/rest.service';
 export class LoginUserPage {
 
   validations_form: FormGroup;
-  email: string;
+  mail: string;
+  secret: string;
   validation_messages = {
-    'email': [
+    'mail': [
       { type: 'required', message: 'Email is required.' },
       { type: 'pattern', message: 'Please enter a valid email.' }
     ],
+    'secret': [
+      { type: 'required', message: 'Password is required.' } 
+    ]
   };
 
   constructor(private menuCtrl: MenuController,
@@ -29,10 +34,11 @@ export class LoginUserPage {
     private restService: RestService,
   ) {
     this.validations_form = this.formBuilder.group({
-      email: ['', Validators.compose([
+      mail: ['', Validators.compose([
         Validators.required,
         Validators.pattern('^[A-Za-z0-9._%+-]{3,}@[a-zA-Z]{3,}([.]{1}[a-zA-Z]{2,}|[.]{1}[a-zA-Z]{2,}[.]{1}[a-zA-Z]{2,})')
       ])],
+      secret:['',Validators.compose([Validators.required])]
     });
   }
 
@@ -41,10 +47,13 @@ export class LoginUserPage {
   }
 
   onSubmit() {
-    this.restService.getUser(this.email).then(
+    let user:User = new User();
+    user.mail = this.mail;
+    user.secret = this.secret;
+    this.restService.login(user).then(
       user=>{
-        this.dataService.setUser(user);
-        this.restService.presentToast("Accesso eseguito come "+user.name);
+        this.dataService.loginUser(user);
+        this.restService.presentToast("Accesso eseguito come "+(user as unknown as User).name);
       }
     );
     this.navCtrl.navigateBack(['/home'], { queryParams: { 'refresh': 1 } });

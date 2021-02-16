@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { Organization } from '../model/organization';
 import { OrganizationInformation } from '../model/organization-information';
 import { Project } from '../model/project';
@@ -9,28 +9,43 @@ import { Skill } from '../model/skill';
 import { User } from '../model/user';
 import { DataService } from './data.service';
 import { GlobalsService } from './globals.service';
+import { Storage } from '@ionic/storage';
+import { tap, switchMap } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class RestService {
 
+  config:any;
+
   constructor(
     private http: HttpClient,
     private dataService: DataService,
+    private navCtrl: NavController,
     private globals: GlobalsService,
-    private toastCtrl: ToastController
+    private toastCtrl: ToastController,
+    private storage:Storage
   ) { 
+  }
+
+
+  refreshToken(){
+    this.config = {
+      headers: { Authorization: this.dataService.getToken() }
+    };
   }
 
   //Organization methods
 
   async createOrganization(organization: Organization): Promise<Organization> {
+    this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.post(this.globals.createOrganizationApiUrl, organization, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
+      this.http.post(this.globals.createOrganizationApiUrl, organization,this.config).subscribe(
         res => {
           this.presentToast("Organizzatione creata");
-          resolve(res as Organization);
+          resolve(res as unknown as Organization);
         },
         err => {
           this.defaultErrorHandler(err);
@@ -41,8 +56,9 @@ export class RestService {
   }
 
   async addCollaborator(organizationId: string, userMail: string, skill: Skill): Promise<void> {
+    this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.post(this.globals.addCollaborator + organizationId + "/" + userMail, skill, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
+      this.http.post(this.globals.addCollaborator + organizationId + "/" + userMail, skill,this.config).subscribe(
         res => {
           this.presentToast("Skill Aggiunta");
           resolve();
@@ -82,11 +98,12 @@ export class RestService {
   }
 
   async modifyOrganization(organization: Organization): Promise<Organization> {
+    this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.put(this.globals.modifyOrganizationApiUrl, organization, { headers: new HttpHeaders(), responseType: 'json' })
+      this.http.put(this.globals.modifyOrganizationApiUrl, organization, this.config)
         .subscribe(
           res => {
-            resolve(res as Organization);
+            resolve(res as unknown as Organization);
           },
           this.defaultErrorHandler
         );
@@ -94,14 +111,17 @@ export class RestService {
   }
 
   async deleteOrganization(organization: Organization): Promise<boolean> {
+    this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.delete(this.globals.organizationApiUrl + organization.id).subscribe(
+      this.http.delete(this.globals.organizationApiUrl + organization.id,this.config).subscribe(
         res => {
-          if (organization.creatorMail == this.dataService.user.mail) {
-            this.dataService.quitFromOrganization();
-          }
-          this.presentToast(res == true ? 'Organizzazione Cancellata.' : 'Organizzazione Non Cancellata');
-          resolve(res as boolean);
+          this.storage.get('user').then((val) => {
+            if (organization.creatorMail == val) {
+              this.storage.remove('organization');
+            }
+          });
+          this.presentToast((res as unknown as boolean) == true ? 'Organizzazione Cancellata.' : 'Organizzazione Non Cancellata');
+          resolve(res  as unknown as boolean);
         },
         err => {
           this.defaultErrorHandler(err);
@@ -143,11 +163,12 @@ export class RestService {
   }
 
   async createProject(project: Project): Promise<Project> {
+    this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.post(this.globals.createProjectApiUrl, project, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
+      this.http.post(this.globals.createProjectApiUrl, project, this.config).subscribe(
         res => {
           this.presentToast('Progetto Creato');
-          resolve(res as Project);
+          resolve(res as unknown as Project);
         },
         err => {
           this.defaultErrorHandler(err);
@@ -158,12 +179,13 @@ export class RestService {
   }
 
   async deleteProject(id: string): Promise<boolean> {
+    this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.delete(this.globals.projectApiUrl + id)
+      this.http.delete(this.globals.projectApiUrl + id,this.config)
         .subscribe(
           res => {
             this.presentToast("Progetto cancellato");
-            resolve(res as boolean);
+            resolve(res as unknown as boolean);
           },
           err => {
             this.defaultErrorHandler(err);
@@ -227,6 +249,22 @@ export class RestService {
     });
   }
 
+  async login(user:User): Promise<User>{
+    return new Promise((resolve, rejects) => {
+      this.http.post(this.globals.login,user,{observe:'response'}).subscribe(
+        res => {
+          this.storage.set('token',res.headers.get('Authorization'));
+          this.storage.set('user',res.body as User);
+          resolve(res.body as User);
+        },
+        err => {
+          this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
   async getUserOrganizations(mail: string): Promise<Organization[]> {
     return new Promise((resolve, rejects) => {
       this.http.get(this.globals.getOrganizationUserCreatorApiUrl + mail)
@@ -257,12 +295,13 @@ export class RestService {
   }
 
   async updateProject(project: Project): Promise<Project>{
+    this.refreshToken();
     return new Promise((resolve, rejects)=>{
-      this.http.put(this.globals.modifyProjectApiUrl, project, { headers: new HttpHeaders(), responseType: 'json' })
+      this.http.put(this.globals.modifyProjectApiUrl, project, this.config)
       .subscribe(
         res => {
           this.presentToast('Progetto Modificato');
-          resolve(res as Project);
+          resolve(res as unknown as Project);
         },
         async err => {
           this.defaultErrorHandler(err);

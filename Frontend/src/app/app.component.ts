@@ -66,8 +66,8 @@ export class AppComponent {
   }
 
   async quitFromOrg() {
-    const orgName = this.dataService.getSelectedOrganization().name;
-    this.dataService.quitFromOrganization();
+    let orgName = this.dataService.getOrganization().name;
+    this.dataService.logoutOrganization();
     const toast = await this.toastCtrl.create({
       message: 'Logout da ' + orgName + ' eseguito',
       duration: 2000
@@ -81,14 +81,13 @@ export class AppComponent {
   }
 
   async logOutUser() {
-    this.dataService.logout();
+    this.dataService.logoutUser();
     const toast = await this.toastCtrl.create({
       message: 'Logout eseguito',
       duration: 2000
     });
-
     toast.present();
-    this.navCtrl.navigateRoot(['/home']);
+    this.navCtrl.navigateRoot(['/home'], { queryParams: { 'refresh': 1 } });
   }
 
   viewSkill() {

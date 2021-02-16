@@ -5,6 +5,7 @@ import { MenuController, NavController, AlertController, ToastController } from 
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 import { RestService } from 'src/app/services/rest.service';
+import { User } from 'src/app/model/user';
 
 @Component({
   selector: 'app-select-organization',
@@ -38,7 +39,7 @@ export class SelectOrganizationPage {
 
   // metodo per richiedere una pagina di elementi
   async loadOrganizations() {
-    const newOrganizations = await this.restService.getUserOrganizations(this.data.user.mail);
+    const newOrganizations = await this.restService.getUserOrganizations((this.data.getUser() as unknown as User).mail);
     this.organizations = this.organizations.concat(newOrganizations);
   }
 
@@ -55,14 +56,14 @@ export class SelectOrganizationPage {
 
   async reload(event?){
     this.page = 0;
-    const newOrganizations = await this.restService.getUserOrganizations(this.data.user.mail);
+    const newOrganizations = await this.restService.getUserOrganizations((this.data.getUser() as unknown as User).mail);
     this.organizations = newOrganizations;
     event.target.complete();
   }
 
   // metodo per aprire la visualizzazione di una pagina (gli si passa un organization)
   async selectOrg(organization: Organization) {
-    this.data.selectOrganization(organization);
+    this.data.loginOrganization(organization);
     this.restService.presentToast("Organizzazione "+ organization.name + " selezionata");
 
     this.navCtrl.navigateBack(["/home"], { queryParams: { 'refresh': 1 } })

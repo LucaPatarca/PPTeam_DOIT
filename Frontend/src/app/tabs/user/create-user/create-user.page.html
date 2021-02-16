@@ -30,6 +30,26 @@
         {{ validation.message }}
       </div>
     </ng-container>
+    <ion-item>
+      <ion-label position="floating" color="primary">Password</ion-label>
+      <ion-input type="password" formControlName="secret" [(ngModel)]="secret"></ion-input>
+    </ion-item>
+    <ng-container *ngFor="let validation of validation_messages.secret">
+      <div class="error-message"
+        *ngIf="validations_form.get('secret').hasError(validation.type) && (validations_form.get('secret').dirty || validations_form.get('secret').touched)">
+        {{ validation.message }}
+      </div>
+    </ng-container>
+    <ion-item>
+      <ion-label position="floating" color="primary">Repeat Password</ion-label>
+      <ion-input type="password" formControlName="confirm" [(ngModel)]="confirm"></ion-input>
+    </ion-item>
+    <ng-container *ngFor="let validation of validation_messages.confirm">
+      <div class="error-message"
+        *ngIf="validations_form.get('confirm').hasError(validation.type) && (validations_form.get('confirm').dirty || validations_form.get('confirm').touched)">
+        {{ validation.message }}
+      </div>
+    </ng-container>
     <ion-button color="primary" class="submit-btn" expand="block" type="submit" [disabled]="!validations_form.valid">
       Submit data</ion-button>
   </form>

@@ -2,67 +2,117 @@ import { Organization } from '../model/organization';
 import { Injectable } from '@angular/core';
 import { User } from '../model/user';
 import { Project } from '../model/project';
+import { Storage } from '@ionic/storage';
+import { isGeneratedFile } from '@angular/compiler/src/aot/util';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataService {
 
-  public user: User;
-  public selectedOrganization: Organization;
+  key_user:string = 'user';
+  key_organization:string = 'organization';
+  key_token:string = 'token';
 
   private guestUser: User = new User();
 
-  constructor() {
+  private user:User;
+  private organization:Organization;
+  private token:string;
+
+
+  constructor(private storage:Storage) {
     this.user = this.guestUser;
-    this.selectedOrganization = null;
+    this.organization = null;
+    this.token = null; 
+    storage.get(this.key_organization).then((val) => {
+      this.organization = val as Organization;
+    });
+    storage.get(this.key_token).then((val) => {
+      this.token = val as string;
+    });
+    storage.get(this.key_user).then((val) => {
+      this.user = val as User;
+    });
   }
 
-  public getUser(): User {
-    return this.user;
-  }
-
-  public isUserLogged(): boolean {
-    return this.user != this.guestUser;
-  }
-
-  public setUser(user: User) {
+  public loginUser(user:User){
     this.user = user;
   }
 
-  public logout() {
+  public getUser():User{
+    return this.user;
+  }
+
+  public getUserMail():string{
+    if(this.user != this.guestUser)
+    return this.user.mail;
+    return "";
+  }
+
+  public isUserLogged():boolean{
+    return this.user != this.guestUser;
+  }
+
+  public logoutUser(){
+    this.storage.remove(this.key_user);
+    this.storage.remove(this.key_token);
     this.user = this.guestUser;
-    this.quitFromOrganization();
+    this.token = null;
+    this.logoutOrganization();
   }
 
-  public getSelectedOrganization(): Organization {
-    return this.selectedOrganization;
+  public loginOrganization(organization:Organization){
+    this.storage.set(this.key_organization,organization);
+    this.organization = organization;
   }
 
-  public selectOrganization(organization: Organization) {
-    this.selectedOrganization = organization;
+  public getOrganization():Organization{
+    return this.organization;
   }
 
-  public isOrganizationSelected(): boolean {
-    return this.selectedOrganization != null;
+  public getOrganizationName():string{
+    if(this.organization!=null)
+    return this.organization.name;
+    return"";
   }
 
-  public quitFromOrganization() {
-    this.selectedOrganization = null;
+  public isOrganizationSelected():boolean{
+    return this.organization != null;
   }
 
-  hasMemberPermission(organization: Organization): boolean {
-    if (organization == null || organization == undefined) return false;
-    return organization.membersMails.includes(this.user.mail);
+  public logoutOrganization(){
+    this.storage.remove(this.key_organization);
+    this.organization = null;
   }
 
-  hasOrganizationCreatorPermission(organization: Organization): boolean {
-    if (organization == null || organization == undefined) return false;
-    return organization.creatorMail == this.user.mail;
+  public hasProjectCreatorPermission(project:Project):boolean{
+    if(this.user.mail==project.creatorMail)
+      return true;
+    else 
+      return false;
   }
 
-  hasProjectCreatorPermission(project: Project){
-    if(project == null || project == undefined) return false;
-    return project.creatorMail == this.user.mail;
+  public hasOrganizationCreatorPermission(organization:Organization):boolean{
+    if(this.user.mail == organization.creatorMail)
+      return true;
+    else
+      return false;
   }
+
+  public hasMemberPermission(organization:Organization):boolean{
+    organization.membersMails.forEach(element => {
+      if(element = this.user.mail) 
+        return true;
+    });
+    return false;
+  }
+
+  public getToken():string{
+    return this.token;
+  }
+  
 }

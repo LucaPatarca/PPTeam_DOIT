@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { AlertController, MenuController, NavController } from '@ionic/angular';
 import { Skill } from 'src/app/model/skill';
+import { User } from 'src/app/model/user';
 import { DataService } from 'src/app/services/data.service';
 import { GlobalsService } from 'src/app/services/globals.service';
 import { RestService } from 'src/app/services/rest.service';
@@ -35,7 +36,7 @@ export class ViewSkillPage {
 
   // metodo per richiedere una pagina di elementi
   async loadSkills(event?) {
-    const newSkills = await  this.restService.getUserSkills(this.data.user.mail);
+    const newSkills = await  this.restService.getUserSkills((this.data.getUser() as unknown as User).mail);
     this.skills = this.skills.concat(newSkills);
   }
 
@@ -51,7 +52,7 @@ export class ViewSkillPage {
 
   async reload(event?){
     this.page=0;
-    const newSkills = await this.restService.getUserSkills(this.data.user.mail);
+    const newSkills = await this.restService.getUserSkills((this.data.getUser() as unknown as User).mail);
     this.skills = newSkills;
     event.target.complete();
   }

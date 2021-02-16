@@ -24,7 +24,7 @@ export class ViewProjectPage {
     private menuCtrl: MenuController,
     public nav: NavController,
     private restService: RestService,
-    public data: DataService,
+    public dataSerivice: DataService,
     private actionSheetCtrl: ActionSheetController,
   ) {
     this.id = this.route.snapshot.params["id"];
@@ -82,7 +82,7 @@ export class ViewProjectPage {
     // TODO da implementare perche non ho l'organizzazione
 
     // azioni per il creatore del progetto
-    if (this.data.hasProjectCreatorPermission(this.project)) {
+    if (this.dataSerivice.hasProjectCreatorPermission(this.project)) {
       buttons = buttons.concat([
         {
           text: 'Delete',
