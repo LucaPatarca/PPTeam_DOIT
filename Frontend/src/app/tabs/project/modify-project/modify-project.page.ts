@@ -1,6 +1,7 @@
+import { Skill } from './../../../model/skill';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from "@angular/router";
-import { MenuController, NavController } from '@ionic/angular';
+import { MenuController, NavController, AlertController, ToastController } from '@ionic/angular';
 import { Project } from 'src/app/model/project';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestService } from 'src/app/services/rest.service';
@@ -26,11 +27,13 @@ export class ModifyProjectPage {
   };
 
   constructor(
+    private alertController:AlertController,
     private route: ActivatedRoute,
     public nav: NavController,
     private menuCtrl: MenuController,
     public formBuilder: FormBuilder,
     private restService: RestService,
+    private toastController:ToastController
   ) {
     this.validations_form = this.formBuilder.group({
 
@@ -59,6 +62,122 @@ export class ModifyProjectPage {
 
   public goBack(id: string) {
     this.nav.navigateBack(['/view-project', { 'id': id }]);
+  }
+
+  async modifySkill(skill:Skill){
+    var newSkill:Skill = new Skill();
+    const add = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Modify skill name!',
+      message: 'skill required',
+      inputs: [ 
+        {
+          name: 'skill',
+          placeholder: skill.name
+        },
+      ],
+      buttons: [
+        {
+          text: 'cancel',
+        }, {
+          text: 'level',
+          handler: async data => {
+            if (data.skill==null || (data.skill as string).trim()=="") {
+              const toast = await this.toastController.create({
+                message: 'Campo skill non deve essere vuoto',
+                duration: 2000
+              });
+              toast.present();
+            } else {
+              newSkill.name = data.skill;
+              await this.modifySkillLevel(skill,newSkill);
+            }
+          }
+        }
+      ]
+    });
+    await add.present();
+  }
+
+  async modifySkillLevel(skill:Skill,newSkill:Skill){
+    const add = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Modify skill level!',
+      message: 'skill level required',
+      inputs: [ 
+        {
+          type: 'radio',
+          label: '1',
+          value: '1'
+        },
+        {
+          type: 'radio',
+          label: '2',
+          value: '2'
+        },
+        {
+          type: 'radio',
+          label: '3',
+          value: '3'
+        },
+        {
+          type: 'radio',
+          label: '4',
+          value: '4'
+        },
+        {
+          type: 'radio',
+          label: '5',
+          value: '5'
+        },
+        {
+          type: 'radio',
+          label: '6',
+          value: '6'
+        },
+        {
+          type: 'radio',
+          label: '7',
+          value: '7'
+        },
+        {
+          type: 'radio',
+          label: '8',
+          value: '8'
+        },
+        {
+          type: 'radio',
+          label: '9',
+          value: '9'
+        },
+        {
+          type: 'radio',
+          label: '10',
+          value: '10'
+        }
+      ], 
+      buttons: [
+        {
+          text: 'cancel',
+        }, {
+          text: 'save',
+          handler: async data => {
+            if (data==null) {
+              const toast = await this.toastController.create({
+                message: 'Campo level skill non selezionato',
+                duration: 2000
+              });
+              toast.present();
+            } else {
+              newSkill.level = data as number;
+              this.project.neededSkills = this.project.neededSkills.filter(obj => obj !== skill);
+              this.project.neededSkills.push(newSkill); 
+            }
+          }
+        }
+      ]
+    });
+    await add.present();
   }
 
 }

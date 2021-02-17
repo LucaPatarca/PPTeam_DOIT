@@ -61,10 +61,6 @@ export class CreateProjectPage {
           name: 'skill',
           placeholder: 'skill'
         },
-        {
-          name: 'level',
-          placeholder: 'level'
-        },
       ],
       buttons: [
         {
@@ -72,7 +68,6 @@ export class CreateProjectPage {
         }, {
           text: 'add',
           handler: async data => {
-            this.skill = new Skill();
             if (data.skill==null || (data.skill as string).trim()=="") {
               const toast = await this.toastController.create({
                 message: 'Campo skill non deve essere vuoto',
@@ -80,22 +75,80 @@ export class CreateProjectPage {
               });
               toast.present();
             } else {
-              try{
-                this.skill.name = data.skill;
-                this.skill.level = data.level as number;
-                if(this.skill.level>10||this.skill.level<1)
-                  throw new Error("");
-                this.skill.name = data.skill;
-                this.skill.level = data.level as number;
-                this.neededSkills.push(this.skill);
-              }catch{
-                const toast = await this.toastController.create({
-                  message: 'Campo level deve essere compreso tra 1 e 10',
-                  duration: 2000
-                });
-                toast.present();
-              }
+              await this.getLevelSkill(data.skill);
             }
+          }
+        }
+      ]
+    });
+    await add.present();
+  }
+
+  async getLevelSkill(skill:string){
+    const add = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'skill level !',
+      message: 'select level',
+      inputs: [ 
+        {
+          type: 'radio',
+          label: '1',
+          value: '1'
+        },
+        {
+          type: 'radio',
+          label: '2',
+          value: '2'
+        },
+        {
+          type: 'radio',
+          label: '3',
+          value: '3'
+        },
+        {
+          type: 'radio',
+          label: '4',
+          value: '4'
+        },
+        {
+          type: 'radio',
+          label: '5',
+          value: '5'
+        },
+        {
+          type: 'radio',
+          label: '6',
+          value: '6'
+        },
+        {
+          type: 'radio',
+          label: '7',
+          value: '7'
+        },
+        {
+          type: 'radio',
+          label: '8',
+          value: '8'
+        },
+        {
+          type: 'radio',
+          label: '9',
+          value: '9'
+        },
+        {
+          type: 'radio',
+          label: '10',
+          value: '10'
+        }
+      ],  
+      buttons: [
+        {
+          text: 'add',
+          handler: async data => {
+            this.skill = new Skill();
+            this.skill.name = skill;
+            this.skill.level = data as number;
+            this.neededSkills.push(this.skill);
           }
         }
       ]

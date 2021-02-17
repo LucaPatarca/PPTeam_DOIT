@@ -75,17 +75,29 @@ export class ViewProjectPage {
     await actionSheet.present();
   }
 
+  createSkillInput() {
+    const theNewInputs = [];
+    var i:number = 1;
+    this.project.neededSkills .forEach(element => {
+      theNewInputs.push(
+        {
+          type: 'radio',
+          label: element.name+' '+element.level,
+          value: '' + i,
+          checked: false
+        }
+      );
+      i++;
+    });
+    return theNewInputs;
+  }
+
   async submit(){
     const add = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Submit a Role',
       message: '',
-      inputs: [ 
-        {
-          name: 'role',
-          placeholder: 'role'
-        }
-      ],
+      inputs: this.createSkillInput(),
       buttons: [
         {
           text: 'cancel',
@@ -93,24 +105,16 @@ export class ViewProjectPage {
           text: 'add',
           handler: async data => {
             this.skill = new Skill();
-            if (data.role==null || (data.role as string).trim()=="") {
+            if (data==null) {
               const toast = await this.toastController.create({
                 message: 'Campo Skill non deve essere vuoto',
                 duration: 2000
               });
               toast.present();
             } else {
-              try{
                 this.skill.name = data.role;
                 this.restService.submit(this.id, new Role(this.dataSerivice.getUserMail(), this.skill, false))
                 this.goBack();
-              }catch{
-                const toast = await this.toastController.create({
-                  message: 'Role deve essere compreso tra le NeededSkills',
-                  duration: 2000
-                });
-                toast.present();
-              }
             }
           }
         }
@@ -153,10 +157,11 @@ export class ViewProjectPage {
     }
 
     // azioni per user non creatore del progetto o creatore dell'organizzazione
-    if (this.dataSerivice.isUserLogged || !this.dataSerivice.hasProjectCreatorPermission(this.project)){
+    if (this.dataSerivice.isUserLogged && !this.dataSerivice.hasProjectCreatorPermission(this.project)){
       buttons = buttons.concat([
         {
           text: 'Submit',
+          icon: 'chevron-down-outline',
           handler: () => {
             this.submit();
           }

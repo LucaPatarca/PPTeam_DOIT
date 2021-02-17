@@ -34,4 +34,16 @@
       Submit data</ion-button>
   </form>
 
+  <ion-label position="floating" color="primary">Select the skill to modify</ion-label>
+
+
+  <ion-card *ngFor="let skill of project.neededSkills">
+    <ion-item (click)='modifySkill(skill)'>
+      <ion-label>
+        <h2 text-capitalize>{{skill.name}}</h2>
+        <p>{{skill.level}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
 </ion-content>
