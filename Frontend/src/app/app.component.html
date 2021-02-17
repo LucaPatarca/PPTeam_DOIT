@@ -51,6 +51,11 @@
               <ion-label>Register</ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <ion-menu-toggle *ngIf="dataService.isUserLogged()" auto-hide="false">
+            <ion-item (click)="userSubmission()">
+              <ion-label>My submission</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
           <ion-menu-toggle *ngIf="!dataService.isUserLogged()" auto-hide="false">
             <ion-item (click)="logInUser()">
               <ion-label>Login</ion-label>

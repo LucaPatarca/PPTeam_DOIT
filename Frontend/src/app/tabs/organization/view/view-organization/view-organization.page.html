@@ -23,8 +23,8 @@
   <ion-card *ngIf="organization != null" style="padding: 8px;">
     <p>{{organization.description}}</p>
     <p>Creator : {{organization.creatorMail}}</p>
-    <p>Members : </p>
-    <p *ngFor="let memberMail of organization.membersMails">{{memberMail}}</p>
+    <p><strong>Member :</strong></p>
+    <p *ngFor="let memberMail of organization.membersMails"> -{{memberMail}}</p>
   </ion-card>
 
   <!-- Elemento mostrato durante il caricamento -->

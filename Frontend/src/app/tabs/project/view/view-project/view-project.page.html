@@ -23,13 +23,13 @@
     <ion-item>
       <ion-label>
         <p>{{project.description}}</p>
-        <p>organization : {{project.organizationId}}</p>
+        <p>organization : {{organization.name}}</p>
         <p>creator : {{project.creatorMail}}</p>
         <p>status : {{project.closed}}</p>
-        <p>neededskills : </p>
-        <p *ngFor="let neededSkill of project.neededSkills">{{neededSkill.name}}</p>
-        <p>candidates : </p>
-        <p *ngFor="let candidate of project.candidates">{{candidate}}</p>
+        <p><strong>neededskills :</strong></p>
+        <p *ngFor="let neededSkill of project.neededSkills"> -{{neededSkill.name}}</p>
+        <p><strong>candidates : </strong></p>
+        <p *ngFor="let candidate of project.candidates"> -{{candidate.userMail}}</p>
       </ion-label>
     </ion-item>
   </ion-card>

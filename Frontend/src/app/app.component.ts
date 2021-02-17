@@ -93,4 +93,8 @@ export class AppComponent {
   viewSkill() {
     this.navCtrl.navigateForward(['view-skill'], { queryParams: { 'refresh': 1 } });
   }
+
+  userSubmission(){
+    this.navCtrl.navigateForward(['/user-submission'], { queryParams: { 'refresh': 1 } });
+  }
 }

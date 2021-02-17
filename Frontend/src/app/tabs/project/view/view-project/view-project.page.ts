@@ -1,3 +1,4 @@
+import { Organization } from './../../../../model/organization';
 import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
 import { ActionSheetController, AlertController, MenuController, NavController, ToastController } from '@ionic/angular';
@@ -17,6 +18,7 @@ import { Skill } from 'src/app/model/skill';
 export class ViewProjectPage {
   private id: string;
   project: Project;
+  organization:Organization;
   loading: boolean;
   skill: Skill;
 
@@ -45,6 +47,7 @@ export class ViewProjectPage {
 
   async load() {
     this.project = await this.restService.getProject(this.id);
+    this.organization = await this.restService.getOrganization(this.project.organizationId);
   }
 
   goBack() {
@@ -83,7 +86,7 @@ export class ViewProjectPage {
         {
           type: 'radio',
           label: element.name+' '+element.level,
-          value: '' + i,
+          value: element,
           checked: false
         }
       );
@@ -107,12 +110,12 @@ export class ViewProjectPage {
             this.skill = new Skill();
             if (data==null) {
               const toast = await this.toastController.create({
-                message: 'Campo Skill non deve essere vuoto',
+                message: 'Campo Skill non selezionato',
                 duration: 2000
               });
               toast.present();
             } else {
-                this.skill.name = data.role;
+                this.skill = this.project.neededSkills.find(obj=> obj==data);
                 this.restService.submit(this.id, new Role(this.dataSerivice.getUserMail(), this.skill, false))
                 this.goBack();
             }
