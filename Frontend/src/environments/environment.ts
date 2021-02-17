@@ -22,6 +22,7 @@ export const environment = {
   listOfProjectsApiUrl: projectApiUrl+"list/",
   modifyProjectApiUrl: projectApiUrl+"update/",
   existProjectApiUr: projectApiUrl+"exist/",
+  submitApiUr: projectApiUrl+"submit/",
   listOfOrganizationsApiUrl: organizationApiUrl+"list/",
   createOrganizationApiUrl: organizationApiUrl + "createNew",
   existOrganizationApiUrl: organizationApiUrl + "exist/",

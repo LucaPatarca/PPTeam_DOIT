@@ -10,6 +10,7 @@ import { User } from '../model/user';
 import { DataService } from './data.service';
 import { Storage } from '@ionic/storage';
 import { environment } from 'src/environments/environment';
+import { Role } from '../model/role';
 
 
 @Injectable({
@@ -212,6 +213,24 @@ export class RestService {
       //TODO implementare
     });
   }
+
+  async submit(id: string, role: Role): Promise<boolean>{
+    this.refreshToken();
+    return new Promise((resolve, rejects) => {
+      this.http.post(environment.submitApiUr + id + "/" + this.dataService.getUserMail(), role, this.config)
+        .subscribe(
+          res => {
+            this.presentToast('Submit aggiunta');
+            resolve(res as unknown as boolean);
+          },
+          err => {
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
+        );
+    });
+  }
+
 
   //User methodr
 

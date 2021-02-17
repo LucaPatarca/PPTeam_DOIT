@@ -180,7 +180,7 @@ public class Project {
         // TODO: 11/02/2021 controlla che non è già nel team
         if(isClosed) throw new IllegalStateException("Project is closed");
         Role role = new Role(Objects.requireNonNull(skill, "skill is null"), Objects.requireNonNull(user, "user is null").getMail(),asExpert);
-        if(!candidates.contains(role)) {
+        if(!candidates.contains(role) && neededSkills.contains(role.getSkill())) {
             candidates.add(role);
             return true;
         } else return false;
