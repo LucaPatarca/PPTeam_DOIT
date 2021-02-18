@@ -4,6 +4,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundExcep
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserSubmissionInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.PermissionComponent;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.UsersManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -67,6 +69,12 @@ public class UsersRestController implements UsersController {
     @GetMapping("/existSkill/{skill}/{userEmail}")
     public boolean existSkill(@PathVariable String skill, @PathVariable String userEmail) throws EntityNotFoundException {
         return manager.existSkill(new Skill(skill),userEmail);
+    }
+
+    @PreAuthorize("permitAll")
+    @GetMapping("/getUserSubmissions/{userMail}")
+    public List<UserSubmissionInformation> getUserSubmissions(@PathVariable String userMail) throws EntityNotFoundException {
+        return manager.getUserSubmissions(userMail);
     }
 
 }

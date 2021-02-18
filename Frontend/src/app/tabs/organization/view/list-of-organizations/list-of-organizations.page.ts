@@ -35,8 +35,7 @@ export class ListOfOrganizationsPage {
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
-    this.organizations = new Array();
-    this.loadOrganizations();
+    this.reloadOrganizations();
   }
 
   ionViewDidLeave(){
@@ -56,7 +55,8 @@ export class ListOfOrganizationsPage {
     this.page = 0;
     const newOrganizations = await this.restService.getOrganizationPage(this.page);
     this.organizations = newOrganizations;
-    event.target.complete();
+    if(event)
+      event.target.complete();
     
   }
 

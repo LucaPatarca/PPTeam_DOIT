@@ -4,6 +4,9 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundExcep
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserSubmissionInformation;
+
+import java.util.List;
 
 
 public interface UsersManager extends EntityManager<UserEntity, String>{
@@ -14,4 +17,5 @@ public interface UsersManager extends EntityManager<UserEntity, String>{
     boolean exists(String userMail);
     boolean existSkill(Skill skill, String userMail) throws EntityNotFoundException;
     boolean hasSkillExpertFor(Skill skill, String userMail, String organizationId) throws EntityNotFoundException;
+    List<UserSubmissionInformation> getUserSubmissions(String userMail) throws EntityNotFoundException;
 }

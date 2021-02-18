@@ -2,14 +2,19 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.ProjectRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class SimpleUsersManager implements UsersManager {
@@ -19,6 +24,8 @@ public class SimpleUsersManager implements UsersManager {
     private UserRepository userRepository;
     @Autowired
     private OrganizationRepository organizationRepository;
+    @Autowired
+    private ProjectRepository projectRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -85,5 +92,26 @@ public class SimpleUsersManager implements UsersManager {
                 userSkill = skill;
         }
         return userSkill != null && userSkill.isExpertFor(organizationId);
+    }
+
+    @Override
+    public List<UserSubmissionInformation> getUserSubmissions(String userMail) throws EntityNotFoundException {
+        List<UserSubmissionInformation> result = new ArrayList<>();
+        if(userMail.isBlank()) throw new IllegalArgumentException("Il campo mail è vuoto");
+
+        List<Project> projects = projectRepository.findAll().stream().filter(project ->
+                project.getCandidates().stream().anyMatch(role -> role.getUserMail().equals(userMail)))
+                .collect(Collectors.toList());
+
+        for(Project project: projects){
+            Organization organization = organizationRepository.findById(project.getOrganizationId())
+                    .orElseThrow(()->new EntityNotFoundException("Nessuna organizzazione"));
+
+            List<Role> roles = project.getCandidates().stream().filter(role -> role.getUserMail().equals(userMail))
+                    .collect(Collectors.toList());
+
+            result.add(new UserSubmissionInformation(organization,project,roles));
+        }
+        return result;
     }
 }

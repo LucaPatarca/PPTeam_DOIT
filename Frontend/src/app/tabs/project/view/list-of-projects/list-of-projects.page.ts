@@ -33,8 +33,7 @@ export class ListOfProjectsPage {
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
-    this.projects = new Array();
-    this.loadProjects();
+    this.reload();
   }
 
   ionViewDidLeave(){
@@ -55,11 +54,12 @@ export class ListOfProjectsPage {
     }
   }
 
-  async reload(event){
+  async reload(event?){
     this.page = 0;
     const newProjects = await this.restService.getProjectsPage(this.page);
     this.projects = newProjects;
-    event.target.complete();
+    if(event)
+      event.target.complete();
   }
 
   viewProject(id: string) {

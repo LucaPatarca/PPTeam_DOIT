@@ -8,7 +8,6 @@ import { ProjectInformation } from '../model/project-information';
 import { Skill } from '../model/skill';
 import { User } from '../model/user';
 import { DataService } from './data.service';
-import { Storage } from '@ionic/storage';
 import { environment } from 'src/environments/environment';
 import { Role } from '../model/role';
 
@@ -23,9 +22,7 @@ export class RestService {
   constructor(
     private http: HttpClient,
     private dataService: DataService,
-    private navCtrl: NavController,
     private toastCtrl: ToastController,
-    private storage:Storage
   ) { 
   }
 
