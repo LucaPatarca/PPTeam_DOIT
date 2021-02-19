@@ -186,23 +186,16 @@ public class Project {
         } else return false;
     }
 
-    /**
-     * Removes the {@link UserEntity} from the list of candidates of this project
-     * @param user the user who wants to be removed from the list of candidates
-     */
-    public void removeSubmission(UserEntity user) throws IllegalStateException {
-        if(isClosed) throw new IllegalStateException("Project is closed");
-        candidates.removeIf(role -> role.getUserMail().equals(Objects.requireNonNull(user, "user is null").getMail()));
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Project project = (Project) o;
+        return isClosed == project.isClosed && id.equals(project.id) && title.equals(project.title) && Objects.equals(description, project.description) && organizationId.equals(project.organizationId) && creatorMail.equals(project.creatorMail) && Objects.equals(neededSkills, project.neededSkills) && Objects.equals(team, project.team) && Objects.equals(candidates, project.candidates);
     }
 
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        Project that = (Project) object;
-        return title.equals(that.title) && description.equals(that.description) && organizationId.equals(that.organizationId) && creatorMail.equals(that.creatorMail);
-    }
-
+    @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), title, description, organizationId, creatorMail);
+        return Objects.hash(id, title, description, organizationId, creatorMail, isClosed, neededSkills, team, candidates);
     }
 }

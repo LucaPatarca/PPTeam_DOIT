@@ -1,4 +1,3 @@
-import { Organization } from "./organization";
 import { Skill } from "./skill";
 
 export class User {

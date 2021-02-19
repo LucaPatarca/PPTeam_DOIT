@@ -134,7 +134,7 @@ public class SimpleProjectsManager implements ProjectsManager{
         Project project = projectRepository.findById(projectId).orElseThrow(()->
                 new EntityNotFoundException("Nessun progetto trovato con l'id: "+projectId));
         project.rejectCandidate(userRole);
-        return projectRepository.save(project).getTeam().contains(userRole);
+        return !projectRepository.save(project).getCandidates().contains(userRole);
     }
 
     @Override

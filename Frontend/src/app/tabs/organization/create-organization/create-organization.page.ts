@@ -44,7 +44,7 @@ export class CreateOrganizationPage {
     const newOrganization = new Organization(
       this.name,
       this.description,
-      this.dataService.getUser().mail
+      this.dataService.getUser().mail,
     );
 
     this.restService.createOrganization(newOrganization);

@@ -95,6 +95,6 @@ export class AppComponent {
   }
 
   userSubmission(){
-    this.navCtrl.navigateForward(['/user-submission'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateRoot(['/user-submission'], { queryParams: { 'refresh': 1 } });
   }
 }

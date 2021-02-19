@@ -1,13 +1,10 @@
-
-import { ActivatedRoute } from '@angular/router';
-import { Component } from '@angular/core';
-import { ActionSheetController, AlertController, MenuController, NavController, ToastController } from '@ionic/angular';
-import { Project } from 'src/app/model/project';
-import { DataService } from 'src/app/services/data.service';
+import { Role } from './../../../model/role';
 import { RestService } from 'src/app/services/rest.service';
-import { Role } from 'src/app/model/role';
-import { Skill } from 'src/app/model/skill';
-import { Organization } from 'src/app/model/organization';
+
+import { Component } from '@angular/core';
+import { NavController, AlertController } from '@ionic/angular';
+import { UserSubmissionInformation } from 'src/app/model/UserSubmissionInformation';
+import { DataService } from 'src/app/services/data.service';
 
 
 @Component({
@@ -17,38 +14,55 @@ import { Organization } from 'src/app/model/organization';
 })
 
 export class UserSubmissionPage {
-  roles:Role[];
-  projects:Project[];
-  organizations:Organization[];
-  loading:boolean;
+  
+  userSubmissions:UserSubmissionInformation[];
+  loading: boolean;
+  page = 0;
 
   constructor(
-    private route: ActivatedRoute,
-    private menuCtrl: MenuController,
-    public nav: NavController,
-    private restService: RestService,
-    public dataSerivice: DataService,
-    private actionSheetCtrl: ActionSheetController,
+    private nav: NavController,
+    private dataSerivice: DataService,
+    private restService:RestService,
     private alertController:AlertController,
-    private toastController:ToastController
   ) {
-    this.load().then(
-      ()=> {
-        this.loading = false;
-      }
-    )
+    this.userSubmissions = new Array();
+    this.loading = true;
+    this.load().then(()=>{
+      this.loading = false;
+    });
   }
 
   ionViewDidEnter() {
-    this.menuCtrl.enable(false);
   }
 
   async load() {
-    
+    this.userSubmissions=new Array();
+    const submission = await this.restService.getUserSubmissions();
+    this.userSubmissions = this.userSubmissions.concat(submission);
   }
 
   goBack() {
     this.nav.navigateBack(["/home"], { queryParams: { 'refresh': 1 } });
+  }
+
+  async removeSubmission(UserSubmission : UserSubmissionInformation,role:Role){
+    const add = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Vuoi rimuovere la submit ?',
+      message: '',
+      buttons: [
+        {
+          text: 'no',
+        }, {
+          text: 'si',
+          handler: async () => {
+            console.log(await this.restService.rejectSubmission(UserSubmission,role));
+            
+          }
+        }
+      ]
+    });
+    await add.present();
   }
 
   modify() {

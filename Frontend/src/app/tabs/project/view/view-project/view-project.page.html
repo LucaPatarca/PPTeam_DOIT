@@ -27,7 +27,7 @@
         <p>creator : {{project.creatorMail}}</p>
         <p>status : {{project.closed}}</p>
         <p><strong>neededskills :</strong></p>
-        <p *ngFor="let neededSkill of project.neededSkills"> -{{neededSkill.name}}</p>
+        <p *ngFor="let neededSkill of project.neededSkills"> -{{neededSkill.name}} (level : {{neededSkill.level}})</p>
         <p><strong>candidates : </strong></p>
         <p *ngFor="let candidate of project.candidates"> -{{candidate.userMail}}</p>
       </ion-label>

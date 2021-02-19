@@ -1,3 +1,4 @@
+import { UserSubmissionInformation } from 'src/app/model/UserSubmissionInformation';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { NavController, ToastController } from '@ionic/angular';
@@ -323,6 +324,38 @@ export class RestService {
     });
   }
 
+  async getUserSubmissions():Promise<UserSubmissionInformation[]>{
+    this.refreshToken();
+    return new Promise((resolve, rejects)=>{
+      this.http.get(environment.getUserSubmissions+this.dataService.getUserMail(), this.config)
+      .subscribe(
+        res => {
+          resolve(res as unknown as UserSubmissionInformation[]);
+        },
+        async err => {
+          this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
+  async rejectSubmission(userSubmission:UserSubmissionInformation,role:Role):Promise<boolean>{
+    this.refreshToken();
+    return new Promise((resolve, rejects)=>{
+      this.http.post(environment.rejectSubmission+userSubmission.projectId,role, this.config)
+      .subscribe(
+        res => {
+          resolve(res as unknown as boolean);
+        },
+        async err => {
+          this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
   //Utils methods
 
   async presentToast(message: string) {
@@ -337,4 +370,5 @@ export class RestService {
     console.log(err);
     this.presentToast(err.error);
   }
+
 }

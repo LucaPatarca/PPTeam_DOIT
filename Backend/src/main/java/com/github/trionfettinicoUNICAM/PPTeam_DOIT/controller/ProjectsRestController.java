@@ -74,7 +74,7 @@ public class ProjectsRestController implements ProjectsController {
     }
 
     @Override
-    @PreAuthorize("@permissionComponent.isTeamManager(authentication, #project.id, #userRole.skill)")
+    @PreAuthorize("permitAll()")
     @PostMapping("/rejectCandidate/{projectId}")
     public boolean rejectCandidate(@PathVariable String projectId, @RequestBody Role userRole) throws EntityNotFoundException{
         return manager.rejectCandidate(projectId, userRole);

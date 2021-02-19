@@ -45,15 +45,17 @@ public class Role{
         this.asExpert = asExpert;
     }
 
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        if (object == null || getClass() != object.getClass()) return false;
-        if (!super.equals(object)) return false;
-        Role realRole = (Role) object;
-        return userMail.equals(realRole.userMail);
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role = (Role) o;
+        return asExpert == role.asExpert && Objects.equals(skill, role.skill) && Objects.equals(userMail, role.userMail);
     }
 
+    @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), userMail);
+        return Objects.hash(skill, userMail, asExpert);
     }
 }
