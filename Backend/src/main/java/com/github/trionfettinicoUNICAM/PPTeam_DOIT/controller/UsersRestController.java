@@ -3,6 +3,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserAdapter;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserSubmissionInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.PermissionComponent;
@@ -52,9 +53,8 @@ public class UsersRestController implements UsersController {
 
     @PreAuthorize("permitAll")
     @GetMapping("/list/{page}")
-    public Page<String> getPage(@PathVariable int page) {
-        // TODO: 08/02/2021 implementare
-        return null;
+    public Page<UserEntity> getPage(@PathVariable int page) throws EntityNotFoundException {
+        return manager.getPage(page, 10);
     }
 
     @Override

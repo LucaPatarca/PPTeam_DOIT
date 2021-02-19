@@ -68,6 +68,22 @@ export class RestService {
     });
   }
 
+  async addExpert(organizationId: string, userMail: string, skill: Skill): Promise<void> {
+    this.refreshToken();
+    return new Promise((resolve, rejects) => {
+      this.http.post(environment.addExpert + organizationId + "/" + userMail, skill,this.config).subscribe(
+        res => {
+          this.presentToast("Esperto aggiunto");
+          resolve();
+        },
+        err => {
+          this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
   async getOrganizationMembers(organizationId: string): Promise<User[]> {
     return new Promise((resolve, rejects) => {
       this.http.get(environment.getOrganizationMember + organizationId).subscribe(
@@ -257,6 +273,32 @@ export class RestService {
         },
         err => {
           this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
+  async getUserPage(page: number): Promise<User[]> {
+    return new Promise((resolve, rejects) => {
+      this.http.get(environment.listOfOrganizationsApiUrl + page).subscribe(
+        res => {
+          resolve(res['content'] as User[]);
+        },
+        err => {
+          rejects(err);
+        }
+      );
+    });
+  }
+
+  async existUser(userMail: string): Promise<boolean> {
+    return new Promise((resolve, rejects) => {
+      this.http.get(environment.existUserApiUrl + userMail).subscribe(
+        res => {
+          resolve(res['content'] as unknown as boolean);
+        },
+        err => {
           rejects(err);
         }
       );

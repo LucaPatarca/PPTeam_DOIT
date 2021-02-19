@@ -7,11 +7,15 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationReposi
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.ProjectRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -113,5 +117,13 @@ public class SimpleUsersManager implements UsersManager {
             result.add(new UserSubmissionInformation(organization,project,roles));
         }
         return result;
+    }
+
+    @Override
+    public Page<UserEntity> getPage(int page, int size) throws EntityNotFoundException {
+        Page<UserEntity> userPage = userRepository.findAll(PageRequest.of(page, size));
+        List<UserEntity> basicUserInformationList = new java.util.ArrayList<>(Collections.emptyList());
+        for(UserEntity user : userPage) basicUserInformationList.add(user);
+        return new PageImpl<>(basicUserInformationList);
     }
 }

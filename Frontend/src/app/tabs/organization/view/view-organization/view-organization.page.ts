@@ -1,9 +1,11 @@
 import { Organization } from './../../../../model/organization';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MenuController, NavController, ActionSheetController } from '@ionic/angular';
+import { MenuController, NavController, ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { RestService } from 'src/app/services/rest.service';
+import { User } from 'src/app/model/user';
+import { Skill } from 'src/app/model/skill';
 
 @Component({
   selector: 'app-view-organization',
@@ -13,6 +15,8 @@ import { RestService } from 'src/app/services/rest.service';
 export class ViewOrganizationPage {
   organization: Organization;
   id: string;
+  userMail: string;
+  skill: Skill;
 
   constructor(
     private route: ActivatedRoute,
@@ -21,6 +25,8 @@ export class ViewOrganizationPage {
     private menuCtrl: MenuController,
     private restService: RestService,
     private actionSheetCtrl: ActionSheetController,
+    private alertController:AlertController,
+    private toastController:ToastController
   ) {
     this.id = this.route.snapshot.params["id"];
     this.organization = null;
@@ -54,6 +60,112 @@ export class ViewOrganizationPage {
     await actionSheet.present();
   }
 
+  async howAddExpert() {
+    const add = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'How Add Expert',
+      buttons: [
+        {
+          text: 'email',
+          handler: () => { this.addExpertByEmail() }
+        }, {
+          text: 'list',
+          handler: () => { this.nav.navigateForward(["/add-expert", { "id": this.organization.id }]); }
+        }, {
+          text: 'cancel',
+        }
+      ]
+    });
+    await add.present();
+  }
+
+  createSkillInput(user:User) {
+    const theNewInputs = [];
+    var i:number = 1;
+    user.skills .forEach(element => {
+      theNewInputs.push(
+        {
+          type: 'radio',
+          label: element.name+' '+element.level,
+          value: element,
+          checked: false
+        }
+      );
+      i++;
+    });
+    return theNewInputs;
+  }
+
+  async addExpertByEmail() {
+    const add = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Add Expert by Email',
+      inputs: [ 
+        {
+          name: 'email',
+          placeholder: 'email'
+        },
+      ],
+      buttons: [
+        {
+          text: 'ok',
+          handler: async data => {
+            if (data.email==null || (data.email as string).trim()=="") {
+              const toast = await this.toastController.create({
+                message: 'Campo email non deve essere vuoto',
+                duration: 2000
+              });
+              toast.present();
+            } if (await !this.restService.existUser(data.email as string) as boolean) {
+              const toast = await this.toastController.create({
+                message: 'Utente non presente',
+                duration: 2000
+              });
+              toast.present();
+            } else {
+                this.userMail = data;
+                this.selectSkill(await this.restService.getUser(this.userMail));
+            }
+          }
+        }, {
+          text: 'cancel',
+        }
+      ]
+    });
+    await add.present();
+  }
+
+  async selectSkill(user:User){
+    const add = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Select Skill',
+      message: '',
+      inputs: this.createSkillInput(user),
+      buttons: [
+        {
+          text: 'cancel',
+        }, {
+          text: 'add',
+          handler: async data => {
+            this.skill = new Skill();
+            if (data==null) {
+              const toast = await this.toastController.create({
+                message: 'Campo Skill non selezionato',
+                duration: 2000
+              });
+              toast.present();
+            } else {
+                this.skill = user.skills.find(obj=> obj==data);
+                this.restService.addExpert(this.id, this.userMail, this.skill);
+                this.goBack();
+            }
+          }
+        }
+      ]
+    });
+    await add.present();
+  }
+
   getButtons(): Array<Object> {
     var buttons = new Array();
 
@@ -85,7 +197,7 @@ export class ViewOrganizationPage {
           text: 'Add Expert',
           icon: 'person-add-outline',
           handler: () => {
-            this.nav.navigateForward(["/add-expert", { "id": this.organization.id }]);
+            this.howAddExpert();
           }
         }, {
           text: 'Add Collaborator',

@@ -60,6 +60,8 @@ public interface OrganizationsManager extends EntityManager<Organization, String
 
     void addCollaborator(String organizationId, String userMail, Skill skill) throws EntityNotFoundException;
 
+    void addExpert(String organizationId, String userMail, Skill skill) throws EntityNotFoundException;
+
     boolean removeMember(String organizationId, String memberMail) throws EntityNotFoundException;
 
     boolean addMember(String organizationId, String memberMail) throws EntityNotFoundException;

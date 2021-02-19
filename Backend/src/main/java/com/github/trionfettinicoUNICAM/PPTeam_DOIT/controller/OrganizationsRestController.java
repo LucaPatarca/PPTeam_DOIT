@@ -82,6 +82,13 @@ public class OrganizationsRestController implements OrganizationsController {
 
     @Override
     @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationId)")
+    @PostMapping("/addExpert/{organizationId}/{userMail}")
+    public void addExpert(@PathVariable String organizationId, @PathVariable String userMail, @RequestBody Skill skill) throws EntityNotFoundException {
+        manager.addExpert(organizationId, userMail, skill);
+    }
+
+    @Override
+    @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationId)")
     @PostMapping("/addMember/{organizationId}/{userMail}")
     public boolean addMember(@PathVariable String organizationId, @PathVariable String userMail) throws EntityNotFoundException {
         return manager.addMember(organizationId,userMail);
