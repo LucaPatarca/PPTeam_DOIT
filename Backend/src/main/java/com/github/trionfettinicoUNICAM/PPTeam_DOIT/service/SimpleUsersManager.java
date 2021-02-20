@@ -14,10 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -125,5 +122,22 @@ public class SimpleUsersManager implements UsersManager {
         List<UserEntity> basicUserInformationList = new java.util.ArrayList<>(Collections.emptyList());
         for(UserEntity user : userPage) basicUserInformationList.add(user);
         return new PageImpl<>(basicUserInformationList);
+    }
+
+    public boolean addNewSkill(String skillName,String userMail){
+        if(skillName.isBlank()) throw new IllegalArgumentException("Nome skill non valida");
+        Optional<UserEntity> user = userRepository.findById(userMail);
+        user.ifPresent(userEntity -> userEntity.addSkill(new Skill(skillName)));
+        userRepository.save(user.get());
+        return true;
+    }
+
+    public boolean removeSkill(Skill skill,String userMail){
+        if(skill==null)
+            throw new IllegalArgumentException("skill non valida");
+        Optional<UserEntity> user = userRepository.findById(userMail);
+        user.ifPresent(userEntity -> userEntity.removeSkill(skill));
+        userRepository.save(user.get());
+        return true;
     }
 }

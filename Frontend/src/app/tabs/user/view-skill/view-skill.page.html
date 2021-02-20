@@ -4,6 +4,11 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Your Skills</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="showActionSheet()">
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -23,7 +28,7 @@
 
   <!-- quando non sta caricando mostro una card per ogni elemento-->
   <div *ngIf="!loading">
-    <ion-card *ngFor="let skill of skills">
+    <ion-card *ngFor="let skill of skills" (click)="deleteSkill(skill)">
       <ion-item>
         <ion-label>
           <h2 text-capitalize>{{skill.name}}</h2>
@@ -31,6 +36,7 @@
           <ion-label *ngFor="let org of skill.expertInOrganization">
             <p>{{org}}</p>
           </ion-label>
+          <p>level : {{skill.level}}</p>
         </ion-label>
       </ion-item>
     </ion-card>
@@ -50,10 +56,5 @@
     </ion-card>
   </div>
 
-  <!-- comando per creare uno scroll infinito-->
-  <ion-infinite-scroll threshold="5%" (ionInfinite)="loadMore($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more skill ...">
-    </ion-infinite-scroll-content>
-  </ion-infinite-scroll>
 
 </ion-content>

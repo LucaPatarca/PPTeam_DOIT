@@ -398,6 +398,39 @@ export class RestService {
     });
   }
 
+  async addNewSkill(skill:string){
+    this.refreshToken();
+    return new Promise((resolve, rejects)=>{
+      this.http.post(environment.addNewSkill+skill,this.dataService.getUserMail(), this.config)
+      .subscribe(
+        res => {
+          resolve(res as unknown as boolean);
+        },
+        async err => {
+          this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
+  async removeSkill(skill:Skill){
+    this.refreshToken();
+    return new Promise((resolve, rejects)=>{
+      console.log(skill);
+      this.http.post(environment.removeSkill+this.dataService.getUserMail(),skill, this.config)
+      .subscribe(
+        res => {
+          resolve(res as unknown as boolean);
+        },
+        async err => {
+          this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
   //Utils methods
 
   async presentToast(message: string) {
