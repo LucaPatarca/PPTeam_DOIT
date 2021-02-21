@@ -17,6 +17,7 @@ export class ViewOrganizationPage {
   id: string;
   userMail: string;
   skill: Skill;
+  user: User;
 
   constructor(
     private route: ActivatedRoute,
@@ -83,7 +84,8 @@ export class ViewOrganizationPage {
     const theNewInputs = [];
     var i:number = 1;
     user.skills .forEach(element => {
-      theNewInputs.push(
+    if(!element.expertInOrganization.includes(this.organization.id)){
+        theNewInputs.push(
         {
           type: 'radio',
           label: element.name+' '+element.level,
@@ -92,6 +94,7 @@ export class ViewOrganizationPage {
         }
       );
       i++;
+    }
     });
     return theNewInputs;
   }
@@ -123,8 +126,14 @@ export class ViewOrganizationPage {
               });
               toast.present();
             } else {
-                this.userMail = data;
-                this.selectSkill(await this.restService.getUser(this.userMail));
+                this.user = await this.restService.getUser(data.email);
+                if(this.user.skills.length == 0){
+                  const toast = await this.toastController.create({
+                    message: 'Utente non ha skill selezionabili',
+                    duration: 2000
+                  });
+                  toast.present();
+                } else this.selectSkill(this.user);
             }
           }
         }, {

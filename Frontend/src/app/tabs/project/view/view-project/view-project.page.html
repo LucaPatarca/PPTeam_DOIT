@@ -29,7 +29,7 @@
         <p><strong>neededskills :</strong></p>
         <p *ngFor="let neededSkill of project.neededSkills"> -{{neededSkill.name}} (level : {{neededSkill.level}})</p>
         <p><strong>candidates : </strong></p>
-        <p *ngFor="let candidate of project.candidates"> -{{candidate.userMail}}</p>
+        <p *ngFor="let candidate of project.candidates"> -{{candidate.userMail}} {{candidate.skill.name}}</p>
       </ion-label>
     </ion-item>
   </ion-card>

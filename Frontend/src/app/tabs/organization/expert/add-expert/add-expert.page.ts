@@ -11,7 +11,10 @@ import { RestService } from 'src/app/services/rest.service';
   styleUrls: ['./add-expert.page.scss'],
 })
 export class AddExpertPage {
-
+  
+  page = 0;
+  loading: boolean;
+  textNoUserss = "Nessun User disponibile";
   users:User[];
   organizationId: string;
   skill: Skill;
@@ -25,14 +28,34 @@ export class AddExpertPage {
   ) {
     this.users = new Array();
     this.organizationId = this.route.snapshot.params["id"];
-    this.loadUser();
+    this.loading = true;
+    this.loadUser().then(
+      ()=>{
+        this.loading = false;
+      }
+    );
    }
 
    async loadUser(event?){
-    this.users = await this.restService.getUserPage(10);
+    const newUsers = await this.restService.getUserPage(this.page);
+    this.users = this.users.concat(newUsers);
     if(event){
       event.target.complete();
     }
+  }
+
+  async reloadUsers(event?){
+    this.page = 0;
+    const newUsers = await this.restService.getUserPage(this.page);
+    this.users = newUsers;
+    if(event)
+      event.target.complete();
+    
+  }
+
+  loadMore(event: any) {
+    this.page++;
+    this.loadUser(event);
   }
 
   async addExpert(user:User){
@@ -70,7 +93,8 @@ export class AddExpertPage {
     const theNewInputs = [];
     var i:number = 1;
     user.skills .forEach(element => {
-      theNewInputs.push(
+    if(!element.expertInOrganization.includes(this.organizationId)){
+        theNewInputs.push(
         {
           type: 'radio',
           label: element.name+' '+element.level,
@@ -79,6 +103,7 @@ export class AddExpertPage {
         }
       );
       i++;
+    }
     });
     return theNewInputs;
   }

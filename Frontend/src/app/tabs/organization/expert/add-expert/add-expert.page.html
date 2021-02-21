@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content fullscreen>
-  <!-- per ogni elemento presente in organizations creo una ion-card-->
+  <!-- per ogni elemento presente in users creo una ion-card-->
   <ion-card *ngFor="let user of users">
     <ion-item (click)="addExpert(user)" routerDirection="forward">
       <ion-label>
@@ -17,5 +17,14 @@
       </ion-label>
     </ion-item>
   </ion-card>
+
+  <!-- quando il caricamento è completato ma non ci sono user disponibili -->
+  <div class="row" *ngIf="(users.length == 0) && !loading">
+    <div class="col">
+      <div class="text-center">
+        <h5 style="text-align: center;">{{textNoUsers}}</h5>
+      </div>
+    </div>
+  </div>
 
 </ion-content>

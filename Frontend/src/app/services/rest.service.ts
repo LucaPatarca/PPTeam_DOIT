@@ -281,7 +281,7 @@ export class RestService {
 
   async getUserPage(page: number): Promise<User[]> {
     return new Promise((resolve, rejects) => {
-      this.http.get(environment.listOfOrganizationsApiUrl + page).subscribe(
+      this.http.get(environment.listOfUsersApiUrl + page).subscribe(
         res => {
           resolve(res['content'] as User[]);
         },
