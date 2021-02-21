@@ -27,4 +27,6 @@ export const environment = {
   modifyOrganizationApiUrl: organizationApiUrl+"update/",
   getUserSubmissions: userApiUrl+"getUserSubmissions/",
   rejectSubmission:projectApiUrl+"rejectCandidate/",
+  addNewSkill:userApiUrl+"addNewSkill/",
+  removeSkill:userApiUrl+"removeSkill/",
 };

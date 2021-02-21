@@ -8,14 +8,26 @@ import org.springframework.data.domain.Page;
 import java.util.List;
 
 
-public interface UsersManager extends EntityManager<UserEntity, String>{
+public interface UsersManager extends EntityManager<UserEntity, String> {
     UserEntity getInstance(String userMail) throws EntityNotFoundException;
+
     UserEntity create(UserEntity user) throws IdConflictException;
+
     boolean delete(String mail) throws EntityNotFoundException;
+
     UserEntity update(UserEntity user) throws EntityNotFoundException;
+
     boolean exists(String userMail);
+
     boolean existSkill(Skill skill, String userMail) throws EntityNotFoundException;
+
     boolean hasSkillExpertFor(Skill skill, String userMail, String organizationId) throws EntityNotFoundException;
+
     List<UserSubmissionInformation> getUserSubmissions(String userMail) throws EntityNotFoundException;
+
     Page<UserEntity> getPage(int page, int size) throws EntityNotFoundException;
+
+    boolean addNewSkill(String skillName, String userMail);
+
+    boolean removeSkill(Skill skill, String userMail);
 }

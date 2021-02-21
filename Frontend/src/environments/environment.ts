@@ -34,7 +34,9 @@ export const environment = {
   getUserSubmissions: userApiUrl+"getUserSubmissions/",
   rejectSubmission:projectApiUrl+"rejectCandidate/",
   listOfUsersApiUrl: userApiUrl+"list/",
-  existUserApiUrl: userApiUrl + "exist/"
+  existUserApiUrl: userApiUrl + "exist/",
+  addNewSkill:userApiUrl+"addNewSkill/",
+  removeSkill:userApiUrl+"removeSkill/",
 };
 
 //TODO spostare qui il globals service

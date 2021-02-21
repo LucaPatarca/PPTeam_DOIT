@@ -3,7 +3,6 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserAdapter;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserSubmissionInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.PermissionComponent;
@@ -76,5 +75,13 @@ public class UsersRestController implements UsersController {
     public List<UserSubmissionInformation> getUserSubmissions(@PathVariable String userMail) throws EntityNotFoundException {
         return manager.getUserSubmissions(userMail);
     }
+
+    @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")
+    @PostMapping(value = "/addNewSkill/{skillName}")
+    public boolean addNewSkill(@RequestBody String userID,@PathVariable String skillName) { return manager.addNewSkill(skillName,userID); }
+
+    @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")
+    @PostMapping(value = "/removeSkill/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public boolean removeSkill(@PathVariable String userID,@RequestBody Skill skill) { return manager.removeSkill(skill,userID); }
 
 }
