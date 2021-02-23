@@ -139,7 +139,7 @@ public class SimpleUsersManager implements UsersManager {
         return new PageImpl<>(basicUserInformationList);
     }
 
-    public boolean addNewSkill(String skillName,String userMail){
+    public boolean addNewSkill(String skillName,String userMail) throws EntityNotFoundException {
         if(skillName.isBlank()) throw new IllegalArgumentException("Nome skill non valida");
         UserEntity user = userRepository.findById(userMail).orElseThrow(()->
                 new EntityNotFoundException("Nessun utente trovato con la mail: "+userMail));

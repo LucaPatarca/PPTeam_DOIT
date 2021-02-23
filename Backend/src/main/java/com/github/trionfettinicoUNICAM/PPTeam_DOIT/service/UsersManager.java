@@ -29,7 +29,7 @@ public interface UsersManager extends EntityManager<UserEntity, String> {
 
     Page<UserEntity> getExpertPage(int page, int size) throws EntityNotFoundException;
 
-    boolean addNewSkill(String skillName, String userMail);
+    boolean addNewSkill(String skillName, String userMail) throws EntityNotFoundException;
 
     boolean removeSkill(Skill skill, String userMail) throws EntityNotFoundException;
 }
