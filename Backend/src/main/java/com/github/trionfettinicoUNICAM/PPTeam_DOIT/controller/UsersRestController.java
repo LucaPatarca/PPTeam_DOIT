@@ -81,11 +81,11 @@ public class UsersRestController implements UsersController {
     @Override
     @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")
     @PostMapping(value = "/addNewSkill/{skillName}")
-    public boolean addNewSkill(@RequestBody String userMail,@PathVariable String skillName) throws EntityNotFoundException { return manager.addNewSkill(skillName,userMail); }
+    public boolean addNewSkill(@RequestBody String userID,@PathVariable String skillName) throws EntityNotFoundException { return manager.addNewSkill(skillName,userID); }
 
     @Override
     @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")
-    @PostMapping(value = "/removeSkill/{userMail}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public boolean removeSkill(@PathVariable String userMail,@RequestBody Skill skill) throws EntityNotFoundException { return manager.removeSkill(skill,userMail); }
+    @PostMapping(value = "/removeSkill/{userID}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public boolean removeSkill(@PathVariable String userID,@RequestBody Skill skill) throws EntityNotFoundException { return manager.removeSkill(skill,userID); }
 
 }
