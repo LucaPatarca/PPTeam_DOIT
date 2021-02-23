@@ -37,20 +37,14 @@ export class ViewSkillPage {
 
   // metodo per richiedere una pagina di elementi
   async loadSkills(event?) {
+    this.skills = new Array();
     const newSkills = await  this.restService.getUserSkills((this.dataService.getUser() as unknown as User).mail);
     this.skills = this.skills.concat(newSkills);
   }
 
-  async reload(event?){
-    this.page=0;
-    const newSkills = await this.restService.getUserSkills((this.dataService.getUser() as unknown as User).mail);
-    this.skills = newSkills;
-    event.target.complete();
-  }
-
   async showActionSheet() {
     const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Project',
+      header: 'Skill',
       cssClass: 'my-custom-class',
       buttons: this.getButtons()
     });
@@ -104,7 +98,7 @@ export class ViewSkillPage {
               toast.present();
             } else {
               await this.restService.addNewSkill(data.skill);
-              this.reload();
+              this.loadSkills();
             }
           }
         }

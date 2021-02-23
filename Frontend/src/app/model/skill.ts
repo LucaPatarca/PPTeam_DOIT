@@ -1,5 +1,5 @@
 export class Skill {
     name:string;
-    expertInOrganization:string[];
+    expertInOrganization:string[]= new Array();
     level:number;
 }

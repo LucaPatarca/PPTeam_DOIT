@@ -8,7 +8,6 @@
 </ion-header>
 
 <ion-content fullscreen>
-  <!-- per ogni elemento presente in users creo una ion-card-->
   <ion-card *ngFor="let user of users">
     <ion-item (click)="addExpert(user)" routerDirection="forward">
       <ion-label>
@@ -22,7 +21,7 @@
   <div class="row" *ngIf="(users.length == 0) && !loading">
     <div class="col">
       <div class="text-center">
-        <h5 style="text-align: center;">{{textNoUsers}}</h5>
+        <h5 style="text-align: center;">{{textNoExpert}}</h5>
       </div>
     </div>
   </div>

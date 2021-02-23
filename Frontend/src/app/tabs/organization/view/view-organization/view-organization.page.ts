@@ -1,3 +1,4 @@
+import { element } from 'protractor';
 import { Organization } from './../../../../model/organization';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -82,7 +83,6 @@ export class ViewOrganizationPage {
 
   createSkillInput(user:User) {
     const theNewInputs = [];
-    var i:number = 1;
     user.skills .forEach(element => {
     if(!element.expertInOrganization.includes(this.organization.id)){
         theNewInputs.push(
@@ -93,7 +93,6 @@ export class ViewOrganizationPage {
           checked: false
         }
       );
-      i++;
     }
     });
     return theNewInputs;
@@ -214,7 +213,14 @@ export class ViewOrganizationPage {
           handler: () => {
             this.nav.navigateForward(["/add-collaborator", { "id": this.organization.id }]);
           }
-        }
+        },
+        // , {
+        //   text: 'Remove Member',
+        //   icon: 'person-add-outline',
+        //   handler: () => {
+        //      this.removeMember();
+        //   }
+        // }
       ]);
     }
 
@@ -229,6 +235,50 @@ export class ViewOrganizationPage {
     ]);
 
     return buttons;
+  }
+
+  async removeMember(){
+    const removeMember = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Select Member',
+      inputs: this.createMemberInput(),
+      buttons: [
+        {
+          text: 'cancel',
+        }, {
+          text: 'remove',
+          handler: async data => {
+            if (data==null) {
+              const toast = await this.toastController.create({
+                message: 'Campo Member non selezionato',
+                duration: 2000
+              });
+              toast.present();
+            } else {
+                this.restService.removeMember(data);
+            }
+          }
+        }
+      ]
+    });
+    await removeMember.present();
+  }
+
+  createMemberInput() {
+    const theNewInputs = [];
+    this.dataService.getOrganization().membersMails.forEach(async element => {
+    if(!(element == this.dataService.getUserMail())){
+        theNewInputs.push(
+        {
+          type: 'radio',
+          label: element,
+          value: element,
+          checked: false
+        }
+      );
+    }
+    });
+    return theNewInputs;
   }
 
 }

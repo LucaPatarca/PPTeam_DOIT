@@ -124,6 +124,21 @@ public class SimpleUsersManager implements UsersManager {
         return new PageImpl<>(basicUserInformationList);
     }
 
+    @Override
+    public Page<UserEntity> getExpertPage(int page, int size) throws EntityNotFoundException {
+        Page<UserEntity> userPage = userRepository.findAll(PageRequest.of(page, size));
+        List<UserEntity> basicUserInformationList = new java.util.ArrayList<>(Collections.emptyList());
+        for(UserEntity user : userPage) {
+            for (Skill userSkill: user.getSkills()) {
+                if(userSkill.isGloballyExpert()) {
+                    basicUserInformationList.add(user);
+                    break;
+                }
+            }
+        }
+        return new PageImpl<>(basicUserInformationList);
+    }
+
     public boolean addNewSkill(String skillName,String userMail){
         if(skillName.isBlank()) throw new IllegalArgumentException("Nome skill non valida");
         Optional<UserEntity> user = userRepository.findById(userMail);

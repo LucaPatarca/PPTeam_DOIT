@@ -56,6 +56,12 @@ public class UsersRestController implements UsersController {
         return manager.getPage(page, 10);
     }
 
+    @PreAuthorize("permitAll")
+    @GetMapping("/listExprts/{page}")
+    public Page<UserEntity> getExpertsPage(@PathVariable int page) throws EntityNotFoundException {
+        return manager.getExpertPage(page, 10);
+    }
+
     @Override
     @PreAuthorize("permitAll")
     @GetMapping("/getUserSkills/{userEmail}")
@@ -81,7 +87,7 @@ public class UsersRestController implements UsersController {
     public boolean addNewSkill(@RequestBody String userID,@PathVariable String skillName) { return manager.addNewSkill(skillName,userID); }
 
     @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")
-    @PostMapping(value = "/removeSkill/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/removeSkill/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public boolean removeSkill(@PathVariable String userID,@RequestBody Skill skill) { return manager.removeSkill(skill,userID); }
 
 }

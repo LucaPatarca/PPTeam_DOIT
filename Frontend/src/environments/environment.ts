@@ -37,6 +37,8 @@ export const environment = {
   existUserApiUrl: userApiUrl + "exist/",
   addNewSkill:userApiUrl+"addNewSkill/",
   removeSkill:userApiUrl+"removeSkill/",
+  getExpertsPage:userApiUrl+"listExprts/",
+  removeMember:organizationApiUrl+"removeMember/",
 };
 
 //TODO spostare qui il globals service

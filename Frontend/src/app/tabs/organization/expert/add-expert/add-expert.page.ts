@@ -1,3 +1,5 @@
+import { Organization } from 'src/app/model/organization';
+import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
@@ -14,8 +16,8 @@ export class AddExpertPage {
   
   page = 0;
   loading: boolean;
-  textNoUserss = "Nessun User disponibile";
   users:User[];
+  textNoExpert = "Nessuno Esperto disponibile";
   organizationId: string;
   skill: Skill;
 
@@ -24,7 +26,8 @@ export class AddExpertPage {
     private navCtrl:NavController,
     private route: ActivatedRoute,
     private alertController:AlertController,
-    private toastController:ToastController
+    private toastController:ToastController,
+    private dataService:DataService,
   ) {
     this.users = new Array();
     this.organizationId = this.route.snapshot.params["id"];
@@ -37,20 +40,16 @@ export class AddExpertPage {
    }
 
    async loadUser(event?){
-    const newUsers = await this.restService.getUserPage(this.page);
-    this.users = this.users.concat(newUsers);
+    const newUsers = await this.restService.getExpertPage(this.page);
+    let usersApp:User[] = new Array();
+    usersApp = this.users.concat(newUsers);
+    usersApp.forEach(element => {
+      if(!this.isPresent(element.mail))
+        this.users.push(element)
+    });
     if(event){
       event.target.complete();
     }
-  }
-
-  async reloadUsers(event?){
-    this.page = 0;
-    const newUsers = await this.restService.getUserPage(this.page);
-    this.users = newUsers;
-    if(event)
-      event.target.complete();
-    
   }
 
   loadMore(event: any) {
@@ -94,6 +93,7 @@ export class AddExpertPage {
     var i:number = 1;
     user.skills .forEach(element => {
     if(!element.expertInOrganization.includes(this.organizationId)){
+      if(element.level==10){
         theNewInputs.push(
         {
           type: 'radio',
@@ -103,6 +103,7 @@ export class AddExpertPage {
         }
       );
       i++;
+      }
     }
     });
     return theNewInputs;
@@ -110,6 +111,14 @@ export class AddExpertPage {
 
   goBack() {
     this.navCtrl.navigateBack(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
+  }
+
+  async isPresent(userMail:String):Promise<boolean>{
+    ( await this.dataService.getOrganization() as unknown as Organization).membersMails.forEach(element => {
+      if(element == userMail)
+        return true;
+    });
+    return false;
   }
 
 }

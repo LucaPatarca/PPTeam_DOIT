@@ -29,4 +29,6 @@ export const environment = {
   rejectSubmission:projectApiUrl+"rejectCandidate/",
   addNewSkill:userApiUrl+"addNewSkill/",
   removeSkill:userApiUrl+"removeSkill/",
+  getExpertsPage:userApiUrl+"listExprts/",
+  removeMember:organizationApiUrl+"removeMember/",
 };

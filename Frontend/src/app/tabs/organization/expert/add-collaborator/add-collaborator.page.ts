@@ -1,9 +1,11 @@
+import { DataService } from './../../../../services/data.service';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
 import { Component } from '@angular/core';
 import { User } from 'src/app/model/user';
 import { RestService } from 'src/app/services/rest.service';
 import { ActivatedRoute } from '@angular/router';
 import { Skill } from 'src/app/model/skill';
+import { Organization } from 'src/app/model/organization';
 
 @Component({
   selector: 'app-add-collaborator',
@@ -21,7 +23,8 @@ export class AddCollaboratorPage {
     private navCtrl:NavController,
     private route: ActivatedRoute,
     private alertController:AlertController,
-    private toastController:ToastController
+    private toastController:ToastController,
+    private dataService:DataService
   ) { 
     this.users = new Array();
     this.organizationId = this.route.snapshot.params["id"];
@@ -60,8 +63,10 @@ export class AddCollaboratorPage {
               });
               toast.present();
             } else {
-                this.skill.name = data
-                this.skill.level = 10;
+                this.skill.name = data.skill;
+                this.skill.expertInOrganization.push((await this.dataService.getOrganization() as unknown as Organization).id as string)
+                this.skill.level = 0;
+                console.log(this.skill);
                 this.restService.addCollaborator(this.organizationId, user.mail, this.skill)
                 this.goBack();
             }

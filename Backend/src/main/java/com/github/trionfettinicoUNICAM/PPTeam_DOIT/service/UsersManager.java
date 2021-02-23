@@ -27,6 +27,8 @@ public interface UsersManager extends EntityManager<UserEntity, String> {
 
     Page<UserEntity> getPage(int page, int size) throws EntityNotFoundException;
 
+    Page<UserEntity> getExpertPage(int page, int size) throws EntityNotFoundException;
+
     boolean addNewSkill(String skillName, String userMail);
 
     boolean removeSkill(Skill skill, String userMail);

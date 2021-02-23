@@ -42,6 +42,7 @@ export class RestService {
       this.http.post(environment.createOrganizationApiUrl, organization,this.config).subscribe(
         res => {
           this.presentToast("Organizzatione creata");
+          this.refresOrganization();
           resolve(res as unknown as Organization);
         },
         err => {
@@ -58,6 +59,7 @@ export class RestService {
       this.http.post(environment.addCollaborator + organizationId + "/" + userMail, skill,this.config).subscribe(
         res => {
           this.presentToast("Skill Aggiunta");
+          this.refresOrganization();
           resolve();
         },
         err => {
@@ -74,6 +76,7 @@ export class RestService {
       this.http.post(environment.addExpert + organizationId + "/" + userMail, skill,this.config).subscribe(
         res => {
           this.presentToast("Esperto aggiunto");
+          this.refresOrganization();
           resolve();
         },
         err => {
@@ -147,6 +150,22 @@ export class RestService {
     return new Promise((resolve, rejects) => {
       this.http.get(environment.organizationApiUrl + id).subscribe(
         res => {
+          resolve(res as Organization);
+        },
+        err => {
+          this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
+  async removeMember(userMail:string){
+    this.refreshToken();
+    return new Promise((resolve, rejects) => {
+      this.http.post(environment.removeMember+this.dataService.getOrganization().id + userMail,this.config).subscribe(
+        res => {
+          this.refresOrganization();
           resolve(res as Organization);
         },
         err => {
@@ -292,6 +311,19 @@ export class RestService {
     });
   }
 
+  async getExpertPage(page: number): Promise<User[]> {
+    return new Promise((resolve, rejects) => {
+      this.http.get(environment.getExpertsPage + page).subscribe(
+        res => {
+          resolve(res['content'] as User[]);
+        },
+        err => {
+          rejects(err);
+        }
+      );
+    });
+  }
+
   async existUser(userMail: string): Promise<boolean> {
     return new Promise((resolve, rejects) => {
       this.http.get(environment.existUserApiUrl + userMail).subscribe(
@@ -417,7 +449,6 @@ export class RestService {
   async removeSkill(skill:Skill){
     this.refreshToken();
     return new Promise((resolve, rejects)=>{
-      console.log(skill);
       this.http.post(environment.removeSkill+this.dataService.getUserMail(),skill, this.config)
       .subscribe(
         res => {
@@ -444,6 +475,17 @@ export class RestService {
   async defaultErrorHandler(err: any) {
     console.log(err);
     this.presentToast(err.error);
+  }
+
+  async refresOrganization(){
+      this.http.get(environment.organizationApiUrl + this.dataService.getOrganization().id).subscribe(
+        res => {
+          this.dataService.updateOrganization(res as Organization);
+        },
+        err => {
+          this.defaultErrorHandler(err);
+        }
+      );
   }
 
 }
