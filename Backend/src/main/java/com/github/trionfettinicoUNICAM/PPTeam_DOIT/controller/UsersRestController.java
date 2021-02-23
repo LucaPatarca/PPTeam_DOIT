@@ -58,7 +58,7 @@ public class UsersRestController implements UsersController {
     }
 
     @PreAuthorize("permitAll")
-    @GetMapping("/listExprts/{page}")
+    @GetMapping("/listExperts/{page}")
     public Page<UserEntity> getExpertsPage(@PathVariable int page) throws EntityNotFoundException {
         return manager.getExpertPage(page, 10);
     }

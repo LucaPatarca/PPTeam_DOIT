@@ -214,13 +214,14 @@ export class ViewOrganizationPage {
             this.nav.navigateForward(["/add-collaborator", { "id": this.organization.id }]);
           }
         },
-        // , {
-        //   text: 'Remove Member',
-        //   icon: 'person-add-outline',
-        //   handler: () => {
-        //      this.removeMember();
-        //   }
-        // }
+        {
+          text: 'Remove Member',
+          icon: 'person-add-outline',
+          handler: () => {
+             this.removeMember();
+             this.nav.navigateForward(['/view-organization', { "id": this.id }], { queryParams: { 'refresh': 1 } });
+            }
+        }
       ]);
     }
 

@@ -37,7 +37,7 @@ export const environment = {
   existUserApiUrl: userApiUrl + "exist/",
   addNewSkill:userApiUrl+"addNewSkill/",
   removeSkill:userApiUrl+"removeSkill/",
-  getExpertsPage:userApiUrl+"listExprts/",
+  getExpertsPage:userApiUrl+"listExperts/",
   removeMember:organizationApiUrl+"removeMember/",
 };
 

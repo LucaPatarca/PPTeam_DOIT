@@ -96,10 +96,11 @@ public class OrganizationsRestController implements OrganizationsController {
     }
 
     @Override
-    @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationId)")
+    @PreAuthorize("permitAll()")
     @PostMapping("/removeMember/{organizationId}/{userMail}")
     public boolean removeMember(@PathVariable String organizationId, @PathVariable String userMail) throws EntityNotFoundException {
         return manager.removeMember(organizationId,userMail);
+        // TODO: 23/02/21 cambaire permessi e TESTARE !!!
     }
 
     @Override

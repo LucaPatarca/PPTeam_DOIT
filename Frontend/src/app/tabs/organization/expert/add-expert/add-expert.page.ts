@@ -43,9 +43,8 @@ export class AddExpertPage {
     const newUsers = await this.restService.getExpertPage(this.page);
     let usersApp:User[] = new Array();
     usersApp = this.users.concat(newUsers);
-    usersApp.forEach(element => {
-      if(!this.isPresent(element.mail))
-        this.users.push(element)
+    usersApp.forEach(async element => {
+    this.isPresent(element);
     });
     if(event){
       event.target.complete();
@@ -113,12 +112,16 @@ export class AddExpertPage {
     this.navCtrl.navigateBack(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
   }
 
-  async isPresent(userMail:String):Promise<boolean>{
-    ( await this.dataService.getOrganization() as unknown as Organization).membersMails.forEach(element => {
-      if(element == userMail)
-        return true;
+  async isPresent(user:User){
+    let check=false;
+    (this.dataService.getOrganization() as unknown as Organization).membersMails.forEach(element => {
+      if(element == user.mail){
+        check=true;
+      }
     });
-    return false;
+    if(check==false){
+    this.users.push(user);
+    }
   }
 
 }
