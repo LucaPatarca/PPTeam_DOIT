@@ -1,9 +1,8 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -22,5 +21,7 @@ public interface OrganizationsController extends EntityController<Organization, 
     boolean removeMember(String organizationId, String userMail) throws EntityNotFoundException;
 
     List<Organization> findByCreator(String userMail);
+
+    Page<BasicOrganizationInformation> getPage(int page) throws EntityNotFoundException;
 
 }

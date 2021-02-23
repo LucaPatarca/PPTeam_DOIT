@@ -53,6 +53,7 @@ public class OrganizationsRestController implements OrganizationsController {
     @GetMapping("/exist/{organizationID}")
     public boolean exists(@PathVariable String organizationID) { return manager.exists(organizationID); }
 
+    @Override
     @PreAuthorize("permitAll")
     @GetMapping("/list/{page}")
     public Page<BasicOrganizationInformation> getPage(@PathVariable int page) throws EntityNotFoundException {
