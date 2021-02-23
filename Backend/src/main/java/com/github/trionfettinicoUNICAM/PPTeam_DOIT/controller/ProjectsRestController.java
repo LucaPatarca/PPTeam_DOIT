@@ -48,6 +48,7 @@ public class ProjectsRestController implements ProjectsController {
     @GetMapping("/exist/{projectID}")
     public boolean exists(@PathVariable String projectID) { return manager.exists(projectID); }
 
+    @Override
     @PreAuthorize("permitAll")
     @GetMapping("/list/{page}")
     public Page<BasicProjectInformation> getPage(@PathVariable int page) throws EntityNotFoundException { return manager.getPage(page, 10); }

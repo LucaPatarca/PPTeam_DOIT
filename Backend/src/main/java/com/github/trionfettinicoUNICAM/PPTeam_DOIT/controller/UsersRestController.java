@@ -50,6 +50,7 @@ public class UsersRestController implements UsersController {
     @GetMapping("/exist/{userID}")
     public boolean exists(@PathVariable String userID) { return manager.exists(userID); }
 
+    @Override
     @PreAuthorize("permitAll")
     @GetMapping("/list/{page}")
     public Page<UserEntity> getPage(@PathVariable int page) throws EntityNotFoundException {
@@ -76,18 +77,20 @@ public class UsersRestController implements UsersController {
         return manager.existSkill(new Skill(skill),userEmail);
     }
 
+    @Override
     @PreAuthorize("permitAll")
     @GetMapping("/getUserSubmissions/{userMail}")
     public List<UserSubmissionInformation> getUserSubmissions(@PathVariable String userMail) throws EntityNotFoundException {
         return manager.getUserSubmissions(userMail);
     }
 
+    @Override
     @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")
     @PostMapping(value = "/addNewSkill/{skillName}")
-    public boolean addNewSkill(@RequestBody String userID,@PathVariable String skillName) { return manager.addNewSkill(skillName,userID); }
+    public boolean addNewSkill(@RequestBody String userID,@PathVariable String skillName) throws EntityNotFoundException { return manager.addNewSkill(skillName,userID); }
 
+    @Override
     @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")
-    @PutMapping(value = "/removeSkill/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public boolean removeSkill(@PathVariable String userID,@RequestBody Skill skill) { return manager.removeSkill(skill,userID); }
+    public boolean removeSkill(@PathVariable String userID,@RequestBody Skill skill) throws EntityNotFoundException { return manager.removeSkill(skill,userID); }
 
 }
