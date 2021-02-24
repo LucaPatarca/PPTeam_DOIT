@@ -39,6 +39,9 @@ export class ViewSkillPage {
   async loadSkills(event?) {
     const newSkills = await  this.restService.getUserSkills((this.dataService.getUser() as unknown as User).mail);
     this.skills = newSkills;
+    if(event){
+      event.target.complete();
+    }
   }
 
   async showActionSheet() {

@@ -125,7 +125,7 @@ public class SimpleUsersManager implements UsersManager {
     }
 
     @Override
-    public Page<UserEntity> getExpertPage(int page, int size) throws EntityNotFoundException {
+    public Page<UserEntity> getExpertPage(int page, int size) {
         Page<UserEntity> userPage = userRepository.findAll(PageRequest.of(page, size));
         List<UserEntity> basicUserInformationList = new java.util.ArrayList<>(Collections.emptyList());
         for(UserEntity user : userPage) {
