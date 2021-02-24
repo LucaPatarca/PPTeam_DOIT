@@ -1,6 +1,6 @@
 import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
-import { MenuController, NavController, AlertController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 
 
 import { Platform } from '@ionic/angular';
@@ -15,21 +15,16 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 })
 export class AppComponent {
 
-  isLog:boolean;
+  isLog: boolean;
 
   constructor(
     private platform: Platform,
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
-    private menuCtrl:MenuController,
-    private navCtrl:NavController,
-    private dataService:DataService,
-    private alertCtrl:AlertController
+    private navCtrl: NavController,
+    public dataService: DataService,
+    private toastCtrl: ToastController
   ) {
-    if(this.dataService.getUser()!="")
-      this.isLog = true;
-    else
-      this.isLog = false;
     this.initializeApp();
   }
 
@@ -40,71 +35,66 @@ export class AppComponent {
     });
   }
 
-  
 
-  createUser(){
-    this.menuCtrl.enable(false);
+
+  createUser() {
     this.navCtrl.navigateForward(['/create-user'], { queryParams: { 'refresh': 1 } });
   }
 
-  logInUser(){
-    this.menuCtrl.enable(false);
+  logInUser() {
     this.navCtrl.navigateForward(['/login-user'], { queryParams: { 'refresh': 1 } });
   }
 
-  listOrganizations(){
+  listOrganizations() {
     this.navCtrl.navigateRoot(['/list-of-organizations'], { queryParams: { 'refresh': 1 } });
   }
 
-  createOrganization(){
-    this.menuCtrl.enable(false);
+  createOrganization() {
     this.navCtrl.navigateForward(['/create-organization'], { queryParams: { 'refresh': 1 } });
   }
 
-  listProjects(){
+  listProjects() {
     this.navCtrl.navigateRoot(['/list-of-projects'], { queryParams: { 'refresh': 1 } });
   }
 
-  createProject(){
-    this.menuCtrl.enable(false);
+  createProject() {
     this.navCtrl.navigateForward(['/create-project'], { queryParams: { 'refresh': 1 } });
   }
 
-  selectOrganizationCreator(){
-    this.menuCtrl.enable(false);
+  selectOrganizationCreator() {
     this.navCtrl.navigateForward(['select-organization'], { queryParams: { 'refresh': 1 } });
   }
 
-  async quitFromOrg(){
-    this.dataService.quitFromOrg();
-    const alert = await this.alertCtrl.create({
-      cssClass: 'my-custom-class',
-      header: 'Log out',
-      message: 'LogOut da Organizzazione.',
-      buttons: ['OK']
+  async quitFromOrg() {
+    let orgName = this.dataService.getOrganization().name;
+    this.dataService.logoutOrganization();
+    const toast = await this.toastCtrl.create({
+      message: 'Logout da ' + orgName + ' eseguito',
+      duration: 2000
     });
-  
-    await alert.present();
+
+    toast.present();
   }
 
-  home(){
+  home() {
     this.navCtrl.navigateRoot(['/home'], { queryParams: { 'refresh': 1 } });
   }
 
-  async logOutUser(){
-    this.dataService.removeUser();
-    const alert = await this.alertCtrl.create({
-      cssClass: 'my-custom-class',
-      header: 'Perfetto',
-      message: 'LogOut eseguito.',
-      buttons: ['OK']
+  async logOutUser() {
+    this.dataService.logoutUser();
+    const toast = await this.toastCtrl.create({
+      message: 'Logout eseguito',
+      duration: 2000
     });
-  
-    await alert.present();
-    this.navCtrl.navigateRoot(['/home']);
+    toast.present();
+    this.navCtrl.navigateRoot(['/home'], { queryParams: { 'refresh': 1 } });
   }
 
-  viewSkill(){
+  viewSkill() {
     this.navCtrl.navigateForward(['view-skill'], { queryParams: { 'refresh': 1 } });
+  }
+
+  userSubmission(){
+    this.navCtrl.navigateRoot(['/user-submission'], { queryParams: { 'refresh': 1 } });
   }
 }

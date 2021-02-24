@@ -1,84 +1,27 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.OrganizationsManager;
-
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
 import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("api/organizations")
-public class OrganizationsController {
+public interface OrganizationsController extends EntityController<Organization, String>{
 
-    @Autowired
-    private OrganizationsManager organizationsManager;
+    List<Organization> getByUser(String userMail);
 
-    @PreAuthorize("permitAll")
-    @GetMapping("/{organizationId}")
-    public Organization getOrganization(@PathVariable String organizationId){
-        return organizationsManager.getOrganizationInstance(organizationId);
-    }
+    List<UserEntity> getUsers(String organizationId) throws EntityNotFoundException;
 
-    @PreAuthorize("permitAll")
-    @GetMapping("/list/{page}")
-    public Page<Organization> getPage(@PathVariable int page){
-        return organizationsManager.getPage(page, 10);
-    }
+    void addCollaborator(String organizationId, String userMail, Skill skill) throws EntityNotFoundException;
 
-    @PreAuthorize("permitAll")
-    @PostMapping("/createNew")
-    public Organization createOrganization(@RequestBody Organization organization){
-        return organizationsManager.createNewOrganization(organization);
-    }
+    void addExpert(String organizationId, String userMail, Skill skill) throws EntityNotFoundException;
 
-    @PreAuthorize("permitAll")
-    @DeleteMapping("/{organizationId}")
-    public boolean deleteOrganization(@PathVariable String organizationId){
-        return organizationsManager.deleteOrganization(organizationId);
-    }
+    boolean addMember(String organizationId, String userMail) throws EntityNotFoundException;
 
-    @PreAuthorize("permitAll")
-    @GetMapping("/byUser/{userMail}")
-    public List<Organization> getByUser(@PathVariable String userMail){
-        return organizationsManager.findByUser(userMail);
-    }
+    boolean removeMember(String organizationId, String userMail, Boolean removeProjects) throws EntityNotFoundException;
 
-    @PreAuthorize("permitAll")
-    @GetMapping("/getUsers/{organizationId}")
-    public List<User> getUsers(@PathVariable String organizationId){
-        return organizationsManager.getUsers(organizationId);
-    }
+    List<Organization> findByCreator(String userMail);
 
-    @PreAuthorize("permitAll")
-    @PostMapping("/addCollaborator/{organizationId}/{userMail}")
-    public boolean addCollaborator(@PathVariable String organizationId, @PathVariable String userMail, @RequestBody Skill skill){
-        return organizationsManager.addCollaborator(organizationId, userMail, skill);
-    }
-
-    @PreAuthorize("permitAll")
-    @GetMapping("/listCreatorOrg/{userMail}")
-    public List<Organization> listOfOrganizationOfUser(@PathVariable String userMail){
-        return organizationsManager.findCreator(userMail);
-    }
-
-    @PreAuthorize("permitAll")
-    @GetMapping("/exist/{organizationName}")
-    public boolean existsUser(@PathVariable String organizationName){
-        return organizationsManager.exists(organizationName);
-    }
-
-    @PreAuthorize("permitAll")
-    @PutMapping(value = "/modify", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Organization modifyOrganization(@RequestBody Organization organization){
-        return organizationsManager.updateOrganization(organization);
-    }
+    Page<BasicOrganizationInformation> getPage(int page) throws EntityNotFoundException;
 
 }

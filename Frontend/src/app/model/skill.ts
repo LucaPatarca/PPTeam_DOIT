@@ -1,5 +1,5 @@
 export class Skill {
     name:string;
-    expertInOrganization:string[];
-    isGloballyExpert:boolean;
+    expertInOrganization:string[]= new Array();
+    level:number;
 }

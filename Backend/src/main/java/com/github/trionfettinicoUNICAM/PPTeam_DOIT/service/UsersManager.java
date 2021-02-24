@@ -1,20 +1,26 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
-import org.bson.types.ObjectId;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
+import org.springframework.data.domain.Page;
 
-import java.util.UUID;
+import java.util.List;
 
 
-public interface UsersManager {
-    User getUserInstance(String userMail);
-    User createUser(String mail, String name);
-    boolean deleteUser(String mail);
-    boolean updateUser(User user);
-    boolean exists(String userMail);
-    boolean existSkill(Skill skill, String userMail);
-    boolean hasSkillExpertFor(Skill skill, String userMail, String organizationId);
-    boolean addCollaborator(String userEmail,Skill skill);
+public interface UsersManager extends EntityManager<UserEntity, String> {
 
+    boolean existSkill(Skill skill, String userMail) throws EntityNotFoundException;
+
+    boolean hasSkillExpertFor(Skill skill, String userMail, String organizationId) throws EntityNotFoundException;
+
+    List<UserSubmissionInformation> getUserSubmissions(String userMail) throws EntityNotFoundException;
+
+    Page<UserEntity> getPage(int page, int size) throws EntityNotFoundException;
+
+    Page<UserEntity> getExpertPage(int page, int size) throws EntityNotFoundException;
+
+    boolean addNewSkill(String skillName, String userMail) throws EntityNotFoundException;
+
+    boolean removeSkill(Skill skill, String userMail) throws EntityNotFoundException;
 }

@@ -1,128 +1,125 @@
 import { Organization } from '../model/organization';
 import { Injectable } from '@angular/core';
+import { User } from '../model/user';
 import { Project } from '../model/project';
+import { Storage } from '@ionic/storage';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class DataService {
-  public listProject:Project[];
-  public listOrganization:Organization[];
-  public listOrganizationCreator:Organization[];
-  public userMail:String;
-  public isLog:boolean;
-  public orgUser:String;
-  public isLogOrg:boolean;
 
-  constructor() {
-    this.listProject = new Array();
-    this.listOrganization = new Array();
-    this.listOrganizationCreator = new Array();
-    this.userMail="";
-    this.orgUser="";
-    this.isLog=false;
-    this.isLogOrg=false;
+  private key_user: string = 'user';
+  private key_organization: string = 'organization';
+  private key_token: string = 'token';
+
+  private guestUser: User = new User();
+
+  private user: User;
+  private organization: Organization;
+  private token: string;
+
+
+  constructor(private storage: Storage) {
+    this.organization = null;
+    this.user = this.guestUser;
+    this.token = "";
+
+    storage.get(this.key_organization).then((val) => {
+      this.organization = val as Organization;
+    });
+    storage.get(this.key_token).then((val) => {
+      if(val != null)
+        this.token = val as string;
+    });
+    storage.get(this.key_user).then((val) => {
+      if(val != null)
+        this.user = val as User;
+    });
   }
 
-  public getUser():String{
-    return this.userMail;
+  public loginUser(user: User, token: string) {
+    this.user = user;
+    this.token = token;
+    this.storage.set(this.key_token, token);
+    this.storage.set(this.key_user, user);
   }
 
-  public userIsLog():boolean{
-    
-    return this.isLog;
+  public getUser(): User {
+    return this.user;
   }
 
-  public setUser(user:String){
-    this.userMail = user;
-    this.isLog = true;
+  public getUserMail(): string {
+    return this.user.mail;
   }
 
-  public removeUser(){
-    this.userMail = "";
-    this.isLog = false;
-    this.quitFromOrg();
+  public isUserLogged(): boolean {
+    return this.user != this.guestUser && this.token != "";
   }
 
-  public addProject(project:Project){
-    this.listProject = this.listProject.concat(project);
+  public logoutUser() {
+    this.storage.remove(this.key_user);
+    this.storage.remove(this.key_token);
+    this.user = this.guestUser;
+    this.token = "";
+    this.logoutOrganization();
   }
 
-  public getIsLogOrg():boolean{
-    return this.isLogOrg;
+  public loginOrganization(organization: Organization) {
+    this.storage.set(this.key_organization, organization);
+    this.organization = organization;
   }
 
-  public getProject(id:string) : Project{
-    return this.listProject.find(it=>it.id==id);
+  public getOrganization(): Organization {
+    return this.organization;
   }
 
-  public setOrgUser(orgId:string){
-    this.orgUser = orgId;
-    this.isLogOrg = true;
+  public getOrganizationName(): string {
+    if (this.organization != null)
+      return this.organization.name;
+    return "";
   }
 
-  public quitFromOrg(){
-    this.orgUser = "";
-    this.isLogOrg =false;
+  public updateOrganization(organization:Organization){
+    this.organization = organization;
   }
 
-  public updateProject(oldID:string, project:Project){
-    const index = this.listProject.findIndex(it=>it.id==oldID);
-    if(index > -1)
-      this.listProject[index]=project;
+  public isOrganizationSelected(): boolean {
+    return this.organization != null;
   }
 
-  public removeProject(project:Project){
-    const index = this.listProject.findIndex(it=>it.id==project.id);
-    if(index > -1)
-      this.listProject.splice(index,1);
+  public logoutOrganization() {
+    this.storage.remove(this.key_organization);
+    this.organization = null;
   }
 
-  public clearProject(){
-    this.listProject=new Array();
+  public hasProjectCreatorPermission(project: Project): boolean {
+    if (this.user.mail == project.creatorMail)
+      return true;
+    else
+      return false;
   }
 
-  public addOrganization(organization:Organization){
-    this.listOrganization = this.listOrganization.concat(organization);
+  public hasOrganizationCreatorPermission(organization: Organization): boolean {
+    if (this.user.mail == organization.creatorMail)
+      return true;
+    else
+      return false;
   }
 
-  public addOrganizationCreator(organization:Organization){
-    this.listOrganizationCreator = this.listOrganizationCreator.concat(organization);
+  public hasMemberPermission(organization: Organization): boolean {
+    organization.membersMails.forEach(element => {
+      if (element = this.user.mail)
+        return true;
+    });
+    return false;
   }
 
-  public getOrganizationt(orgId:string) : Organization{
-    return this.listOrganization.find(it=>it.id==orgId);
+  public getToken(): string {
+    return this.token;
   }
 
-  public updateOrganization(oldName:string, organization:Organization){
-    const index = this.listOrganization.findIndex(it=>it.name==oldName);
-    if(index > -1)
-      this.listOrganization[index]=organization;
-  }
-
-  public removeOrganizationt(organization:Organization){
-    const index = this.listOrganization.findIndex(it=>it.name==organization.name);
-    if(index > -1)
-      this.listOrganization.splice(index,1);
-  }
-
-  public clearOrganization(){
-    this.listOrganization=new Array();
-  }
-
-  public clearOrganizationCreator(){
-    this.listOrganizationCreator=new Array();
-  }
-
-  public isOrganizationEmpty():boolean{
-      return this.listOrganization.length==0;
-  }
-
-  public isOrganizationCreatorEmpty():boolean{
-    return this.listOrganizationCreator.length==0;
-  }
-
-  public isProjectEmpty():boolean{
-    return this.listProject.length==0;
-  }
 }

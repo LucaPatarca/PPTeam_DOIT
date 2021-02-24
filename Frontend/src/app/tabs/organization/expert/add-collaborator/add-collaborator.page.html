@@ -3,19 +3,19 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>addCollaborator</ion-title>
+    <ion-title>Add Collaborator</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
- <!-- per ogni elemento presente in organizations creo una ion-card-->
+  <!-- per ogni elemento presente in organizations creo una ion-card-->
   <ion-card *ngFor="let user of users">
-   <ion-item (click)="addSkill(user)" routerDirection="forward">
-     <ion-label>
-       <h2 text-capitalize>{{user.name}}</h2>
-       <p>{{user.mail}}</p>
-     </ion-label>
-   </ion-item>
- </ion-card>
- 
- </ion-content>
+    <ion-item (click)="addSkill(user)" routerDirection="forward">
+      <ion-label>
+        <h2 text-capitalize>{{user.name}}</h2>
+        <p>{{user.mail}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
+</ion-content>

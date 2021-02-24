@@ -1,41 +1,57 @@
 <ion-header>
- <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button auto-hide="true"></ion-menu-button>
-        </ion-buttons>
-        <ion-buttons slot="primary">
-          <ion-button>
-            <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
-          </ion-button>
-        </ion-buttons>
-        <ion-title>LIST OF PROJECTS</ion-title>
-      </ion-toolbar>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button auto-hide="true"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="primary">
+      <ion-button>
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>List Of Projects</ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
 
-<div class="row">
-    <div class="col">
-        <div class="text-center">
-            <h5 *ngIf="data.isProjectEmpty()" style="text-align: center;">Nessun progetto disponibile</h5>
-        </div>
-    </div>
-</div>
-<!-- per ogni elemento presente in projects creo una ion-card-->
- <ion-card *ngFor="let project of data.listProject">
-  <ion-item (click)="viewProject(project.id)" routerDirection="forward">
-    <ion-label>
-      <h2 text-capitalize>{{project.name}}</h2>
-      <p>{{project.description}}</p>
-    </ion-label>
-  </ion-item>
-</ion-card>
+  <ion-refresher slot="fixed" (ionRefresh)="reload($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-<!-- comando per creare uno scroll infinito-->
-<ion-infinite-scroll threshold="5%" (ionInfinite)="loadMore($event)">
-  <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more users ...">
-  </ion-infinite-scroll-content>
-</ion-infinite-scroll>
+  <div *ngIf="projects.length==0&&!loading" class="row">
+    <div class="col">
+      <div class="text-center">
+        <h5 style="text-align: center;">Nessun progetto disponibile</h5>
+      </div>
+    </div>
+  </div>
+  <!-- per ogni elemento presente in projects creo una ion-card-->
+  <div *ngIf="!loading">
+    <ion-card *ngFor="let project of projects">
+      <ion-item (click)="viewProject(project.id)" routerDirection="forward">
+        <ion-label>
+          <h2 text-capitalize>{{project.title}}</h2>
+          <p>{{project.description}}</p>
+        </ion-label>
+      </ion-item>
+    </ion-card>
+  </div>
+
+  <div *ngIf="loading">
+    <ion-card *ngFor="let item of [].constructor(10)">
+      <ion-item>
+        <ion-label>
+          <ion-skeleton-text animate style="width: 40%;"></ion-skeleton-text>
+          <ion-skeleton-text animate style="width: 80%;"></ion-skeleton-text>
+        </ion-label>
+      </ion-item>
+    </ion-card>
+  </div>
+
+  <!-- comando per creare uno scroll infinito-->
+  <ion-infinite-scroll threshold="5%" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more users ...">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>
-

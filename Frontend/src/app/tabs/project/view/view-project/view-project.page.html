@@ -1,10 +1,16 @@
 <ion-header>
- <ion-toolbar>
-  <ion-buttons slot="start">
-    <ion-back-button (click)="onBack()"></ion-back-button>
-  </ion-buttons>
-  <ion-title>VIEW PROJECT</ion-title>
- </ion-toolbar>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title *ngIf="!loading">{{project.title}}</ion-title>
+    <ion-skeleton-text *ngIf="loading" animated style="width: 60%;"></ion-skeleton-text>
+    <ion-buttons slot="end">
+      <ion-button (click)="showActionSheet()">
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
@@ -13,23 +19,38 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-card>
+  <ion-card *ngIf="!loading">
     <ion-item>
       <ion-label>
-        <h2 text-capitalize>{{project.name}}</h2>
         <p>{{project.description}}</p>
-        <p>organization : {{project.organizationName}}</p>
+        <p>organization : {{organization.name}}</p>
         <p>creator : {{project.creatorMail}}</p>
-        <p>status : {{isClosed}}</p>
-          <p>neededskills : </p>
-        <p  *ngFor="let neededskill of project.neededskills">{{neededskill}}</p>
-          <p>candidates : </p>
-        <p  *ngFor="let candidate of project.candidates">{{candidate}}</p>
+        <p>status : {{project.closed}}</p>
+        <p><strong>neededskills :</strong></p>
+        <p *ngFor="let neededSkill of project.neededSkills"> -{{neededSkill.name}} (level : {{neededSkill.level}})</p>
+        <p><strong>candidates : </strong></p>
+        <p *ngFor="let candidate of project.candidates"> -{{candidate.userMail}} {{candidate.skill.name}}</p>
       </ion-label>
     </ion-item>
   </ion-card>
+
+  <ion-card *ngIf="loading">
+    <ion-item>
+      <ion-label>
+        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 40%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 30%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 40%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 70%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 40%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
 </ion-content>
-
-<ion-button *ngIf="project.creatorMail==data.userMail" (click)="modify()">modify</ion-button>
-
-<ion-button *ngIf="project.creatorMail==data.userMail" (click)="delete()" type="submit">delete</ion-button>

@@ -1,7 +1,18 @@
 export class Organization {
-    id:string;
-    name:string;
-    description:string;
-    membersMails:[];
-    creatorMail:string;
+    public id:string = "";
+    public membersMails: Array<string> = new Array();
+    public name:string;
+    public description:String;
+    public creatorMail:String;
+
+    constructor(
+        private nameOrg: string,
+        private descriptionOrg: string,
+        private creatorMailOrg: string,
+    ){
+        this.id = "";
+        this.creatorMail = creatorMailOrg;
+        this.name = nameOrg;
+        this.description = descriptionOrg;
+    }
 }

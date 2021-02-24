@@ -1,54 +1,73 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { MenuController, NavController } from '@ionic/angular';
-import { DataService } from 'src/app/services/data.service';
-import { GlobalsService } from 'src/app/services/globals.service';
+import { Component } from '@angular/core';
+import { MenuController, NavController, Platform } from '@ionic/angular';
+import { OrganizationInformation } from 'src/app/model/organization-information';
+import { RestService } from 'src/app/services/rest.service';
 
 @Component({
   selector: 'app-list-of-organizations',
   templateUrl: './list-of-organizations.page.html',
   styleUrls: ['./list-of-organizations.page.scss'],
 })
-export class ListOfOrganizationsPage  {
+export class ListOfOrganizationsPage {
   page = 0;
-  textNoOrganizations="Nessuna Organizzazione disponibile";  
+  textNoOrganizations = "Nessuna Organizzazione disponibile";
+  organizations: Array<OrganizationInformation>;
+  loading: boolean;
+  HWBackSubscription: any;
 
   constructor(
-    private titleService: Title,
-    private http: HttpClient,
-    public router:Router,
-    public data: DataService,
-    public menuCtrl:MenuController,
-    private navCtrl:NavController,
-    private globals:GlobalsService
-    ) {
-    this.data.clearOrganization();
-    this.loadOrganizations();
-    this.titleService.setTitle("listOfOrganizations");
+    public menuCtrl: MenuController,
+    private navCtrl: NavController,
+    private restService: RestService,
+    private platform: Platform,
+  ) {
+    this.organizations = new Array();
+    this.loading = true;
+    this.loadOrganizations().then(
+      ()=>{
+        this.loading = false;
+      }
+    );
+  }
+
+  ionViewDidEnter() {
     this.menuCtrl.enable(true);
+    this.HWBackSubscription = this.platform.backButton.subscribe(() => {
+      navigator['app'].exitApp();
+    });
+    this.reloadOrganizations();
+  }
+
+  ionViewDidLeave(){
+    this.HWBackSubscription.unsubscribe();
   }
 
   // metodo per richiedere una pagina di elementi
-  loadOrganizations(event?){
-    this.http.get(this.globals.listOfOrganizationsApiUrl+this.page)
-    .subscribe(res => {
-      this.data.addOrganization(res['content']);
-      if(event){
-        event.target.complete();
-      }
-    });
+  async loadOrganizations(event?) {
+    const newOrganizations = await this.restService.getOrganizationPage(this.page);
+    this.organizations = this.organizations.concat(newOrganizations);
+    if (event) {
+      event.target.complete();
+    }
   }
 
-  loadMore(event: any){
-        this.page++;
-        this.loadOrganizations(event);
+  async reloadOrganizations(event?){
+    this.page = 0;
+    const newOrganizations = await this.restService.getOrganizationPage(this.page);
+    this.organizations = newOrganizations;
+    if(event)
+      event.target.complete();
+    
+  }
+
+  loadMore(event: any) {
+    this.page++;
+    this.loadOrganizations(event);
   }
 
 
   // metodo per aprire la visualizzazione di una pagina (gli si passa un organization)
-  viewOrganization(organization:String){
-    this.navCtrl.navigateForward(['/view-organization',{"id":organization}], { queryParams: { 'refresh': 1 } });
+  viewOrganization(organizationId: String) {
+    this.navCtrl.navigateForward(['/view-organization', { "id": organizationId }], { queryParams: { 'refresh': 1 } });
   }
 }

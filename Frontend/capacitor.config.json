@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "DOIT]",
+  "appName": "DOIT",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
@@ -9,5 +9,6 @@
       "launchShowDuration": 0
     }
   },
-  "cordova": {}
+  "cordova": {},
+  "windowsAndroidStudioPath": "C:\\Program Files\\Android\\Android Studio\\bin\\studio64.exe"
 }

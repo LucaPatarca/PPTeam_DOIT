@@ -1,9 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>addExpert</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Add Expert</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content fullscreen>
+  <ion-card *ngFor="let user of users">
+    <ion-item (click)="addExpert(user)" routerDirection="forward">
+      <ion-label>
+        <h2 text-capitalize>{{user.name}}</h2>
+        <p>{{user.mail}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+
+  <!-- quando il caricamento è completato ma non ci sono user disponibili -->
+  <div class="row" *ngIf="(users.length == 0) && !loading">
+    <div class="col">
+      <div class="text-center">
+        <h5 style="text-align: center;">{{textNoExpert}}</h5>
+      </div>
+    </div>
+  </div>
 
 </ion-content>

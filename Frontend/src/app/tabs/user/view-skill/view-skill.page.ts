@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { AlertController, MenuController, NavController } from '@ionic/angular';
+
+import { Component } from '@angular/core';
+import { MenuController, ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 import { Skill } from 'src/app/model/skill';
+import { User } from 'src/app/model/user';
 import { DataService } from 'src/app/services/data.service';
-import { GlobalsService } from 'src/app/services/globals.service';
+import { RestService } from 'src/app/services/rest.service';
 
 @Component({
   selector: 'app-view-skill',
@@ -13,46 +13,126 @@ import { GlobalsService } from 'src/app/services/globals.service';
 })
 export class ViewSkillPage {
 
-  listSkills:Skill[] = new Array();
+  skills: Skill[];
   page = 0;
-  textNoSkill="Nessuna skill disponibile";  
+  textNoSkill = "Nessuna skill disponibile";
+  loading: boolean;
 
   constructor(
-    private titleService: Title,
-    private http: HttpClient,
-    public data: DataService,
-    public menuCtrl:MenuController,
-    private navCtrl:NavController,
-    private globals:GlobalsService,
-    private alertCtrl:AlertController
-    ) {
-    this.loadSkill();
-    this.titleService.setTitle("viewSkill");
+    public menuCtrl: MenuController,
+    private restService: RestService,
+    private dataService:DataService,
+    private actionSheetCtrl:ActionSheetController,
+    private alertController:AlertController,
+    private toastController:ToastController,
+  ) {
+    this.loading = true;
+    this.skills = new Array()
+    this.loadSkills().then(
+      ()=>{
+        this.loading = false;
+      }
+    );
   }
 
   // metodo per richiedere una pagina di elementi
-  loadSkill(event?){
-    this.http.get(this.globals.getUserSkills+this.data.userMail)
-    .subscribe(res => {
-      const toAdd:Skill[] = res as Skill[];
-      toAdd.forEach(skill=>this.listSkills.push(skill));
-      if(event){
-        event.target.complete();
-      }
-    }, 
-    err => { 
-      console.log('oops some error in select org'); 
+  async loadSkills(event?) {
+    const newSkills = await  this.restService.getUserSkills((this.dataService.getUser() as unknown as User).mail);
+    this.skills = newSkills;
+    if(event){
+      event.target.complete();
+    }
+  }
+
+  async showActionSheet() {
+    const actionSheet = await this.actionSheetCtrl.create({
+      header: 'Skill',
+      cssClass: 'my-custom-class',
+      buttons: this.getButtons()
     });
+    await actionSheet.present();
   }
 
-  loadMore(event: any){
-        this.page++;
-        this.loadSkill(event);
+  getButtons(): Array<Object> {
+    var buttons = new Array();
+
+    if (this.dataService.isUserLogged()) {
+      buttons = buttons.concat([
+         {
+          text: 'Close',
+          icon: 'close-outline',
+          handler: () => {
+          }
+        }, {
+          text: 'Add skill',
+          icon: 'create-outline',
+          handler: () => {
+            this.addNewSkill();
+          }
+        }
+      ]);
+    }
+    return buttons;
   }
 
-  onBack(){
-    this.menuCtrl.enable(true);
-    this.navCtrl.navigateBack(["/home"], { queryParams: { 'refresh': 1 } })
+  async addNewSkill(){
+    const add = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Add skill name !',
+      message: 'skill  name required',
+      inputs: [ 
+        {
+          name: 'skill',
+          placeholder: 'skill'
+        },
+      ],
+      buttons: [
+        {
+          text: 'cancel',
+        }, {
+          text: 'add',
+          handler: async data => {
+            if (data.skill==null || (data.skill as string).trim()=="") {
+              const toast = await this.toastController.create({
+                message: 'Campo skill non deve essere vuoto',
+                duration: 2000
+              });
+              toast.present();
+            } else {
+              await this.restService.addNewSkill(data.skill);
+              this.loadSkills();
+            }
+          }
+        }
+      ]
+    });
+    await add.present();
+  }
+
+  async deleteSkill(skill:Skill){
+    const remove = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Remove skill !',
+      message: `
+      Skill info  
+      <ul>
+          <li>name : `+skill.name+`</li>
+          <li>level : `+skill.level+`</li>
+      </ul> 
+      `,
+      buttons: [
+        {
+          text: 'cancel',
+        }, {
+          text: 'remove',
+          handler: async () => {
+            await this.restService.removeSkill(skill);
+            this.loadSkills();
+          }
+        }
+      ]
+    });
+    await remove.present();
   }
 
 }

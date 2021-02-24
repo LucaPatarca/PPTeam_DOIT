@@ -9,8 +9,9 @@ import org.springframework.data.mongodb.core.convert.DefaultDbRefResolver;
 import org.springframework.data.mongodb.core.convert.MappingMongoConverter;
 import org.springframework.data.mongodb.core.mapping.MongoMappingContext;
 
-//TODO aggiungere documentazione
-//Classe aggiunta per configurare Mongo DB che sennò da problemi con il '.' nelle mail passate per come parametro
+/**
+ * This class is needed to configure MongoDB to allow dots in field values (this is important to save emails)
+ */
 @Configuration
 public class MongoConfig {
 

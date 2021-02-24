@@ -1,74 +1,25 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.User;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.service.UsersManager;
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserSubmissionInformation;
+import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
-@RestController
-@RequestMapping("api/users")
-public class UsersController {
+public interface UsersController extends EntityController<UserEntity, String> {
 
-    @Autowired
-    private UsersManager usersManager;
+    Set<Skill> getUserSkill(String userEmail) throws EntityNotFoundException;
 
-    @PreAuthorize("permitAll")
-    @GetMapping("/{userEmail}")
-    public User getUser(@PathVariable String userEmail){
-        return usersManager.getUserInstance(userEmail);
-    }
+    boolean existSkill(String skill, String userEmail) throws EntityNotFoundException;
 
-    @PreAuthorize("permitAll")
-    @GetMapping("/getUserSkills/{userEmail}")
-    public Set<Skill> getUserSkill(@PathVariable String userEmail){
-        return usersManager.getUserInstance(userEmail).getSkills();
-    }
+    List<UserSubmissionInformation> getUserSubmissions(String userMail) throws EntityNotFoundException;
 
-    @PreAuthorize("permitAll")
-    @GetMapping("/existSkill/{skill}/{userEmail}")
-    public boolean existSkill( @PathVariable String skill,@PathVariable String userEmail){
-        return usersManager.existSkill(new Skill(skill),userEmail);
-    }
+    boolean addNewSkill(String userID, String skillName) throws EntityNotFoundException;
 
-    @PreAuthorize("permitAll")
-    @PutMapping("/addSkillCollaborator/{organizationId}/{userEmail}/{skillName}")
-    public boolean addCollaborator(@PathVariable String organizationId, @PathVariable String userEmail, @PathVariable String skillName){
-        Skill skill = new Skill(skillName, organizationId);
-        if(usersManager.hasSkillExpertFor(skill,userEmail,organizationId))
-            return false;
-        return usersManager.addCollaborator(userEmail,skill);
-    }
+    boolean removeSkill(String userID,Skill skill) throws EntityNotFoundException;
 
-    @PreAuthorize("permitAll")
-    @PostMapping(value = "/createNew", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public User createNewUser(@RequestBody User user){
-        return usersManager.createUser(user.getMail(),user.getName());
-    }
-
-    @PreAuthorize("permitAll")
-    @DeleteMapping(value = "/{userMail}")
-    public boolean deleteUser(@PathVariable String userMail){
-        return usersManager.deleteUser(userMail);
-    }
-
-
-    @PreAuthorize("permitAll")
-    @PutMapping(value = "/modify", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public boolean modifyUser(@RequestBody User user){
-        return usersManager.updateUser(user);
-    }
-
-    @PreAuthorize("permitAll")
-    @PostMapping("/exist/")
-    public boolean existsUser(@RequestBody String userEmail){
-        return usersManager.exists(userEmail);
-    }
-
+    Page<UserEntity> getPage(int page) throws EntityNotFoundException;
 }

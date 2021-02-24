@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button auto-hide="true"></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="primary">
+      <ion-button>
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>My Submissions</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <div *ngIf="userSubmissions.length==0&&!loading" class="row">
+    <div class="col">
+      <div class="text-center">
+        <h5 style="text-align: center;">Nessuna submit disponibile</h5>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!loading">
+    <ion-card *ngFor="let userSubmission of userSubmissions">
+      <ion-item routerDirection="forward">
+        <ion-label>
+          <h2 text-capitalize>Project : {{userSubmission.projectName}}</h2>
+          <p>organization : {{userSubmission.organizationName}}</p>
+          <ion-card *ngFor="let role of userSubmission.role" (click)="removeSubmission(userSubmission,role)">
+            <p>role : {{role.skill.name}}</p>
+            <p>level skill : {{role.skill.level}}</p>
+          </ion-card>
+        </ion-label>
+      </ion-item>
+    </ion-card>
+  </div>
+
+</ion-content>

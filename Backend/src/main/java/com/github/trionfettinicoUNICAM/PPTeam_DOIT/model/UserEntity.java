@@ -1,17 +1,22 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
-import org.bson.types.ObjectId;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Represents a registered user inside the application. It has the ability to join a project's team
  * and to do so, it needs a list of {@link Skill}s.
  */
 @Document(collection = "user")
-public class User {
+public class UserEntity {
 
     // TODO: 10/12/20 scrivere il javadoc di questi metodi (lasciati indietro perche comunque si spiegano gia bene da soli)
 
@@ -21,11 +26,22 @@ public class User {
     private String mail;
     private String name;
     private Set<Skill> skills;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String secret;
 
-    public User(String mail, String name) throws IllegalArgumentException {
+    public UserEntity(String mail, String name) throws IllegalArgumentException {
         setMail(mail);
         setName(name);
         skills = new HashSet<>();
+    }
+
+    public UserEntity(UserAdapter userAdapter){
+        this.setMail(userAdapter.getMail());
+        this.setName(userAdapter.getName());
+        this.setSkills(userAdapter.getSkills());
+    }
+
+    public UserEntity() {
     }
 
     /**
@@ -71,7 +87,7 @@ public class User {
     }
 
     /**
-     * The {@link User} mail is unique for each user so a user can be identified by it's mail.
+     * The {@link UserEntity} mail is unique for each user so a user can be identified by it's mail.
      * @return the user's mail
      */
     @Id
@@ -80,7 +96,7 @@ public class User {
     }
 
     public void setMail(String mail) throws IllegalArgumentException {
-        if(mail.length() == 0) throw new IllegalArgumentException("Mail is empty");
+        if(mail.isBlank()) throw new IllegalArgumentException("Mail is empty");
         this.mail = mail;
     }
 
@@ -89,18 +105,8 @@ public class User {
     }
 
     public void setName(String name) throws IllegalArgumentException {
-        if(name.length() == 0) throw new IllegalArgumentException("Name is empty");
+        if(name.isBlank()) throw new IllegalArgumentException("Name is empty");
         this.name = name;
-    }
-
-    public void setGloballyExpert(Skill skill){
-        Optional<Skill> optionalSkill = this.getSkills().stream().filter(it->it.equals(skill)).findAny();
-        if(optionalSkill.isPresent()){
-            optionalSkill.get().setGloballyExpert(true);
-        } else{
-            skill.setGloballyExpert(true);
-            this.addSkill(skill);
-        }
     }
 
     public void setExpert(Skill skill, String organizationId){
@@ -111,5 +117,26 @@ public class User {
             skill.getExpertInOrganization().add(organizationId);
             this.addSkill(skill);
         }
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity user = (UserEntity) o;
+        return Objects.equals(mail, user.mail) && Objects.equals(name, user.name) && Objects.equals(skills, user.skills);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(mail, name, skills);
     }
 }
