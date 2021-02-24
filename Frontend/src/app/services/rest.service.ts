@@ -160,6 +160,23 @@ export class RestService {
     });
   }
 
+  async addMember(userMail:string){
+    this.refreshToken();
+    console.log(this.config);
+    return new Promise((resolve, rejects) => {
+      this.http.post(environment.addMember+this.dataService.getOrganization().id +"/"+ userMail,this.config).subscribe(
+        res => {
+          this.refresOrganization();
+          resolve(res as boolean);
+        },
+        err => {
+          this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
   async removeMember(userMail:string){
     this.refreshToken();
     return new Promise((resolve, rejects) => {

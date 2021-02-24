@@ -202,6 +202,12 @@ export class ViewOrganizationPage {
             this.goBack();
           }
         }, {
+          text: 'Add Member',
+          icon: 'person-add-outline',
+          handler: () => {
+            this.addMember();
+          }
+        }, {
           text: 'Add Expert',
           icon: 'person-add-outline',
           handler: () => {
@@ -216,7 +222,7 @@ export class ViewOrganizationPage {
         },
         {
           text: 'Remove Member',
-          icon: 'person-add-outline',
+          icon: 'person-remove-outline',
           handler: () => {
              this.removeMember();
              this.nav.navigateForward(['/view-organization', { "id": this.id }], { queryParams: { 'refresh': 1 } });
@@ -280,6 +286,41 @@ export class ViewOrganizationPage {
     }
     });
     return theNewInputs;
+  }
+
+  async addMember(){
+    const add = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: 'Enter Member mail',
+      message: '',
+      inputs: [
+        {
+          name: 'mail',
+          type: 'text',
+          placeholder: 'Member Mail'
+        },
+      ],
+      buttons: [
+        {
+          text: 'cancel',
+        }, {
+          text: 'add',
+          handler: async data => {
+            if (data.mail==null||(data.mail as string).trim() == "") {
+              const toast = await this.toastController.create({
+                message: 'Campo mail non valido',
+                duration: 2000
+              });
+              toast.present();
+            } else {
+                this.restService.addMember(data.mail as string);
+                this.goBack();
+            }
+          }
+        }
+      ]
+    });
+    await add.present();
   }
 
 }

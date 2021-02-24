@@ -31,4 +31,5 @@ export const environment = {
   removeSkill:userApiUrl+"removeSkill/",
   getExpertsPage:userApiUrl+"listExperts/",
   removeMember:organizationApiUrl+"removeMember/",
+  addMember:organizationApiUrl+"addMember/",
 };
