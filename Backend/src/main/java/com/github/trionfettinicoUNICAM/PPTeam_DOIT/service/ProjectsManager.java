@@ -11,21 +11,6 @@ import java.util.List;
  * it knows how to get every project by it's ID and can perform basic operations on them.
  */
 public interface ProjectsManager extends EntityManager<Project, String> {
-    /**
-     * Retrieves the project associated with the given ID and returns an instance of it.
-     * @param projectID the unique name of the wanted project
-     * @return an instance of the project
-     */
-    Project getInstance(String projectID) throws EntityNotFoundException;
-
-    /**
-     * Creates a new empty (with an empty team and no experts) project. The new project is associated
-     * with the given {@link Organization}.
-     * @param  project the project
-     * @return the newly created Project
-     * @throws IllegalArgumentException if the {@link UserEntity} is not part of the organization
-     */
-    Project create(Project project) throws EntityNotFoundException;
 
     /**
      * Closes the project identified by the given ID. The project is NOT deleted from the system,
@@ -36,29 +21,13 @@ public interface ProjectsManager extends EntityManager<Project, String> {
      */
     boolean closeProject(String projectID) throws EntityNotFoundException;
 
-    /**
-     * Deletes a project from the system.
-     * @param projectID the unique name of the project to delete
-     * @return true if the project has been deleted, false instead
-     */
-    boolean delete(String projectID);
-
-    /**
-     * Updates the {@link Project} passed as parameter and saves it.
-     * @param project the project to be saved
-     * @return true if the project is stored successfully, false instead.
-     */
-    Project update(Project project) throws EntityNotFoundException;
-
     Page<BasicProjectInformation> getPage(int page, int size) throws EntityNotFoundException;
-
-    boolean exists(String projectID);
 
     boolean existsSignature(String projectSignature);
 
     List<Project> findByOrganizationId(String organizationId);
 
-    boolean submit(String projectId, String userMail, Role role) throws EntityNotFoundException;
+    boolean submit(String projectId, Role role) throws EntityNotFoundException;
 
     boolean acceptCandidate(String projectId, Role userRole) throws EntityNotFoundException;
 

@@ -12,7 +12,7 @@ public interface EntityController <T,I>{
 
     T update(T object) throws EntityNotFoundException;
 
-    boolean delete(I id) throws EntityNotFoundException;
+    boolean delete(I id);
 
     boolean exists(I id);
 

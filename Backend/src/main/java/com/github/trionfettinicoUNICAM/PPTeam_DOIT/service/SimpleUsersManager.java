@@ -46,12 +46,12 @@ public class SimpleUsersManager implements UsersManager {
     }
 
     @Override
-    public boolean delete(String mail) throws EntityNotFoundException {
+    public boolean delete(String mail) {
         if(mail.isBlank()) throw new IllegalArgumentException("Il campo 'mail' è vuoto");
         if(!exists(mail))
-            throw new EntityNotFoundException("Nessun utente con la mail: "+mail);
+            return false;
         userRepository.deleteById(mail);
-        return !userRepository.existsById(mail);
+        return !exists(mail);
     }
 
     @Override

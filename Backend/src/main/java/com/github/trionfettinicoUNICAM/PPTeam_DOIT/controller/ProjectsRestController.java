@@ -41,7 +41,7 @@ public class ProjectsRestController implements ProjectsController {
     @Override
     @PreAuthorize("@permissionComponent.isProjectManager(authentication, #projectID)")
     @DeleteMapping(value = "/{projectID}")
-    public boolean delete(@PathVariable String projectID) throws EntityNotFoundException { return manager.delete(projectID); }
+    public boolean delete(@PathVariable String projectID) { return manager.delete(projectID); }
 
     @Override
     @PreAuthorize("permitAll")
@@ -61,10 +61,10 @@ public class ProjectsRestController implements ProjectsController {
     }
 
     @Override
-    @PreAuthorize("@permissionComponent.sameMail(authentication, #userMail)")
-    @PostMapping("/submit/{projectId}/{userMail}")
-    public boolean submit(@PathVariable String projectId, @PathVariable String userMail, @RequestBody Role role) throws EntityNotFoundException{
-        return manager.submit(projectId, userMail, role);
+    @PreAuthorize("@permissionComponent.sameMail(authentication, #role.userMail)")
+    @PostMapping("/submit/{projectId}")
+    public boolean submit(@PathVariable String projectId, @RequestBody Role role) throws EntityNotFoundException{
+        return manager.submit(projectId, role);
     }
 
     @Override

@@ -1,6 +1,6 @@
 
 import { Component } from '@angular/core';
-import { MenuController, ActionSheetController, AlertController, ToastController, NavController } from '@ionic/angular';
+import { MenuController, ActionSheetController, AlertController, ToastController } from '@ionic/angular';
 import { Skill } from 'src/app/model/skill';
 import { User } from 'src/app/model/user';
 import { DataService } from 'src/app/services/data.service';
@@ -37,9 +37,8 @@ export class ViewSkillPage {
 
   // metodo per richiedere una pagina di elementi
   async loadSkills(event?) {
-    this.skills = new Array();
     const newSkills = await  this.restService.getUserSkills((this.dataService.getUser() as unknown as User).mail);
-    this.skills = this.skills.concat(newSkills);
+    this.skills = newSkills;
   }
 
   async showActionSheet() {
@@ -112,7 +111,7 @@ export class ViewSkillPage {
       cssClass: 'my-custom-class',
       header: 'Remove skill !',
       message: `
-      Are these details correct?  
+      Skill info  
       <ul>
           <li>name : `+skill.name+`</li>
           <li>level : `+skill.level+`</li>
@@ -123,8 +122,8 @@ export class ViewSkillPage {
           text: 'cancel',
         }, {
           text: 'remove',
-          handler: () => {
-            this.restService.removeSkill(skill);
+          handler: async () => {
+            await this.restService.removeSkill(skill);
             this.loadSkills();
           }
         }

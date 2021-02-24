@@ -20,37 +20,9 @@ import java.util.List;
  */
 public interface OrganizationsManager extends EntityManager<Organization, String>{
 
-    /**
-     * Retrieves the organization with the given ID and returns an instance of it.
-     * @return an instance of the organization
-     */
-    Organization getInstance(@Valid @NotNull @NotBlank String organizationId) throws EntityNotFoundException;
-
-    /**
-     * Creates a new {@link Organization} with the given parameters
-     * @param  organization the organization
-     * @return the newly created organization
-     */
-    Organization create(Organization organization) throws EntityNotFoundException, IdConflictException;
-
-    /**
-     * Removes an {@link Organization} from the system.
-     * @return true if the organization is successfully removed, false instead
-     */
-    boolean delete(String organizationId);
-
-    /**
-     * Updates the {@link Organization} passed as parameter and saves it.
-     * @param organization the organization to be saved
-     * @return true if the organization is stored successfully, false instead.
-     */
-    Organization update(Organization organization) throws EntityNotFoundException;
-
     List<UserEntity> getUsers(String organizationId) throws EntityNotFoundException;
 
     boolean existsName(String organizationName);
-
-    boolean exists(String organizationId);
 
     List<Organization> findByUser(String userMail);
 

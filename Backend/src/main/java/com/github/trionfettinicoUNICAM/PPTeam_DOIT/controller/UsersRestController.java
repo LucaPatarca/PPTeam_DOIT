@@ -43,7 +43,7 @@ public class UsersRestController implements UsersController {
     @Override
     @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")
     @DeleteMapping(value = "/{userID}")
-    public boolean delete(@PathVariable String userID) throws EntityNotFoundException { return manager.delete(userID); }
+    public boolean delete(@PathVariable String userID) { return manager.delete(userID); }
 
     @Override
     @PreAuthorize("permitAll")

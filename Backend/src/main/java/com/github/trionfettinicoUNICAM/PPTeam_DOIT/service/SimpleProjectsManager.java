@@ -104,16 +104,13 @@ public class SimpleProjectsManager implements ProjectsManager{
     }
 
     @Override
-    public boolean submit(String projectId, String userMail, Role role) throws EntityNotFoundException {
+    public boolean submit(String projectId, Role role) throws EntityNotFoundException {
         //TODO 09/02/2021 controllare il contenuto di role
         if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");
-        if(userMail.isBlank()) throw new IllegalArgumentException("Il campo 'userMail' è vuoto");
         if(Objects.isNull(role)) throw new IllegalArgumentException("Il campo 'role' è nullo");
         Project project = projectRepository.findById(projectId).orElseThrow(()->
                 new EntityNotFoundException("Nessun progetto trovato con l'id: "+projectId));
-        UserEntity user = userRepository.findById(userMail).orElseThrow(()->
-                new EntityNotFoundException("Nessun utente trovato con l'email: "+userMail));
-        project.submit(user, role.getSkill(), role.isAsExpert());
+        if(!project.submit(role)) return false;
         return projectRepository.save(project).getCandidates().contains(role);
     }
 

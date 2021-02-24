@@ -45,7 +45,7 @@ public class OrganizationsRestController implements OrganizationsController {
     @Override
     @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationID)")
     @DeleteMapping(value = "/{organizationID}")
-    public boolean delete(@PathVariable String organizationID) throws EntityNotFoundException { return manager.delete(organizationID); }
+    public boolean delete(@PathVariable String organizationID) { return manager.delete(organizationID); }
     // FIXME: 10/02/2021  non rimuove le skill da collaboratore
 
     @Override

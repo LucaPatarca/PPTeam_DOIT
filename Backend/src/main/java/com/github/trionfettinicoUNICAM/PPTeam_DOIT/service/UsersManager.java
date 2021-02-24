@@ -9,15 +9,6 @@ import java.util.List;
 
 
 public interface UsersManager extends EntityManager<UserEntity, String> {
-    UserEntity getInstance(String userMail) throws EntityNotFoundException;
-
-    UserEntity create(UserEntity user) throws IdConflictException;
-
-    boolean delete(String mail) throws EntityNotFoundException;
-
-    UserEntity update(UserEntity user) throws EntityNotFoundException;
-
-    boolean exists(String userMail);
 
     boolean existSkill(Skill skill, String userMail) throws EntityNotFoundException;
 

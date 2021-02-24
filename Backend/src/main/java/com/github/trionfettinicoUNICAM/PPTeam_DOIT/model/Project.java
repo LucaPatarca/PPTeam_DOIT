@@ -164,6 +164,7 @@ public class Project {
      */
     public void close() {
         // TODO: 04/02/2021 aggiungere il controlle se è già chiuso, in caso lancio illegal state
+        // TODO: 24/02/2021 aumentare le skill dei progettisti
         isClosed=true;
     }
 
@@ -176,10 +177,10 @@ public class Project {
      * @throws IllegalArgumentException if the user does not have this {@link Skill} or if
      * the skill is not needed for this project
      */
-    public boolean submit(UserEntity user, Skill skill, boolean asExpert) throws IllegalStateException {
+    public boolean submit(Role role) throws IllegalStateException {
         // TODO: 11/02/2021 controlla che non è già nel team
         if(isClosed) throw new IllegalStateException("Project is closed");
-        Role role = new Role(Objects.requireNonNull(skill, "skill is null"), Objects.requireNonNull(user, "user is null").getMail(),asExpert);
+        if(team.contains(role)) throw new IllegalStateException("Il candidato è già nel team");
         if(!candidates.contains(role) && neededSkills.contains(role.getSkill())) {
             candidates.add(role);
             return true;
