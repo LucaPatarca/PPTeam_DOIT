@@ -8,10 +8,10 @@
 </ion-header>
 
 <ion-content padding class="form-content">
-  <form [formGroup]="validations_form" (ngSubmit)="save()">
+  <form [formGroup]="validations_form" (ngSubmit)="save()" *ngIf="!loading">
     <ion-item>
       <ion-label position="floating" color="primary">Title</ion-label>
-      <ion-input type="text" formControlName="title" [(ngModel)]="title"
+      <ion-input type="text" formControlName="title" [(ngModel)]="organization.name"
         placeholder="{{organization != null ? organization.name : 'name'}}"></ion-input>
     </ion-item>
     <ng-container *ngFor="let validation of validation_messages.title">
@@ -22,7 +22,7 @@
     </ng-container>
     <ion-item>
       <ion-label position="floating" color="primary">Description</ion-label>
-      <ion-input type="text" formControlName="description" [(ngModel)]="description"
+      <ion-input type="text" formControlName="description" [(ngModel)]="organization.description"
         placeholder="{{ organization != null ? organization.description : 'description'}}"></ion-input>
     </ion-item>
     <ng-container *ngFor="let validation of validation_messages.description">

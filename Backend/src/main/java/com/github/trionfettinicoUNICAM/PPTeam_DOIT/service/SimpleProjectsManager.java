@@ -53,6 +53,7 @@ public class SimpleProjectsManager implements ProjectsManager{
         if(toClose.isClosed() ) return false;
         toClose.close();
         projectRepository.save(toClose);
+        
         return getInstance(projectID).isClosed();
     }
 

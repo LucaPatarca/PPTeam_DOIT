@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Organization } from 'src/app/model/organization';
 import { Router, ActivatedRoute } from "@angular/router";
-import { MenuController, NavController } from '@ionic/angular';
+import { LoadingController, MenuController, NavController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestService } from 'src/app/services/rest.service';
 
@@ -15,8 +15,7 @@ export class ModifyOrganizationPage {
   organization: Organization;
   id: string;
   validations_form: FormGroup;
-  title: string;
-  description: string;
+  loading: boolean;
   validation_messages = {
     'title': [
       { type: 'required', message: 'Name is required.' }
@@ -32,6 +31,7 @@ export class ModifyOrganizationPage {
     public formBuilder: FormBuilder,
     private restService: RestService,
     private navCtrl: NavController,
+    private loadingCtrl: LoadingController,
   ) {
     this.validations_form = this.formBuilder.group({
 
@@ -39,28 +39,34 @@ export class ModifyOrganizationPage {
       description: [Validators.required],
     });
     this.id = this.route.snapshot.params['id'];
+    this.loading = true;
   }
 
-  ionViewDidEnter() {
+  async ionViewDidEnter() {
+    const loader = await this.loadingCtrl.create({
+        message: "Loading organization"
+      }
+    );
+    loader.present();
     this.menuCtrl.enable(false);
-    this.loadOrganization();
-    //todo non era meglio se prendevi l'organizzazione direttamente dalla schermata precedente coglione?!
+    this.loadOrganization().then(value=>{
+      loader.dismiss();
+      this.loading = false;
+    });
   }
 
-  async loadOrganization(){
-    try{
+  async loadOrganization() {
+    try {
       this.organization = await this.restService.getOrganization(this.id);
-    } catch(e){
+    } catch (e) {
       console.log(e);
       //todo gestire
     }
-    
+
   }
 
   async save() {
-    this.organization.name = this.title;
-    this.organization.description = this.description;
     const newOrganization = await this.restService.modifyOrganization(this.organization);
-    this.navCtrl.navigateBack(["/view-organization", {'id': newOrganization.id }])
+    this.navCtrl.navigateBack(["/view-organization", { 'id': newOrganization.id }])
   }
 }

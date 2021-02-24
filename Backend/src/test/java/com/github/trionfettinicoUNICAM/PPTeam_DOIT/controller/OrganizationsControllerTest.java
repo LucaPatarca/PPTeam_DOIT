@@ -1,5 +1,6 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicOrganizationInformation;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
@@ -37,13 +38,12 @@ class OrganizationsControllerTest extends ControllerTest{
     @Test
     @Order(2)
     void getPage() throws Exception {
-        // TODO: 02/02/2021 cambiare in String e confrontare con delle stringhe create apposta
         String uri = "/api/organizations/list/0";
         String content = get(uri,200,"content");
-        Page<String> page = toObjectPage(content, String.class);
+        Page<BasicOrganizationInformation> page = toObjectPage(content, BasicOrganizationInformation.class);
         assertEquals(2,page.getTotalElements());
-        assertTrue(page.toList().get(0).contains("'name':'name1','description':'description','creatorMail':'test1@test.com','creatorName':'name1'"));
-        assertTrue(page.toList().get(1).contains("'name':'name2','description':'description','creatorMail':'tes2@test.com','creatorName':'name2'"));
+        assertTrue(page.toList().contains(new BasicOrganizationInformation(organization1,user1)));
+        assertTrue(page.toList().contains(new BasicOrganizationInformation(organization2,user2)));
     }
 
     @Test

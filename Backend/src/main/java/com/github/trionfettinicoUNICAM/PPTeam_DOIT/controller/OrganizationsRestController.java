@@ -46,7 +46,6 @@ public class OrganizationsRestController implements OrganizationsController {
     @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationID)")
     @DeleteMapping(value = "/{organizationID}")
     public boolean delete(@PathVariable String organizationID) { return manager.delete(organizationID); }
-    // FIXME: 10/02/2021  non rimuove le skill da collaboratore
 
     @Override
     @PreAuthorize("permitAll")
@@ -96,11 +95,10 @@ public class OrganizationsRestController implements OrganizationsController {
     }
 
     @Override
-    @PreAuthorize("permitAll()")
-    @PostMapping("/removeMember/{organizationId}/{userMail}")
-    public boolean removeMember(@PathVariable String organizationId, @PathVariable String userMail) throws EntityNotFoundException {
-        return manager.removeMember(organizationId,userMail);
-        // TODO: 23/02/21 cambaire permessi e TESTARE !!!
+    @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationId) or @permissionComponent.sameMail(authentication, #userMail)")
+    @PostMapping("/removeMember/{organizationId}/{userMail}/{removeProjects}")
+    public boolean removeMember(@PathVariable String organizationId, @PathVariable String userMail, @PathVariable Boolean removeProjects) throws EntityNotFoundException {
+        return manager.removeMember(organizationId,userMail, removeProjects);
     }
 
     @Override

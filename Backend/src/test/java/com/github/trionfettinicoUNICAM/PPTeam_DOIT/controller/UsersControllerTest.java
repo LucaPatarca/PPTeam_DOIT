@@ -3,6 +3,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.UserEntity;
 import org.junit.jupiter.api.*;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Set;
@@ -11,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@WithMockUser
 public class UsersControllerTest extends ControllerTest {
 
     private UserEntity user;
@@ -28,6 +30,7 @@ public class UsersControllerTest extends ControllerTest {
         //creates the new user
         String uri = "/api/users/createNew";
         UserEntity user = new UserEntity("test@test.com","Test JUnit");
+        user.setSecret("password");
         skill1 = new Skill("skill1");
         skill2 = new Skill("skill2", "fakeOrgID");
         skill2.setLevel(3);

@@ -164,10 +164,10 @@ export class RestService {
     this.refreshToken();
     console.log(this.config);
     return new Promise((resolve, rejects) => {
-      this.http.post(environment.addMember+this.dataService.getOrganization().id +"/"+ userMail,this.config).subscribe(
+      this.http.post(environment.addMember+this.dataService.getOrganization().id +"/"+ userMail, "", this.config).subscribe(
         res => {
           this.refresOrganization();
-          resolve(res as boolean);
+          resolve(res as unknown as Boolean);
         },
         err => {
           this.defaultErrorHandler(err);
@@ -180,10 +180,10 @@ export class RestService {
   async removeMember(userMail:string){
     this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.post(environment.removeMember+this.dataService.getOrganization().id +"/"+ userMail,this.config).subscribe(
+      this.http.post(environment.removeMember+this.dataService.getOrganization().id +"/"+ userMail, "", this.config).subscribe(
         res => {
           this.refresOrganization();
-          resolve(res as boolean);
+          resolve(res as unknown as boolean);
         },
         err => {
           this.defaultErrorHandler(err);

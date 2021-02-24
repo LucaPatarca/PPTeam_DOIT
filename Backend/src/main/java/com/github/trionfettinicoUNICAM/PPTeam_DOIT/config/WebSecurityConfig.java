@@ -21,6 +21,9 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Spring boot configuration class used to set up security and authorizations
+ */
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
@@ -42,7 +45,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // TODO: 14/02/2021 DISABILITARE IL CORS PRIMA DELLA CONSEGNA
         http.cors().and().csrf().disable().authorizeRequests()
                 .anyRequest().permitAll()
                 .and()

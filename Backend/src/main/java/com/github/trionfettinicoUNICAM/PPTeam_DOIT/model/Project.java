@@ -24,7 +24,6 @@ public class Project {
     private Set<Role> candidates;
 
     public Project(String organizationId, String creatorMail, String title, String description) throws IllegalArgumentException {
-        // TODO: 11/02/2021 controllare campi nulli (dentro ai vari setter)
         this.candidates = new HashSet<>();
         setTitle(title);
         setDescription(description);
@@ -53,7 +52,8 @@ public class Project {
 
     public void setTitle(String title) throws IllegalStateException, IllegalArgumentException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(title.isBlank()) throw new IllegalArgumentException("Name is empty");
+        if(Objects.requireNonNull(title,"Name is null").isBlank())
+            throw new IllegalArgumentException("Name is empty");
         this.title = title;
     }
 
@@ -63,7 +63,8 @@ public class Project {
 
     public void setDescription(String description) throws IllegalStateException, IllegalArgumentException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(description.isBlank()) throw new IllegalArgumentException("Description is empty");
+        if(Objects.requireNonNull(description,"Description is null").isBlank())
+            throw new IllegalArgumentException("Description is empty");
         this.description=description;
     }
 
@@ -73,7 +74,8 @@ public class Project {
 
     public void setOrganizationId(String organizationId) throws IllegalStateException, IllegalArgumentException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(organizationId.isBlank()) throw new IllegalArgumentException("Id is empty");
+        if(Objects.requireNonNull(organizationId,"Organization Id is null").isBlank())
+            throw new IllegalArgumentException("Organization Id is empty");
         this.organizationId=organizationId;
     }
 
@@ -83,7 +85,8 @@ public class Project {
 
     public void setCreatorMail(String creatorMail) throws IllegalStateException, IllegalArgumentException {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        if(creatorMail.isBlank()) throw new IllegalArgumentException("CreatorMail is empty");
+        if(Objects.requireNonNull(creatorMail,"CreatorMail is null").isBlank())
+            throw new IllegalArgumentException("CreatorMail is empty");
         this.creatorMail=creatorMail;
     }
 
@@ -94,7 +97,6 @@ public class Project {
         return isClosed;
     }
 
-    //TODO eccezione se lo stato è già nello stato che si vuole settare?
     public void setClosed(boolean closed) {
         isClosed = closed;
     }
@@ -143,11 +145,11 @@ public class Project {
     /**
      *
      */
-    public void acceptCandidate(Role role) throws RuntimeException {
+    public void acceptCandidate(Role role) {
         if(isClosed) throw new IllegalStateException("Project is closed");
+        if(!candidates.contains(role)) throw new IllegalArgumentException("Role is not in the candidates list");
         if(!team.add(Objects.requireNonNull(role, "role is null"))) throw new RuntimeException("unable to add role to team");
         candidates.remove(role);
-        // TODO: 11/02/2021 controlla candidato inesistente
     }
 
     /**
@@ -163,7 +165,7 @@ public class Project {
      * Marks this project as closed. After this operation no one can apply to this project
      */
     public void close() {
-        // TODO: 04/02/2021 aggiungere il controlle se è già chiuso, in caso lancio illegal state
+        if(isClosed) throw new IllegalStateException("Project is closed");
         // TODO: 24/02/2021 aumentare le skill dei progettisti
         isClosed=true;
     }
@@ -178,7 +180,6 @@ public class Project {
      * the skill is not needed for this project
      */
     public boolean submit(Role role) throws IllegalStateException {
-        // TODO: 11/02/2021 controlla che non è già nel team
         if(isClosed) throw new IllegalStateException("Project is closed");
         if(team.contains(role)) throw new IllegalStateException("Il candidato è già nel team");
         if(!candidates.contains(role) && neededSkills.contains(role.getSkill())) {

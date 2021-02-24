@@ -58,10 +58,16 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     public boolean delete(String organizationId) {
         if(organizationId.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
         if(!exists(organizationId)) return false;
+        Optional<Organization> organization = organizationRepository.findById(organizationId);
+        organization.ifPresent(value -> value.getMembersMails().forEach(email -> {
+            try {
+                removeMember(organizationId, email, false);
+            } catch (EntityNotFoundException e) {
+                e.printStackTrace();
+            }
+        }));
+        projectRepository.findByOrganizationId(organizationId).forEach(projectRepository::delete);
         organizationRepository.deleteById(organizationId);
-        for (Project project: projectRepository.findByOrganizationId(organizationId)) {
-            projectRepository.deleteById(project.getId());
-        }
         return !exists(organizationId);
     }
 
@@ -155,7 +161,8 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     }
 
     @Override
-    public boolean removeMember(String organizationId, String memberMail) throws EntityNotFoundException {
+    public boolean removeMember(String organizationId, String memberMail, Boolean removeProjects) throws EntityNotFoundException {
+        // TODO: 24/02/2021 implementare removeProjects
         if(organizationId.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
         if(memberMail.isBlank()) throw new IllegalArgumentException("Il campo 'memberMail' è vuoto");
         Organization organization = getInstance(organizationId);

@@ -18,7 +18,7 @@ public interface OrganizationsController extends EntityController<Organization, 
 
     boolean addMember(String organizationId, String userMail) throws EntityNotFoundException;
 
-    boolean removeMember(String organizationId, String userMail) throws EntityNotFoundException;
+    boolean removeMember(String organizationId, String userMail, Boolean removeProjects) throws EntityNotFoundException;
 
     List<Organization> findByCreator(String userMail);
 
