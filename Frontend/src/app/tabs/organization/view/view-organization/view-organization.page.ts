@@ -37,10 +37,11 @@ export class ViewOrganizationPage {
     this.id = this.route.snapshot.params["id"];
     this.organization = null;
     this.creator = null;
+    this.loadingMembers = true;
+    this.members = new Array();
   }
 
   ionViewDidEnter() {
-    this.loadingMembers = true;
     this.menuCtrl.enable(false);
     this.loadOrganization().then(v => this.loadingMembers = false);
   }

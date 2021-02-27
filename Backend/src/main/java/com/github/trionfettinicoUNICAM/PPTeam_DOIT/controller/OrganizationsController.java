@@ -14,8 +14,6 @@ public interface OrganizationsController extends EntityController<Organization, 
 
     void addCollaborator(String organizationId, String userMail, Skill skill) throws EntityNotFoundException;
 
-    void addExpert(String organizationId, String userMail, Skill skill) throws EntityNotFoundException;
-
     boolean addMember(String organizationId, String userMail) throws EntityNotFoundException;
 
     boolean removeMember(String organizationId, String userMail, Boolean removeProjects) throws EntityNotFoundException;

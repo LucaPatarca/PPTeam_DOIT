@@ -52,10 +52,10 @@ export class LoginUserPage {
     user.secret = this.secret;
     this.restService.login(user).then(
       user=>{
+        this.navCtrl.navigateBack(['/home'], { queryParams: { 'refresh': 1 } });
         this.restService.presentToast("Accesso eseguito come "+(user as unknown as User).name);
       }
     );
-    this.navCtrl.navigateBack(['/home'], { queryParams: { 'refresh': 1 } });
   }
 
 }

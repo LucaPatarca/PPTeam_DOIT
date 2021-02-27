@@ -20,7 +20,6 @@ import java.util.*;
 
 @Validated
 @Service
-// TODO: 22/01/2021 controllare annotazioni perche forse service non e un singleton
 public class SimpleOrganizationsManager implements OrganizationsManager{
 
     @Autowired
@@ -142,22 +141,6 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
             user.setExpert(skill, organizationId);
             userRepository.save(user);
         }
-    }
-
-    @Override
-    public void addExpert(String organizationId, String userMail, Skill skill) throws EntityNotFoundException {
-        if(Objects.isNull(organizationId) || organizationId.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
-        if(userMail.isBlank()) throw new IllegalArgumentException("Il campo 'userMail' è vuoto");
-        // TODO: 11/02/2021 controllare se la skill è nulla
-        // TODO: 11/02/2021 controllare se lo user è il creatore dell'organizzazione e in caso ritorna errore
-        Organization organization = organizationRepository.findById(organizationId).orElseThrow(()->
-                new EntityNotFoundException("Nessun organizzazione trovata con l'ID: "+organizationId));
-        UserEntity user = userRepository.findById(userMail).orElseThrow(()->
-                new EntityNotFoundException("Nessun utente trovato con la mail: "+userMail));
-        organization.addMember(userMail);
-        organizationRepository.save(organization);
-        user.setExpert(skill,organizationId);
-        userRepository.save(user);
     }
 
     @Override

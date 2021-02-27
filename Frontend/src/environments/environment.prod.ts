@@ -17,7 +17,8 @@ export const environment = {
   createProjectApiUrl: projectApiUrl + "createNew",
   listOfProjectsApiUrl: projectApiUrl+"list/",
   modifyProjectApiUrl: projectApiUrl+"update/",
-  existProjectApiUr: projectApiUrl+"exist/",
+  existProjectApiUrl: projectApiUrl+"exist/",
+  submitApiUrl: projectApiUrl+"submit/",
   listOfOrganizationsApiUrl: organizationApiUrl+"list/",
   createOrganizationApiUrl: organizationApiUrl + "createNew",
   existOrganizationApiUrl: organizationApiUrl + "exist/",
@@ -32,4 +33,6 @@ export const environment = {
   getExpertsPage:userApiUrl+"listExperts/",
   removeMember:organizationApiUrl+"removeMember/",
   addMember:organizationApiUrl+"addMember/",
+  listOfUsersApiUrl: userApiUrl+"list/",
+  existUserApiUrl: userApiUrl + "exist/",
 };
