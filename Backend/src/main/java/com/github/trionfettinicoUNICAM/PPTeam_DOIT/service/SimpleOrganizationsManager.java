@@ -168,6 +168,7 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
         Organization organization = getInstance(organizationId);
         UserEntity user = userRepository.findById(memberMail).orElseThrow(()->
                 new EntityNotFoundException("Nessun utente trovato con la mail: "+memberMail));
+        if(organization.getCreatorMail().equals(memberMail)) return false;
         //se l'utente non è membro dell'organizzazione ritorna false
         if(!organization.getMembersMails().contains(memberMail)) return false;
         organization.removeMember(memberMail);

@@ -41,10 +41,6 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/project/modify-project/modify-project.module').then( m => m.ModifyProjectPageModule)
   },
   {
-    path: 'add-collaborator',
-    loadChildren: () => import('./tabs/organization/expert/add-collaborator/add-collaborator.module').then( m => m.AddCollaboratorPageModule)
-  },
-  {
     path: 'create-user',
     loadChildren: () => import('./tabs/user/create-user/create-user.module').then( m => m.CreateUserPageModule)
   },
@@ -55,14 +51,6 @@ const routes: Routes = [
   {
     path: 'select-organization',
     loadChildren: () => import('./tabs/user/select-organization/select-organization.module').then( m => m.SelectOrganizationPageModule)
-  },
-  {
-    path: 'add-expert',
-    loadChildren: () => import('./tabs/organization/expert/add-expert/add-expert.module').then( m => m.AddExpertPageModule)
-  },
-  {
-    path: 'add-skill',
-    loadChildren: () => import('./tabs/organization/expert/add-collaborator/add-skill/add-skill.module').then( m => m.AddSkillPageModule)
   },
   {
     path: 'view-skill',
@@ -76,6 +64,7 @@ const routes: Routes = [
     path: 'user-submission',
     loadChildren: () => import('./tabs/user/user-submission/user-submission.module').then( m => m.UserSubmissionPageModule)
   },
+
 
 
 

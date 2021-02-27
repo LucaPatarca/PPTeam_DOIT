@@ -11,6 +11,7 @@ import { User } from '../model/user';
 import { DataService } from './data.service';
 import { environment } from 'src/environments/environment';
 import { Role } from '../model/role';
+import { Page } from '../model/page';
 
 
 @Injectable({
@@ -42,7 +43,6 @@ export class RestService {
       this.http.post(environment.createOrganizationApiUrl, organization,this.config).subscribe(
         res => {
           this.presentToast("Organizzatione creata");
-          this.refresOrganization();
           resolve(res as unknown as Organization);
         },
         err => {
@@ -59,24 +59,6 @@ export class RestService {
       this.http.post(environment.addCollaborator + organizationId + "/" + userMail, skill,this.config).subscribe(
         res => {
           this.presentToast("Skill Aggiunta");
-          this.refresOrganization();
-          resolve();
-        },
-        err => {
-          this.defaultErrorHandler(err);
-          rejects(err);
-        }
-      );
-    });
-  }
-
-  async addExpert(organizationId: string, userMail: string, skill: Skill): Promise<void> {
-    this.refreshToken();
-    return new Promise((resolve, rejects) => {
-      this.http.post(environment.addExpert + organizationId + "/" + userMail, skill,this.config).subscribe(
-        res => {
-          this.presentToast("Esperto aggiunto");
-          this.refresOrganization();
           resolve();
         },
         err => {
@@ -160,13 +142,14 @@ export class RestService {
     });
   }
 
-  async addMember(userMail:string){
+  async addMember(organizationId: string, userMail:string): Promise<Boolean>{
     this.refreshToken();
     console.log(this.config);
     return new Promise((resolve, rejects) => {
-      this.http.post(environment.addMember+this.dataService.getOrganization().id +"/"+ userMail, "", this.config).subscribe(
+      this.http.post(environment.addMember+organizationId +"/"+ userMail, "", this.config).subscribe(
         res => {
-          this.refresOrganization();
+          if(this.dataService.getOrganization() && this.dataService.getOrganization().id == organizationId)
+            this.refresOrganization();
           resolve(res as unknown as Boolean);
         },
         err => {
@@ -177,12 +160,13 @@ export class RestService {
     });
   }
 
-  async removeMember(userMail:string){
+  async removeMember(organizationId: string, userMail:string, removeProjects: boolean){
     this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.post(environment.removeMember+this.dataService.getOrganization().id +"/"+ userMail, "", this.config).subscribe(
+      this.http.post(environment.removeMember+organizationId +"/"+ userMail + "/" + removeProjects as string, "", this.config).subscribe(
         res => {
-          this.refresOrganization();
+          if(this.dataService.getOrganization() && this.dataService.getOrganization().id == organizationId)
+            this.refresOrganization();
           resolve(res as unknown as boolean);
         },
         err => {
@@ -315,11 +299,11 @@ export class RestService {
     });
   }
 
-  async getUserPage(page: number): Promise<User[]> {
+  async getUserPage(page: number): Promise<Page<User>> {
     return new Promise((resolve, rejects) => {
       this.http.get(environment.listOfUsersApiUrl + page).subscribe(
         res => {
-          resolve(res['content'] as User[]);
+          resolve(res as Page<User>);
         },
         err => {
           rejects(err);

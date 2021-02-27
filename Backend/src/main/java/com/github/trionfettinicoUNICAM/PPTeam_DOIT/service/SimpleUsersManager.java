@@ -118,10 +118,7 @@ public class SimpleUsersManager implements UsersManager {
 
     @Override
     public Page<UserEntity> getPage(int page, int size) throws EntityNotFoundException {
-        Page<UserEntity> userPage = userRepository.findAll(PageRequest.of(page, size));
-        List<UserEntity> basicUserInformationList = new java.util.ArrayList<>(Collections.emptyList());
-        for(UserEntity user : userPage) basicUserInformationList.add(user);
-        return new PageImpl<>(basicUserInformationList);
+        return userRepository.findAll(PageRequest.of(page, size));
     }
 
     @Override

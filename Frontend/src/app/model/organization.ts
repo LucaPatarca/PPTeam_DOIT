@@ -2,8 +2,8 @@ export class Organization {
     public id:string = "";
     public membersMails: Array<string> = new Array();
     public name:string;
-    public description:String;
-    public creatorMail:String;
+    public description:string;
+    public creatorMail:string;
 
     constructor(
         private nameOrg: string,

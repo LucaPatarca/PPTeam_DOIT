@@ -14,7 +14,7 @@
 </ion-header>
 
 <ion-content fullscreen>
-  
+
   <ion-refresher slot="fixed" (ionRefresh)="reload($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
@@ -22,10 +22,49 @@
   <!-- Elemento mostrato a fine caricamento -->
   <ion-card *ngIf="organization != null" style="padding: 8px;">
     <p>{{organization.description}}</p>
-    <p>Creator : {{organization.creatorMail}}</p>
-    <p><strong>Member :</strong></p>
-    <p *ngFor="let memberMail of organization.membersMails"> -{{memberMail}}</p>
   </ion-card>
+  <ion-item-divider>
+    <ion-label>
+      Creator
+    </ion-label>
+  </ion-item-divider>
+  <ion-item *ngIf="creator!=null">
+    <ion-label>
+      <h2 text-capitalize>{{creator.name}}</h2>
+      <p>{{creator.mail}}</p>
+      <ion-note *ngFor="let skill of getExpertSkill(creator)" [color]="skill.level>=10?'tertiary':'secondary'">
+        {{skill.name}}
+      </ion-note>
+    </ion-label>
+  </ion-item>
+  <ion-item-divider>
+    <ion-label>
+      Members
+    </ion-label>
+  </ion-item-divider>
+  <div *ngIf="!loadingMembers">
+    <ion-item-sliding *ngFor="let user of members" [disabled]="!dataService.hasOrganizationCreatorPermission(organization)" #slidingItem>
+      <ion-item-options side="start" (ionSwipe)="makeCollaborator(user,slidingItem)">
+        <ion-item-option expandable (click)="makeCollaborator(user,slidingItem)">
+          Make Collaborator
+        </ion-item-option>
+      </ion-item-options>
+      <ion-item>
+        <ion-label>
+          <h2 text-capitalize>{{user.name}}</h2>
+          <p>{{user.mail}}</p>
+          <ion-note *ngFor="let skill of user.skills" [color]="skill.level>=10?'tertiary':'secondary'">
+            {{skill.name}}
+          </ion-note>
+        </ion-label>
+      </ion-item>
+      <ion-item-options side="end" (ionSwipe)="removeMember(user, slidingItem)">
+        <ion-item-option expandable color="danger" (click)="removeMember(user, slidingItem)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </div>
 
   <!-- Elemento mostrato durante il caricamento -->
   <ion-card *ngIf="organization == null">
@@ -37,4 +76,10 @@
     <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
   </ion-card>
 
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed"
+    *ngIf="dataService.hasOrganizationCreatorPermission(organization)">
+    <ion-fab-button (click)="addMember()">
+      <ion-icon name="person-add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>

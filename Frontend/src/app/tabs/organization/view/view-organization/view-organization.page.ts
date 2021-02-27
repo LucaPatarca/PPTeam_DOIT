@@ -1,12 +1,12 @@
-import { element } from 'protractor';
 import { Organization } from './../../../../model/organization';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MenuController, NavController, ActionSheetController, AlertController, ToastController } from '@ionic/angular';
+import { MenuController, NavController, ActionSheetController, AlertController, ToastController, ModalController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { RestService } from 'src/app/services/rest.service';
 import { User } from 'src/app/model/user';
 import { Skill } from 'src/app/model/skill';
+import { SelectUserComponent } from 'src/app/components/select-user/select-user.component';
 
 @Component({
   selector: 'app-view-organization',
@@ -19,6 +19,9 @@ export class ViewOrganizationPage {
   userMail: string;
   skill: Skill;
   user: User;
+  loadingMembers: boolean;
+  members: User[];
+  creator: User;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,21 +30,34 @@ export class ViewOrganizationPage {
     private menuCtrl: MenuController,
     private restService: RestService,
     private actionSheetCtrl: ActionSheetController,
-    private alertController:AlertController,
-    private toastController:ToastController
+    private alertController: AlertController,
+    private toastController: ToastController,
+    private modalCtrl: ModalController
   ) {
     this.id = this.route.snapshot.params["id"];
     this.organization = null;
+    this.creator = null;
   }
 
   ionViewDidEnter() {
+    this.loadingMembers = true;
     this.menuCtrl.enable(false);
-    this.loadOrganization();
+    this.loadOrganization().then(v => this.loadingMembers = false);
   }
 
   async loadOrganization() {
     this.organization = await this.restService.getOrganization(this.id);
-
+    const newMembers = await this.restService.getOrganizationMembers(this.id);
+    this.creator = await this.restService.getUser(this.organization.creatorMail);
+    var i = 0;
+    newMembers.forEach(() => {
+      const member = newMembers[i];
+      if (member.mail == this.creator.mail) {
+        newMembers.splice(i, 1);
+      }
+      i++;
+    })
+    this.members = newMembers;
   }
 
   async reload(event?) {
@@ -49,8 +65,72 @@ export class ViewOrganizationPage {
     event.target.complete();
   }
 
-  goBack() {
-    this.nav.navigateBack(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
+  getExpertSkill(user: User): Skill[] {
+    return user.skills.filter(it => it.expertInOrganization.includes(this.id) || it.level == 10);
+  }
+
+  async removeMember(user: User, slidingItem: any) {
+    const alert = await this.alertController.create({
+      message: "Remove " + user.name + " from this organization?",
+      buttons: [
+        "Cancel",
+        {
+          text: "Yes",
+          handler: () => {
+            //rimuove subito il member ma se c'è un errore sulla chiamata lo riaggiunge
+            const index = this.members.indexOf(user);
+            this.restService.removeMember(this.id, user.mail, false)
+              .then(res => {
+                if (!res)
+                  this.members.splice(index, 0, user);
+              }).catch(err => {
+                this.members.splice(index, 0, user);
+              });
+            this.members.splice(index, 1);
+          }
+        }
+      ]
+    });
+    alert.present();
+    slidingItem.close();
+  }
+
+  async makeCollaborator(user: User, slidingItem: any) {
+    const add = await this.alertController.create({
+      header: 'Choose a Skill',
+      message: '',
+      inputs: [
+        {
+          name: 'skill',
+          placeholder: 'skill'
+        },
+      ],
+      buttons: [
+        {
+          text: 'cancel',
+        }, {
+          text: 'add',
+          handler: async data => {
+            this.skill = new Skill();
+            if (data.skill == null || (data.skill as string).trim() == "") {
+              const toast = await this.toastController.create({
+                message: 'Campo skill non deve essere vuoto',
+                duration: 2000
+              });
+              toast.present();
+            } else {
+              this.skill.name = data.skill;
+              this.skill.expertInOrganization.push(this.id);
+              this.skill.level = 1;
+              this.restService.addCollaborator(this.id, user.mail, this.skill)
+                .then(_val => this.members[this.members.indexOf(user)].skills.push(this.skill));
+            }
+          }
+        }
+      ]
+    });
+    add.present();
+    slidingItem.close();
   }
 
   async showActionSheet() {
@@ -62,123 +142,28 @@ export class ViewOrganizationPage {
     await actionSheet.present();
   }
 
-  async howAddExpert() {
-    const add = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'How Add Expert',
+  async delete() {
+    const alert = await this.alertController.create({
+      message: "Delete organization?",
       buttons: [
+        "Cancel",
         {
-          text: 'email',
-          handler: () => { this.addExpertByEmail() }
-        }, {
-          text: 'list',
-          handler: () => { this.nav.navigateForward(["/add-expert", { "id": this.organization.id }]); }
-        }, {
-          text: 'cancel',
-        }
-      ]
-    });
-    await add.present();
-  }
-
-  createSkillInput(user:User) {
-    const theNewInputs = [];
-    user.skills .forEach(element => {
-    if(!element.expertInOrganization.includes(this.organization.id)){
-        theNewInputs.push(
-        {
-          type: 'radio',
-          label: element.name+' '+element.level,
-          value: element,
-          checked: false
-        }
-      );
-    }
-    });
-    return theNewInputs;
-  }
-
-  async addExpertByEmail() {
-    const add = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Add Expert by Email',
-      inputs: [ 
-        {
-          name: 'email',
-          placeholder: 'email'
-        },
-      ],
-      buttons: [
-        {
-          text: 'ok',
-          handler: async data => {
-            if (data.email==null || (data.email as string).trim()=="") {
-              const toast = await this.toastController.create({
-                message: 'Campo email non deve essere vuoto',
-                duration: 2000
-              });
-              toast.present();
-            } if (await !this.restService.existUser(data.email as string) as boolean) {
-              const toast = await this.toastController.create({
-                message: 'Utente non presente',
-                duration: 2000
-              });
-              toast.present();
-            } else {
-                this.user = await this.restService.getUser(data.email);
-                if(this.user.skills.length == 0){
-                  const toast = await this.toastController.create({
-                    message: 'Utente non ha skill selezionabili',
-                    duration: 2000
-                  });
-                  toast.present();
-                } else this.selectSkill(this.user);
-            }
-          }
-        }, {
-          text: 'cancel',
-        }
-      ]
-    });
-    await add.present();
-  }
-
-  async selectSkill(user:User){
-    const add = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Select Skill',
-      message: '',
-      inputs: this.createSkillInput(user),
-      buttons: [
-        {
-          text: 'cancel',
-        }, {
-          text: 'add',
-          handler: async data => {
-            this.skill = new Skill();
-            if (data==null) {
-              const toast = await this.toastController.create({
-                message: 'Campo Skill non selezionato',
-                duration: 2000
-              });
-              toast.present();
-            } else {
-                this.skill = user.skills.find(obj=> obj==data);
-                this.restService.addExpert(this.id, this.userMail, this.skill);
-                this.goBack();
-            }
+          text: "Yes",
+          handler: () => {
+            this.restService.deleteOrganization(this.organization);
+            this.nav.navigateBack(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
           }
         }
       ]
     });
-    await add.present();
+    alert.present();
   }
 
   getButtons(): Array<Object> {
     var buttons = new Array();
 
     // azioni per i membri
-    if (this.dataService.hasOrganizationCreatorPermission(this.organization)) {
+    if (this.dataService.hasMemberPermission(this.organization)) {
       buttons = buttons.concat([
         {
           text: 'Edit',
@@ -198,35 +183,8 @@ export class ViewOrganizationPage {
           role: 'destructive',
           icon: 'trash',
           handler: () => {
-            this.restService.deleteOrganization(this.organization);
-            this.goBack();
+            this.delete();
           }
-        }, {
-          text: 'Add Member',
-          icon: 'person-add-outline',
-          handler: () => {
-            this.addMember();
-          }
-        }, {
-          text: 'Add Expert',
-          icon: 'person-add-outline',
-          handler: () => {
-            this.howAddExpert();
-          }
-        }, {
-          text: 'Add Collaborator',
-          icon: 'person-add-outline',
-          handler: () => {
-            this.nav.navigateForward(["/add-collaborator", { "id": this.organization.id }]);
-          }
-        },
-        {
-          text: 'Remove Member',
-          icon: 'person-remove-outline',
-          handler: () => {
-             this.removeMember();
-             this.nav.navigateForward(['/view-organization', { "id": this.id }], { queryParams: { 'refresh': 1 } });
-            }
         }
       ]);
     }
@@ -244,83 +202,21 @@ export class ViewOrganizationPage {
     return buttons;
   }
 
-  async removeMember(){
-    const removeMember = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Select Member',
-      inputs: this.createMemberInput(),
-      buttons: [
-        {
-          text: 'cancel',
-        }, {
-          text: 'remove',
-          handler: async data => {
-            if (data==null) {
-              const toast = await this.toastController.create({
-                message: 'Campo Member non selezionato',
-                duration: 2000
-              });
-              toast.present();
-            } else {
-                this.restService.removeMember(data);
-            }
-          }
-        }
-      ]
+  async addMember() {
+    const modal = await this.modalCtrl.create({
+      component: SelectUserComponent
     });
-    await removeMember.present();
-  }
-
-  createMemberInput() {
-    const theNewInputs = [];
-    this.dataService.getOrganization().membersMails.forEach(async element => {
-    if(!(element == this.dataService.getUserMail())){
-        theNewInputs.push(
-        {
-          type: 'radio',
-          label: element,
-          value: element,
-          checked: false
-        }
-      );
-    }
+    modal.onWillDismiss().then(data => {
+      if (data.data.user) {
+        this.restService.addMember(this.id, data.data.user.mail).then(res => {
+          if (res == true)
+            this.members.push(data.data.user);
+          else
+            this.restService.presentToast("Impossibile aggiungere l'utente")
+        });
+      }
     });
-    return theNewInputs;
-  }
-
-  async addMember(){
-    const add = await this.alertController.create({
-      cssClass: 'my-custom-class',
-      header: 'Enter Member mail',
-      message: '',
-      inputs: [
-        {
-          name: 'mail',
-          type: 'text',
-          placeholder: 'Member Mail'
-        },
-      ],
-      buttons: [
-        {
-          text: 'cancel',
-        }, {
-          text: 'add',
-          handler: async data => {
-            if (data.mail==null||(data.mail as string).trim() == "") {
-              const toast = await this.toastController.create({
-                message: 'Campo mail non valido',
-                duration: 2000
-              });
-              toast.present();
-            } else {
-                this.restService.addMember(data.mail as string);
-                this.goBack();
-            }
-          }
-        }
-      ]
-    });
-    await add.present();
+    return await modal.present();
   }
 
 }

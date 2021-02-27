@@ -104,6 +104,7 @@ export class DataService {
   }
 
   public hasOrganizationCreatorPermission(organization: Organization): boolean {
+    if(!organization) return false;
     if (this.user.mail == organization.creatorMail)
       return true;
     else
@@ -111,11 +112,12 @@ export class DataService {
   }
 
   public hasMemberPermission(organization: Organization): boolean {
+    var result = false;
     organization.membersMails.forEach(element => {
       if (element = this.user.mail)
-        return true;
+        result = true;
     });
-    return false;
+    return result;
   }
 
   public getToken(): string {

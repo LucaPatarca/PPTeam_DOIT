@@ -4,15 +4,21 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Modify Organization</ion-title>
+    <ion-buttons slot="end">
+      <ion-button ion-button icon-end color="primary" [disabled]="!validations_form.valid" (click)="save()">
+        done
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding class="form-content">
-  <form [formGroup]="validations_form" (ngSubmit)="save()" *ngIf="!loading">
+  <form [formGroup]="validations_form" *ngIf="!loading">
     <ion-item>
       <ion-label position="floating" color="primary">Title</ion-label>
       <ion-input type="text" formControlName="title" [(ngModel)]="organization.name"
-        placeholder="{{organization != null ? organization.name : 'name'}}"></ion-input>
+        placeholder="{{organization.name}}"></ion-input>
     </ion-item>
     <ng-container *ngFor="let validation of validation_messages.title">
       <div class="error-message"
@@ -22,8 +28,8 @@
     </ng-container>
     <ion-item>
       <ion-label position="floating" color="primary">Description</ion-label>
-      <ion-input type="text" formControlName="description" [(ngModel)]="organization.description"
-        placeholder="{{ organization != null ? organization.description : 'description'}}"></ion-input>
+      <ion-textarea rows="10" type="text" formControlName="description" [(ngModel)]="organization.description"
+        placeholder="{{organization.description}}"></ion-textarea>
     </ion-item>
     <ng-container *ngFor="let validation of validation_messages.description">
       <div class="error-message"
@@ -31,8 +37,6 @@
         {{ validation.message }}
       </div>
     </ng-container>
-    <ion-button color="primary" class="submit-btn" expand="block" type="submit" [disabled]="!validations_form.valid">
-      Submit data</ion-button>
   </form>
 
 </ion-content>

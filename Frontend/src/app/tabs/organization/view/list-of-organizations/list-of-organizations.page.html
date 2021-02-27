@@ -42,13 +42,11 @@
   <!-- mentre sta caricando le prime organizzazioni -->
   <div *ngIf="loading">
     <ion-card *ngFor="let item of [].constructor(10)">
-    <ion-item>
-      <ion-label>
+      <ion-item>
         <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
         <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
-      </ion-label>
-    </ion-item>
-  </ion-card>
+      </ion-item>
+    </ion-card>
   </div>
 
   <!-- per creare uno scroll infinito-->

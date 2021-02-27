@@ -15,12 +15,13 @@ import { AppRoutingModule } from './app-routing.module';
 import {HttpClientModule} from "@angular/common/http";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import { SelectUserComponent } from './components/select-user/select-user.component';
 
 
 
 @NgModule({
-  declarations: [AppComponent],
-  entryComponents: [],
+  declarations: [AppComponent, SelectUserComponent],
+  entryComponents: [SelectUserComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -29,7 +30,7 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     HttpClientModule,
     IonicStorageModule.forRoot(),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
     ],
   providers: [
     FormBuilder,
