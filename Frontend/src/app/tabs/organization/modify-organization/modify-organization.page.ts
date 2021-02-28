@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Organization } from 'src/app/model/organization';
 import { Router, ActivatedRoute } from "@angular/router";
 import { LoadingController, MenuController, NavController } from '@ionic/angular';
@@ -10,7 +10,7 @@ import { RestService } from 'src/app/services/rest.service';
   templateUrl: './modify-organization.page.html',
   styleUrls: ['./modify-organization.page.scss'],
 })
-export class ModifyOrganizationPage {
+export class ModifyOrganizationPage implements OnInit {
 
   organization: Organization;
   id: string;
@@ -31,7 +31,6 @@ export class ModifyOrganizationPage {
     public formBuilder: FormBuilder,
     private restService: RestService,
     private navCtrl: NavController,
-    private loadingCtrl: LoadingController,
   ) {
     this.validations_form = this.formBuilder.group({
 
@@ -42,17 +41,14 @@ export class ModifyOrganizationPage {
     this.loading = true;
   }
 
-  async ionViewDidEnter() {
-    const loader = await this.loadingCtrl.create({
-        message: "Loading organization"
-      }
-    );
-    loader.present();
-    this.menuCtrl.enable(false);
-    this.loadOrganization().then(value=>{
-      loader.dismiss();
+  ngOnInit(): void {
+    this.loadOrganization().then(value => {
       this.loading = false;
     });
+  }
+
+  async ionViewDidEnter() {
+    this.menuCtrl.enable(false);
   }
 
   async loadOrganization() {

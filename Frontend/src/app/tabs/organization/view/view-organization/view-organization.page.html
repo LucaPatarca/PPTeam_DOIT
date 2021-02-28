@@ -20,9 +20,11 @@
   </ion-refresher>
 
   <!-- Descrizione -->
-  <ion-card *ngIf="organization != null" style="padding: 8px;">
-    <p>{{organization.description}}</p>
-  </ion-card>
+  <ion-item *ngIf="organization != null" style="padding: 8px;">
+    <ion-text>
+      <p>{{organization.description}}</p>
+    </ion-text>
+  </ion-item>
   <!-- Caricamento descrizione -->
   <ion-card *ngIf="organization == null" style="padding: 8px;">
     <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
@@ -59,7 +61,7 @@
   </ion-item-divider>
 
   <!-- Membri -->
-  <div *ngIf="!loadingMembers">
+  <ion-list *ngIf="!loadingMembers">
     <!-- quando il caricamento è completato ma non ci sono membri disponibili -->
     <div class="row" *ngIf="(members.length == 0)">
       <div class="col">
@@ -90,16 +92,16 @@
         </ion-item-option>
       </ion-item-options>
     </ion-item-sliding>
-  </div>
+  </ion-list>
   <!-- Caricamento membri -->
-  <div *ngIf="loadingMembers">
+  <ion-list *ngIf="loadingMembers">
     <ion-item *ngFor="let user of [].constructor(5)">
       <ion-label>
         <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
         <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
       </ion-label>
     </ion-item>
-  </div>
+  </ion-list>
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed"
     *ngIf="dataService.hasOrganizationCreatorPermission(organization)">

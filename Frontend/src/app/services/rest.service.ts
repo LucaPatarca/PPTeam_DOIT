@@ -265,6 +265,35 @@ export class RestService {
     });
   }
 
+  async rejectCandidate(projectId: string, role: Role): Promise<boolean>{
+    return new Promise((resolve, rejects)=>{
+      this.http.post(environment.rejectCandidate + projectId, role, this.config)
+        .subscribe(
+          res => {
+            resolve(res as unknown as boolean);
+          },
+          err => {
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
+        );
+    });
+  }
+
+  async acceptCandidate(projectId: string, role: Role): Promise<boolean>{
+    return new Promise((resolve, rejects)=>{
+      this.http.post(environment.acceptCandidate + projectId, role, this.config)
+        .subscribe(
+          res => {
+            resolve(res as unknown as boolean);
+          },
+          err => {
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
+        );
+    });
+  }
 
   //User methodr
 

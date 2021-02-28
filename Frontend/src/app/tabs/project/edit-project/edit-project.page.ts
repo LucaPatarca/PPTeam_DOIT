@@ -1,21 +1,26 @@
-import { Skill } from './../../../model/skill';
-import { Component } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
+import { Skill } from '../../../model/skill';
+import { Organization } from '../../../model/organization';
+import { Component, OnInit } from '@angular/core';
 import { MenuController, NavController, AlertController, ToastController } from '@ionic/angular';
+import { DataService } from 'src/app/services/data.service';
+import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Project } from 'src/app/model/project';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestService } from 'src/app/services/rest.service';
+import { User } from 'src/app/model/user';
+import { ActivatedRoute } from '@angular/router';
+import { proxyOutputs } from '@ionic/angular/directives/proxies-utils';
+
+
 
 @Component({
-  selector: 'app-modify-project',
-  templateUrl: './modify-project.page.html',
-  styleUrls: ['./modify-project.page.scss'],
+  selector: 'app-edit-project',
+  templateUrl: './edit-project.page.html',
+  styleUrls: ['./edit-project.page.scss'],
 })
-export class ModifyProjectPage {
-  project: Project;
+export class EditProjectPage implements OnInit{
   validations_form: FormGroup;
-  title: string;
-  description: string;
+  project: Project;
+  organizationName: string;
   validation_messages = {
     'title': [
       { type: 'required', message: 'Name is required.' }
@@ -26,61 +31,59 @@ export class ModifyProjectPage {
     ],
   };
 
-  constructor(
-    private alertController:AlertController,
-    private route: ActivatedRoute,
-    public nav: NavController,
-    private menuCtrl: MenuController,
+  constructor(private menuCtrl: MenuController,
     public formBuilder: FormBuilder,
+    private navCtrl: NavController,
+    private alertController:AlertController,
+    public dataService: DataService,
     private restService: RestService,
-    private toastController:ToastController
-  ) {
+    private toastController:ToastController,
+    private route: ActivatedRoute
+    ) {
     this.validations_form = this.formBuilder.group({
-
       title: ['', Validators.required],
-      description: [Validators.required],
+      description: ['', Validators.required],
     });
-    const id = this.route.snapshot.params['id'];
-    this.project = new Project("Title", "Description", "", "",new Array());
-    restService.getProject(id).then(
-      project=>{
-        this.project = project;
-      }
-    )
   }
 
-  ionViewDidlEnter() {
+  ngOnInit(): void {
+    const id = this.route.snapshot.params['id'];
+    this.project = new Project("","","",this.dataService.getUser().mail,new Array());
+    this.organizationName = "";
+    if(id){
+      this.restService.getProject(id)
+        .then(p=> {
+          this.project = p;
+          this.restService.getOrganization(this.project.organizationId).then(org=>{
+            this.organizationName = org.name;
+          });
+        });
+    } else{
+      this.project.organizationId = this.dataService.getOrganization().id;
+      this.organizationName = this.dataService.getOrganizationName();
+    }
+  }
+
+  ionViewDidEnter() {
     this.menuCtrl.enable(false);
   }
 
-  save() {
-    this.project.title = this.title;
-    this.project.description = this.description;
-    this.restService.updateProject(this.project);
-    this.goBack(this.project.id);
-  }
-
-  public goBack(id: string) {
-    this.nav.navigateBack(['/view-project', { 'id': id }]);
-  }
-
-  async modifySkill(skill:Skill){
-    var newSkill:Skill = new Skill();
+  async addSkill(){
     const add = await this.alertController.create({
       cssClass: 'my-custom-class',
-      header: 'Modify skill name!',
+      header: 'Add Component !',
       message: 'skill required',
       inputs: [ 
         {
           name: 'skill',
-          placeholder: skill.name
+          placeholder: 'skill'
         },
       ],
       buttons: [
         {
           text: 'cancel',
         }, {
-          text: 'level',
+          text: 'add',
           handler: async data => {
             if (data.skill==null || (data.skill as string).trim()=="") {
               const toast = await this.toastController.create({
@@ -89,8 +92,7 @@ export class ModifyProjectPage {
               });
               toast.present();
             } else {
-              newSkill.name = data.skill;
-              await this.modifySkillLevel(skill,newSkill);
+              await this.getLevelSkill(data.skill);
             }
           }
         }
@@ -99,11 +101,11 @@ export class ModifyProjectPage {
     await add.present();
   }
 
-  async modifySkillLevel(skill:Skill,newSkill:Skill){
+  async getLevelSkill(skillName:string){
     const add = await this.alertController.create({
       cssClass: 'my-custom-class',
-      header: 'Modify skill level!',
-      message: 'skill level required',
+      header: 'skill level !',
+      message: 'select level',
       inputs: [ 
         {
           type: 'radio',
@@ -155,24 +157,15 @@ export class ModifyProjectPage {
           label: '10',
           value: '10'
         }
-      ], 
+      ],  
       buttons: [
         {
-          text: 'cancel',
-        }, {
-          text: 'save',
+          text: 'add',
           handler: async data => {
-            if (data==null) {
-              const toast = await this.toastController.create({
-                message: 'Campo level skill non selezionato',
-                duration: 2000
-              });
-              toast.present();
-            } else {
-              newSkill.level = data as number;
-              this.project.neededSkills = this.project.neededSkills.filter(obj => obj !== skill);
-              this.project.neededSkills.push(newSkill); 
-            }
+            var skill = new Skill();
+            skill.name = skillName;
+            skill.level = data as number;
+            this.project.neededSkills.push(skill);
           }
         }
       ]
@@ -180,4 +173,15 @@ export class ModifyProjectPage {
     await add.present();
   }
 
+  createProject() {
+    this.restService.createProject(this.project).then(
+      value=>{
+        this.goToProjectsList();
+      }
+    );
+  }
+
+  goToProjectsList() {
+    this.navCtrl.navigateRoot(['/list-of-projects'], { queryParams: { 'refresh': 1 } });
+  }
 }

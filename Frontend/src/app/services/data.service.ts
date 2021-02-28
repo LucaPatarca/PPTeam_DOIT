@@ -1,3 +1,4 @@
+import { Skill } from './../model/skill';
 import { Organization } from '../model/organization';
 import { Injectable } from '@angular/core';
 import { User } from '../model/user';
@@ -101,6 +102,12 @@ export class DataService {
       return true;
     else
       return false;
+  }
+
+  public hasTeamManagerPermission(organization: Organization, project: Project, skill: Skill){
+    return this.hasProjectCreatorPermission(project)
+      || this.hasOrganizationCreatorPermission(organization)
+      || this.user.skills.filter(it=> it.name == skill.name && it.level>=10);
   }
 
   public hasOrganizationCreatorPermission(organization: Organization): boolean {

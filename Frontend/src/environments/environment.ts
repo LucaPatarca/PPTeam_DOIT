@@ -35,11 +35,13 @@ export const environment = {
   rejectSubmission:projectApiUrl+"rejectCandidate/",
   listOfUsersApiUrl: userApiUrl+"list/",
   existUserApiUrl: userApiUrl + "exist/",
-  addNewSkill:userApiUrl+"addNewSkill/",
-  removeSkill:userApiUrl+"removeSkill/",
-  getExpertsPage:userApiUrl+"listExperts/",
-  removeMember:organizationApiUrl+"removeMember/",
-  addMember:organizationApiUrl+"addMember/",
+  addNewSkill: userApiUrl+"addNewSkill/",
+  removeSkill: userApiUrl+"removeSkill/",
+  getExpertsPage: userApiUrl+"listExperts/",
+  removeMember: organizationApiUrl+"removeMember/",
+  addMember: organizationApiUrl+"addMember/",
+  rejectCandidate: projectApiUrl+"rejectCandidate/",
+  acceptCandidate: projectApiUrl+"acceptCandidate/",
 };
 
 //TODO spostare qui il globals service

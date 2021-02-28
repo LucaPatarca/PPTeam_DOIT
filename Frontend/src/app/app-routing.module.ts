@@ -21,8 +21,8 @@ const routes: Routes = [
       loadChildren: () => import('./tabs/project/view/view-project/view-project.module').then( m => m.ViewProjectPageModule)
     },
   {
-    path: 'create-project',
-    loadChildren: () => import('./tabs/project/create-project/create-project.module').then( m => m.CreateProjectPageModule)
+    path: 'edit-project',
+    loadChildren: () => import('./tabs/project/edit-project/edit-project.module').then( m => m.EditProjectPageModule)
   },
   {
     path: 'create-organization',
@@ -35,10 +35,6 @@ const routes: Routes = [
   {
     path: 'view-organization',
     loadChildren: () => import('./tabs/organization/view/view-organization/view-organization.module').then( m => m.ViewOrganizationPageModule)
-  },
-  {
-    path: 'modify-project',
-    loadChildren: () => import('./tabs/project/modify-project/modify-project.module').then( m => m.ModifyProjectPageModule)
   },
   {
     path: 'create-user',

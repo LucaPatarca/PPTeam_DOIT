@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>Modify Organization</ion-title>
     <ion-buttons slot="end">
-      <ion-button ion-button icon-end color="primary" [disabled]="!validations_form.valid" (click)="save()">
+      <ion-button icon-end color="primary" [disabled]="!validations_form.valid || loading" (click)="save()">
         done
         <ion-icon name="chevron-forward-outline"></ion-icon>
       </ion-button>

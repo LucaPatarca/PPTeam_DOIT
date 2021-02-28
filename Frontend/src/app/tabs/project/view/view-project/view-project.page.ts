@@ -7,6 +7,7 @@ import { DataService } from 'src/app/services/data.service';
 import { RestService } from 'src/app/services/rest.service';
 import { Role } from 'src/app/model/role';
 import { Skill } from 'src/app/model/skill';
+import { User } from 'src/app/model/user';
 
 
 @Component({
@@ -19,21 +20,23 @@ export class ViewProjectPage {
   private id: string;
   project: Project;
   organization:Organization;
+  creator: User;
   loading: boolean;
-  skill: Skill;
 
   constructor(
     private route: ActivatedRoute,
     private menuCtrl: MenuController,
     public nav: NavController,
     private restService: RestService,
-    public dataSerivice: DataService,
+    public dataService: DataService,
     private actionSheetCtrl: ActionSheetController,
     private alertController:AlertController,
     private toastController:ToastController
   ) {
     this.id = this.route.snapshot.params["id"];
     this.loading = true;
+    this.organization = null;
+    this.creator = null;
     this.load().then(
       ()=> {
         this.loading = false;
@@ -48,6 +51,7 @@ export class ViewProjectPage {
   async load() {
     this.project = await this.restService.getProject(this.id);
     this.organization = await this.restService.getOrganization(this.project.organizationId);
+    this.creator = await this.restService.getUser(this.project.creatorMail);
   }
 
   goBack() {
@@ -55,7 +59,7 @@ export class ViewProjectPage {
   }
 
   modify() {
-    this.nav.navigateForward(['/modify-project', { "id": this.project.id }]);
+    this.nav.navigateForward(['/edit-project', { "id": this.project.id }]);
   }
 
   delete() {
@@ -65,8 +69,9 @@ export class ViewProjectPage {
 
   public async reload(event?) {
     const newProject = await this.restService.getProject(this.id);
-    this.project = newProject; 
-    event.target.complete();
+    this.project = newProject;
+    if(event)
+      event.target.complete();
   }
 
   async showActionSheet() {
@@ -107,7 +112,7 @@ export class ViewProjectPage {
         }, {
           text: 'add',
           handler: async data => {
-            this.skill = new Skill();
+            var skill = new Skill();
             if (data==null) {
               const toast = await this.toastController.create({
                 message: 'Campo Skill non selezionato',
@@ -115,8 +120,8 @@ export class ViewProjectPage {
               });
               toast.present();
             } else {
-                this.skill = this.project.neededSkills.find(obj=> obj==data);
-                this.restService.submit(this.id, new Role(this.dataSerivice.getUserMail(), this.skill, false))
+                skill = this.project.neededSkills.find(obj=> obj==data);
+                this.restService.submit(this.id, new Role(this.dataService.getUserMail(), skill, false))
                 this.goBack();
             }
           }
@@ -134,7 +139,7 @@ export class ViewProjectPage {
 
     // azioni per il creatore del progetto e creatore dell'organizzazione
     //if (this.dataSerivice.hasProjectCreatorPermission(this.project) || this.dataSerivice.hasOrganizationCreatorPermission(this.restService.getOrganization(this.project.organizationId))) {
-    if (this.dataSerivice.hasProjectCreatorPermission(this.project)) {
+    if (this.dataService.hasProjectCreatorPermission(this.project)) {
       buttons = buttons.concat([
         {
           text: 'Delete',
@@ -153,14 +158,14 @@ export class ViewProjectPage {
           text: 'Edit',
           icon: 'create-outline',
           handler: () => {
-            this.nav.navigateForward(["/modify-project", { "id": this.project.id }]);
+            this.modify();
           }
         }
       ]);
     }
 
     // azioni per user non creatore del progetto o creatore dell'organizzazione
-    if (this.dataSerivice.isUserLogged && !this.dataSerivice.hasProjectCreatorPermission(this.project)){
+    if (this.dataService.isUserLogged && !this.dataService.hasProjectCreatorPermission(this.project)){
       buttons = buttons.concat([
         {
           text: 'Submit',
@@ -183,6 +188,42 @@ export class ViewProjectPage {
     ]);
 
     return buttons;
+  }
+
+  acceptCandidate(role: Role, slidingItem: any){
+    const index = this.project.candidates.indexOf(role);
+    this.restService.acceptCandidate(this.project.id,role).then(
+      res=>{
+        if(res){
+          this.project.team.push(role);
+        } else{
+          this.project.candidates.splice(index,0,role);
+        }
+      }
+    ).catch(err=>{
+      this.project.candidates.splice(index,0,role);
+    });
+    this.project.candidates.splice(index, 1);
+    slidingItem.close();
+  }
+
+  rejectCandidate(role: Role, slidingItem: any){
+    const index = this.project.candidates.indexOf(role);
+    this.restService.rejectCandidate(this.project.id,role).then(
+      res=>{
+        if(!res){
+          this.project.candidates.splice(index,0,role);
+        }
+      }
+    ).catch(err=>{
+      this.project.candidates.splice(index,0,role);
+    });
+    this.project.candidates.splice(index, 1);
+    slidingItem.close();
+  }
+
+  getCandidates(): Role[]{
+    return this.project.candidates.filter(it=>this.dataService.hasTeamManagerPermission(this.organization,this.project,it.skill));
   }
 
 }

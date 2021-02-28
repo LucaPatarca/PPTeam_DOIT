@@ -4,10 +4,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CreateProjectPageRoutingModule } from './create-project-routing.module';
+import { EditProjectPageRoutingModule } from './edit-project-routing.module';
 
 
-import { CreateProjectPage } from './create-project.page';
+import { EditProjectPage } from './edit-project.page';
 
 @NgModule({
   imports: [
@@ -15,8 +15,8 @@ import { CreateProjectPage } from './create-project.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    CreateProjectPageRoutingModule
+    EditProjectPageRoutingModule
   ],
-  declarations: [CreateProjectPage]
+  declarations: [EditProjectPage]
 })
-export class CreateProjectPageModule {}
+export class EditProjectPageModule {}

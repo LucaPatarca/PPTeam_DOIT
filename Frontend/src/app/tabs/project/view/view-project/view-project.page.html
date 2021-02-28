@@ -19,20 +19,128 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-card *ngIf="!loading">
-    <ion-item>
-      <ion-label>
-        <p>{{project.description}}</p>
-        <p>organization : {{organization.name}}</p>
-        <p>creator : {{project.creatorMail}}</p>
-        <p>status : {{project.closed}}</p>
-        <p><strong>neededskills :</strong></p>
-        <p *ngFor="let neededSkill of project.neededSkills"> -{{neededSkill.name}} (level : {{neededSkill.level}})</p>
-        <p><strong>candidates : </strong></p>
-        <p *ngFor="let candidate of project.candidates"> -{{candidate.userMail}} {{candidate.skill.name}}</p>
-      </ion-label>
+  <ion-item>
+    <ion-text *ngIf="!loading">
+      <p>{{project.description}}</p>
+    </ion-text>
+  </ion-item>
+
+  <ion-item-divider>
+    <ion-label>
+      Organization
+    </ion-label>
+  </ion-item-divider>
+
+  <ion-item *ngIf="organization">
+    <ion-label>
+      <h2 text-capitalize>{{organization.name}}</h2>
+      <p>{{organization.description}}</p>
+    </ion-label>
+  </ion-item>
+
+  <ion-item-divider>
+    <ion-label>
+      Creator
+    </ion-label>
+  </ion-item-divider>
+
+  <ion-item *ngIf="creator">
+    <ion-label>
+      <h2 text-capitalize>{{creator.name}}</h2>
+      <p>{{creator.mail}}</p>
+    </ion-label>
+  </ion-item>
+
+  <ion-item-divider>
+    <ion-label>
+      Needed skills
+    </ion-label>
+  </ion-item-divider>
+
+  <!-- quando il caricamento è completato ma non ci sono skill disponibili -->
+  <div class="row" *ngIf="!loading && (project.neededSkills.length == 0)">
+    <div class="col">
+      <div class="text-center">
+        <h6 style="text-align: center;">Non c'è ancora nessuna skill necessaria</h6>
+      </div>
+    </div>
+  </div>
+
+  <ion-list *ngIf="!loading && (project.neededSkills.length>0)">
+    <ion-item *ngFor="let skill of project.neededSkills">
+      <ion-note color="secondary" slot="start">{{skill.level}}</ion-note>
+      <ion-label text-capitalize>{{skill.name}}</ion-label>
     </ion-item>
-  </ion-card>
+  </ion-list>
+
+  <ion-item-divider>
+    <ion-label>
+      Team
+    </ion-label>
+  </ion-item-divider>
+
+  <!-- quando il caricamento è completato ma non ci sono progettisti disponibili -->
+  <div class="row" *ngIf="!loading && (project.team.length == 0)">
+    <div class="col">
+      <div class="text-center">
+        <h6 style="text-align: center;">Non c'è ancora nessuno nel Team</h6>
+      </div>
+    </div>
+  </div>
+
+  <ion-list *ngIf="!loading && (project.team.length>0)">
+    <ion-item-sliding *ngFor="let role of project.team" [disabled]="false" #slidingItem>
+      <ion-item>
+        <ion-label>
+          <h2 text-capitalize>{{role.userMail}}</h2>
+          <p>{{role.skill.name}}</p>
+        </ion-label>
+      </ion-item>
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-item-divider>
+    <ion-label>
+      Candidates
+    </ion-label>
+  </ion-item-divider>
+
+  <!-- quando il caricamento è completato ma non ci sono candidati disponibili -->
+  <div class="row" *ngIf="!loading && (project.candidates.length == 0)">
+    <div class="col">
+      <div class="text-center">
+        <h6 style="text-align: center;">Non ci sono ancora candidati</h6>
+      </div>
+    </div>
+  </div>
+
+  <ion-list *ngIf="!loading && (project.candidates.length>0)">
+    <ion-item-sliding *ngFor="let role of project.candidates" [disabled]="false" #slidingItem>
+      <ion-item-options side="start" (ionSwipe)="acceptCandidate(role,slidingItem)">
+        <ion-item-option expandable (click)="acceptCandidate(role,slidingItem)">
+          <ion-icon slot="icon-only" name="thumbs-up"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+      <ion-item>
+        <ion-label>
+          <h2 text-capitalize>{{role.userMail}}</h2>
+          <p>{{role.skill.name}}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item-options side="end" (ionSwipe)="rejectCandidate(role, slidingItem)">
+        <ion-item-option expandable color="danger" (click)="rejectCandidate(role, slidingItem)">
+          <ion-icon slot="icon-only" name="thumbs-down"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-button *ngIf="!loading && dataService.getUser().mail != project.creatorMail" expand="block" (click)="submit()">
+    Submit
+    <ion-icon slot="end" name="checkmark"></ion-icon>
+  </ion-button>
+
+  <!-- <p>status : {{project.closed}}</p> -->
 
   <ion-card *ngIf="loading">
     <ion-item>

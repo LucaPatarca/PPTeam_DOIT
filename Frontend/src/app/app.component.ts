@@ -58,7 +58,7 @@ export class AppComponent {
   }
 
   createProject() {
-    this.navCtrl.navigateForward(['/create-project'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateForward(['/edit-project'], { queryParams: { 'refresh': 1 } });
   }
 
   selectOrganizationCreator() {

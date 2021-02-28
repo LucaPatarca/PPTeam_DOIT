@@ -35,4 +35,6 @@ export const environment = {
   addMember:organizationApiUrl+"addMember/",
   listOfUsersApiUrl: userApiUrl+"list/",
   existUserApiUrl: userApiUrl + "exist/",
+  rejectCandidate: projectApiUrl+"rejectCandidate/",
+  acceptCandidate: projectApiUrl+"acceptCandidate/",
 };
