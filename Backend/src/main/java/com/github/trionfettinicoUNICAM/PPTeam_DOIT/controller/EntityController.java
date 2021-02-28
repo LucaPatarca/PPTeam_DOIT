@@ -10,7 +10,7 @@ public interface EntityController <T,I>{
 
     T create(T object) throws EntityNotFoundException, IdConflictException;
 
-    T update(T object) throws EntityNotFoundException;
+    T update(T object) throws EntityNotFoundException, IdConflictException;
 
     boolean delete(I id);
 

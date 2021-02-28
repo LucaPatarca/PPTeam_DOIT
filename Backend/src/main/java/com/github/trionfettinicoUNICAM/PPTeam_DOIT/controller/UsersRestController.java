@@ -38,7 +38,7 @@ public class UsersRestController implements UsersController {
     @Override
     @PreAuthorize("@permissionComponent.sameMail(authentication, #user.mail)")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserEntity update(@RequestBody UserEntity user) throws EntityNotFoundException { return manager.update(user); }
+    public UserEntity update(@RequestBody UserEntity user) throws EntityNotFoundException, IdConflictException { return manager.update(user); }
 
     @Override
     @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")

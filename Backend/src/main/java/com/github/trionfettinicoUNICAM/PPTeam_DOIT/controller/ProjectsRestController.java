@@ -36,7 +36,7 @@ public class ProjectsRestController implements ProjectsController {
     @Override
     @PreAuthorize("@permissionComponent.isProjectManager(authentication, #project.id)")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Project update(@RequestBody Project project) throws EntityNotFoundException { return manager.update(project); }
+    public Project update(@RequestBody Project project) throws EntityNotFoundException, IdConflictException { return manager.update(project); }
 
     @Override
     @PreAuthorize("@permissionComponent.isProjectManager(authentication, #projectID)")

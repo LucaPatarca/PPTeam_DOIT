@@ -40,7 +40,7 @@ public class OrganizationsRestController implements OrganizationsController {
     @Override
     @PreAuthorize("@permissionComponent.isFounder(authentication, #organization.id)")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Organization update(@RequestBody Organization organization) throws EntityNotFoundException { return manager.update(organization); }
+    public Organization update(@RequestBody Organization organization) throws EntityNotFoundException, IdConflictException { return manager.update(organization); }
 
     @Override
     @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationID)")
