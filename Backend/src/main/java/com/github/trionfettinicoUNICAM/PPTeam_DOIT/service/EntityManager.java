@@ -27,7 +27,7 @@ public interface EntityManager <T,I extends CharSequence>{
      * @param organization the organization to be saved
      * @return true if the organization is stored successfully, false instead.
      */
-    T update(T object) throws EntityNotFoundException;
+    T update(T object) throws EntityNotFoundException, IdConflictException;
 
     /**
      * Removes an {@link Organization} from the system.

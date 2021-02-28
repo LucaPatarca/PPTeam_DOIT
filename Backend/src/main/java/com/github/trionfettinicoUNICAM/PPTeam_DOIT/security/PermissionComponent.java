@@ -1,11 +1,9 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.security;
 
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Organization;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Role;
-import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.ProjectRepository;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -20,6 +18,8 @@ public class PermissionComponent {
     private OrganizationRepository organizationRepository;
     @Autowired
     private ProjectRepository projectRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public boolean sameMail(Authentication authentication, String userMail){
         return authentication.isAuthenticated() && authentication.getName().equals(userMail);
@@ -32,19 +32,28 @@ public class PermissionComponent {
     }
 
     public boolean isProjectCreator(Authentication authentication, String projectId){
-        // TODO: 14/02/2021 implement
-        return true;
+        Optional<Project> project = projectRepository.findById(projectId);
+        if (project.isEmpty()) return false;
+        Optional<UserEntity> user = userRepository.findById(authentication.getName());
+        if (user.isEmpty()) return false;
+        return project.get().getCreatorMail().equals(authentication.getName());
     }
 
     public boolean isExpert(Authentication authentication, String orgId, Skill skill){
-        // TODO: 14/02/2021 implement
         if(Objects.isNull(skill)) return false;
-        return true;
+        Optional<Organization> organization = organizationRepository.findById(orgId);
+        if (organization.isEmpty()) return false;
+        Optional<UserEntity> user = userRepository.findById(authentication.getName());
+        if (user.isEmpty()) return false;
+        return isMember(authentication,orgId) && skill.isExpertFor(orgId) && user.get().getSkills().contains(skill);
     }
 
     public boolean isMember(Authentication authentication, String orgId){
-        // TODO: 14/02/2021 implement
-        return true;
+        Optional<Organization> organization = organizationRepository.findById(orgId);
+        if (organization.isEmpty()) return false;
+        Optional<UserEntity> user = userRepository.findById(authentication.getName());
+        if (user.isEmpty()) return false;
+        return organization.get().getMembersMails().contains(authentication.getName());
     }
 
     public boolean isProjectManager(Authentication authentication, String projectId){

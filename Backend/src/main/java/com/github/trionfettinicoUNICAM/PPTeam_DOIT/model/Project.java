@@ -166,7 +166,7 @@ public class Project {
      */
     public void close() {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        // TODO: 24/02/2021 aumentare le skill dei progettisti
+        for(Role role: team) role.getSkill().levelUp();
         isClosed=true;
     }
 

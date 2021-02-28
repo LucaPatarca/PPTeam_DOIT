@@ -17,6 +17,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Validated
 @Service
@@ -38,7 +39,12 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
 
     @Override
     public Organization create(Organization organization) throws EntityNotFoundException, IdConflictException {
-        // TODO: 11/02/2021 estrarre questi controlli e metterli anche nel metodo update
+        checkOrganization(organization);
+        // TODO: 14/02/2021 indagare perche non ritorna l'id
+        return organizationRepository.save(organization);
+    }
+
+    private void checkOrganization(Organization organization) throws EntityNotFoundException, IdConflictException{
         if(!userRepository.existsById(organization.getCreatorMail()))
             throw new EntityNotFoundException("Nessun utente trovato con la mail: "+organization.getCreatorMail());
         for (String memberMail : organization.getMembersMails()) {
@@ -49,8 +55,6 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
             throw new IdConflictException("Esiste gia un organizzazione con questo nome");
         if(!organization.getMembersMails().contains(organization.getCreatorMail()))
             organization.addMember(organization.getCreatorMail());
-        // TODO: 14/02/2021 indagare perche non ritorna l'id
-        return organizationRepository.save(organization);
     }
 
     @Override
@@ -71,9 +75,10 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     }
 
     @Override
-    public Organization update(Organization organization) throws EntityNotFoundException {
+    public Organization update(Organization organization) throws EntityNotFoundException, IdConflictException {
         if(!exists(organization.getId()))
             throw new EntityNotFoundException("Nessuna organizzazione con id: "+ organization.getId());
+        checkOrganization(organization);
         return organizationRepository.save(organization);
     }
 
@@ -131,24 +136,30 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
     public void addCollaborator(String organizationId, String userMail, Skill skill) throws EntityNotFoundException {
         if(Objects.isNull(organizationId) || organizationId.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
         if(userMail.isBlank()) throw new IllegalArgumentException("Il campo 'userMail' è vuoto");
-        // TODO: 11/02/2021 controllare se la skill è nulla
-        // TODO: 11/02/2021 controllare se lo user è il creatore dell'organizzazione e in caso ritorna errore
+        checkSkill(skill);
         Organization organization = organizationRepository.findById(organizationId).orElseThrow(()->
                 new EntityNotFoundException("Nessun organizzazione trovata con l'ID: "+organizationId));
         UserEntity user = userRepository.findById(userMail).orElseThrow(()->
                 new EntityNotFoundException("Nessun utente trovato con la mail: "+userMail));
+        if (organization.getCreatorMail().equals(userMail)) throw new IllegalArgumentException("Il campo 'userMail' contiene l'userMail del creatore dell'organizzazione");
         if(organization.getMembersMails().contains(userMail)) {
             user.setExpert(skill, organizationId);
             userRepository.save(user);
         }
     }
 
+    private void checkSkill(Skill skill){
+        Objects.requireNonNull(skill, "Il campo skill è nullo");
+        if(skill.getName().isBlank()) throw new IllegalStateException("Il campo name del campo skill è vuoto");
+        if(skill.getLevel() > 10 || skill.getLevel() <= 0) throw new IllegalStateException("Il campo name del campo skill è vuoto");
+    }
+
     @Override
     public boolean removeMember(String organizationId, String memberMail, Boolean removeProjects) throws EntityNotFoundException {
-        // TODO: 24/02/2021 implementare removeProjects
         if(organizationId.isBlank()) throw new IllegalArgumentException("Il campo 'ID' è vuoto");
         if(memberMail.isBlank()) throw new IllegalArgumentException("Il campo 'memberMail' è vuoto");
-        Organization organization = getInstance(organizationId);
+        Organization organization = organizationRepository.findById(organizationId).orElseThrow(()->
+                new EntityNotFoundException("Nessun organizzazione trovata con l'Id: "+organizationId));
         UserEntity user = userRepository.findById(memberMail).orElseThrow(()->
                 new EntityNotFoundException("Nessun utente trovato con la mail: "+memberMail));
         if(organization.getCreatorMail().equals(memberMail)) return false;
@@ -157,6 +168,11 @@ public class SimpleOrganizationsManager implements OrganizationsManager{
         organization.removeMember(memberMail);
         //rimuove le eventuali skill da collaboratore
         user.getSkills().forEach(skill -> skill.getExpertInOrganization().remove(organizationId));
+        //se removeProjects è true rimuovo tutti i progetti di cui il membro è creatore
+        if(removeProjects) {
+            for (Project project : projectRepository.findAll().stream().filter(p -> p.getCreatorMail().equals(memberMail)).collect(Collectors.toList()))
+                projectRepository.deleteById(project.getId());
+        }
         UserEntity savedUser = userRepository.save(user);
         Organization savedOrg = organizationRepository.save(organization);
         return organization.equals(savedOrg) && user.equals(savedUser);

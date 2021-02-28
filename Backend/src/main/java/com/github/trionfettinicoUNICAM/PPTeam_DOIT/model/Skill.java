@@ -67,7 +67,7 @@ public class Skill {
     }
 
     public void levelUp(){
-        level++;
+        if(level < EXPERT_LEVEL_THRESHOLD) level++;
     }
 
     public void levelDown(){
