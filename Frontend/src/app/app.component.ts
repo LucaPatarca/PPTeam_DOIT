@@ -16,6 +16,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 export class AppComponent {
 
   isLog: boolean;
+  darkMode: boolean = true;
+
 
   constructor(
     private platform: Platform,
@@ -25,6 +27,8 @@ export class AppComponent {
     public dataService: DataService,
     private toastCtrl: ToastController
   ) {
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    this.darkMode = prefersDark.matches;
     this.initializeApp();
   }
 
@@ -35,7 +39,12 @@ export class AppComponent {
     });
   }
 
-
+  cambio() {
+    // const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    this.darkMode = !this.darkMode;
+    document.body.classList.toggle( 'dark' );
+    
+  }
 
   createUser() {
     this.navCtrl.navigateForward(['/create-user'], { queryParams: { 'refresh': 1 } });
