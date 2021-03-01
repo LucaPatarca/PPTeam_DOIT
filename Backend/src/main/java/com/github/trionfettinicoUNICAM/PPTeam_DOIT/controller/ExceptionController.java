@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.constraints.Null;
+
 @ControllerAdvice
 public class ExceptionController extends ResponseEntityExceptionHandler {
 
@@ -24,5 +26,15 @@ public class ExceptionController extends ResponseEntityExceptionHandler {
     @ExceptionHandler(IdConflictException.class)
     protected ResponseEntity<String> idConflictHandler(IdConflictException e){
         return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    protected ResponseEntity<String> nullHandler(NullPointerException e){
+        return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.PARTIAL_CONTENT);
+    }
+
+    @ExceptionHandler(IllegalStateException.class)
+    protected ResponseEntity<String> illegalStateHandler(IllegalStateException e){
+        return new ResponseEntity<>(e.getLocalizedMessage(), HttpStatus.BAD_REQUEST);
     }
 }

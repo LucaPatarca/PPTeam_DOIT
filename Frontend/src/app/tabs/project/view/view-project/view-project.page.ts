@@ -8,6 +8,7 @@ import { RestService } from 'src/app/services/rest.service';
 import { Role } from 'src/app/model/role';
 import { Skill } from 'src/app/model/skill';
 import { User } from 'src/app/model/user';
+import { tick } from '@angular/core/testing';
 
 
 @Component({
@@ -19,9 +20,10 @@ import { User } from 'src/app/model/user';
 export class ViewProjectPage {
   private id: string;
   project: Project;
-  organization:Organization;
+  organization: Organization;
   creator: User;
   loading: boolean;
+  userAvailableSkillsInput: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -30,18 +32,20 @@ export class ViewProjectPage {
     private restService: RestService,
     public dataService: DataService,
     private actionSheetCtrl: ActionSheetController,
-    private alertController:AlertController,
-    private toastController:ToastController
+    private alertController: AlertController,
+    private toastController: ToastController
   ) {
     this.id = this.route.snapshot.params["id"];
     this.loading = true;
     this.organization = null;
     this.creator = null;
     this.load().then(
-      ()=> {
+      () => {
+        this.createSkillInput();
         this.loading = false;
       }
     )
+    this.userAvailableSkillsInput = new Array();
   }
 
   ionViewDidEnter() {
@@ -70,7 +74,8 @@ export class ViewProjectPage {
   public async reload(event?) {
     const newProject = await this.restService.getProject(this.id);
     this.project = newProject;
-    if(event)
+    this.createSkillInput();
+    if (event)
       event.target.complete();
   }
 
@@ -85,27 +90,36 @@ export class ViewProjectPage {
 
   createSkillInput() {
     const theNewInputs = [];
-    var i:number = 1;
-    this.project.neededSkills .forEach(element => {
-      theNewInputs.push(
-        {
-          type: 'radio',
-          label: element.name+' '+element.level,
-          value: element,
-          checked: false
-        }
-      );
-      i++;
+    this.project.neededSkills.forEach(element => {
+      const userSkill = this.dataService.getUser().skills.find(it => it.name.toUpperCase() == element.name.toUpperCase());
+      var alreadyInTeam: Role;
+      var alreadyInCandidates: Role;
+      if (userSkill) {
+        alreadyInTeam = this.project.team.find(it =>
+          it.skill.name.toUpperCase() == userSkill.name.toUpperCase() && it.userMail == this.dataService.getUser().mail);
+        alreadyInCandidates = this.project.candidates.find(it =>
+          it.skill.name.toUpperCase() == userSkill.name.toUpperCase() && it.userMail == this.dataService.getUser().mail);
+      };
+      if (userSkill && userSkill.level >= element.level && alreadyInTeam == undefined && alreadyInCandidates == undefined) {
+        theNewInputs.push(
+          {
+            type: 'radio',
+            label: element.name + ' ' + element.level,
+            value: element,
+            checked: false
+          }
+        );
+      }
     });
-    return theNewInputs;
+    this.userAvailableSkillsInput = theNewInputs;
   }
 
-  async submit(){
+  async submit() {
     const add = await this.alertController.create({
       cssClass: 'my-custom-class',
       header: 'Submit a Role',
       message: '',
-      inputs: this.createSkillInput(),
+      inputs: this.userAvailableSkillsInput,
       buttons: [
         {
           text: 'cancel',
@@ -113,16 +127,26 @@ export class ViewProjectPage {
           text: 'add',
           handler: async data => {
             var skill = new Skill();
-            if (data==null) {
+            if (data == null) {
               const toast = await this.toastController.create({
                 message: 'Campo Skill non selezionato',
                 duration: 2000
               });
               toast.present();
             } else {
-                skill = this.project.neededSkills.find(obj=> obj==data);
-                this.restService.submit(this.id, new Role(this.dataService.getUserMail(), skill, false))
-                this.goBack();
+              const role = new Role(this.dataService.getUserMail(), data, data.level >= 10);
+              this.restService.submit(this.id,role)
+                .then(val => {
+                  if (val){
+                    this.restService.presentToast("Ti sei iscritto a questo progetto!");
+                    this.project.candidates.push(role);
+                    this.createSkillInput();
+                  }
+                  else
+                    this.restService.presentToast("C'è stato un errore durante l'iscrizione");
+                }).catch(err => {
+                  this.restService.presentToast("C'è stato un errore durante l'iscrizione");
+                });
             }
           }
         }
@@ -130,7 +154,7 @@ export class ViewProjectPage {
     });
     await add.present();
   }
-  
+
   getButtons(): Array<Object> {
     var buttons = new Array();
 
@@ -165,7 +189,7 @@ export class ViewProjectPage {
     }
 
     // azioni per user non creatore del progetto o creatore dell'organizzazione
-    if (this.dataService.isUserLogged && !this.dataService.hasProjectCreatorPermission(this.project)){
+    if (this.dataService.isUserLogged && !this.dataService.hasProjectCreatorPermission(this.project)) {
       buttons = buttons.concat([
         {
           text: 'Submit',
@@ -190,40 +214,41 @@ export class ViewProjectPage {
     return buttons;
   }
 
-  acceptCandidate(role: Role, slidingItem: any){
+  acceptCandidate(role: Role, slidingItem: any) {
     const index = this.project.candidates.indexOf(role);
-    this.restService.acceptCandidate(this.project.id,role).then(
-      res=>{
-        if(res){
+    this.restService.acceptCandidate(this.project.id, role).then(
+      res => {
+        if (res) {
           this.project.team.push(role);
-        } else{
-          this.project.candidates.splice(index,0,role);
+        } else {
+          this.project.candidates.splice(index, 0, role);
         }
       }
-    ).catch(err=>{
-      this.project.candidates.splice(index,0,role);
+    ).catch(err => {
+      this.project.candidates.splice(index, 0, role);
     });
     this.project.candidates.splice(index, 1);
     slidingItem.close();
   }
 
-  rejectCandidate(role: Role, slidingItem: any){
+  rejectCandidate(role: Role, slidingItem: any) {
     const index = this.project.candidates.indexOf(role);
-    this.restService.rejectCandidate(this.project.id,role).then(
-      res=>{
-        if(!res){
-          this.project.candidates.splice(index,0,role);
+    this.restService.rejectCandidate(this.project.id, role).then(
+      res => {
+        if (!res) {
+          this.project.candidates.splice(index, 0, role);
         }
+        this.createSkillInput();
       }
-    ).catch(err=>{
-      this.project.candidates.splice(index,0,role);
+    ).catch(err => {
+      this.project.candidates.splice(index, 0, role);
     });
     this.project.candidates.splice(index, 1);
     slidingItem.close();
   }
 
-  getCandidates(): Role[]{
-    return this.project.candidates.filter(it=>this.dataService.hasTeamManagerPermission(this.organization,this.project,it.skill));
+  getCandidates(): Role[] {
+    return this.project.candidates.filter(it => this.dataService.hasTeamManagerPermission(this.organization, this.project, it.skill));
   }
 
 }

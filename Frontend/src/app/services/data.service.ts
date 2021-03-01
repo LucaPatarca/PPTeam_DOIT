@@ -105,9 +105,9 @@ export class DataService {
   }
 
   public hasTeamManagerPermission(organization: Organization, project: Project, skill: Skill){
-    return this.hasProjectCreatorPermission(project)
+    return this.isUserLogged() && (this.hasProjectCreatorPermission(project)
       || this.hasOrganizationCreatorPermission(organization)
-      || this.user.skills.filter(it=> it.name == skill.name && it.level>=10);
+      || this.user.skills.find(it=> it.name.toLowerCase() == skill.name.toLowerCase() && it.level>=10));
   }
 
   public hasOrganizationCreatorPermission(organization: Organization): boolean {

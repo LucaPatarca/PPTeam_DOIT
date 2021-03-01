@@ -5,6 +5,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.ProjectRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -109,25 +110,18 @@ public class SimpleProjectsManager implements ProjectsManager{
     @Override
     public boolean submit(String projectId, Role role) throws EntityNotFoundException {
         if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");
-        checkRole(role);
         Project project = projectRepository.findById(projectId).orElseThrow(()->
                 new EntityNotFoundException("Nessun progetto trovato con l'id: "+projectId));
+        UserEntity user = userRepository.findById(role.getUserMail()).orElseThrow(()->
+                new EntityNotFoundException("Nessun utente con la mail: "+role.getUserMail()));
+        if(!user.hasSkill(role.getSkill())) return false;
         if(!project.submit(role)) return false;
         return projectRepository.save(project).getCandidates().contains(role);
-    }
-
-    private void checkRole(Role role){
-        Objects.requireNonNull(role, "Il campo role è nullo");
-        if(role.getUserMail().isBlank()) throw new IllegalStateException("Il campo userMail di role è vuoto");
-        Objects.requireNonNull(role.getSkill(), "Il campo Skill di role è nullo");
-        if(role.getSkill().getName().isBlank()) throw new IllegalStateException("Il campo name del campo skill  di role è vuoto");
-        if(role.getSkill().getLevel() > 10 || role.getSkill().getLevel() <= 0) throw new IllegalStateException("Il campo name del campo skill  di role è vuoto");
     }
 
     @Override
     public boolean acceptCandidate(String projectId, Role userRole) throws EntityNotFoundException {
         if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");
-        checkRole(userRole);
         Project project = projectRepository.findById(projectId).orElseThrow(()->
                 new EntityNotFoundException("Nessun progetto trovato con l'id: "+projectId));
         project.acceptCandidate(userRole);
@@ -137,7 +131,6 @@ public class SimpleProjectsManager implements ProjectsManager{
     @Override
     public boolean rejectCandidate(String projectId, Role userRole) throws EntityNotFoundException {
         if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");
-        checkRole(userRole);
         Project project = projectRepository.findById(projectId).orElseThrow(()->
                 new EntityNotFoundException("Nessun progetto trovato con l'id: "+projectId));
         project.rejectCandidate(userRole);

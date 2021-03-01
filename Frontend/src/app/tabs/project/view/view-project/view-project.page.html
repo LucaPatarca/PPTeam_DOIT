@@ -115,7 +115,7 @@
   </div>
 
   <ion-list *ngIf="!loading && (project.candidates.length>0)">
-    <ion-item-sliding *ngFor="let role of project.candidates" [disabled]="false" #slidingItem>
+    <ion-item-sliding *ngFor="let role of project.candidates" [disabled]="!dataService.hasTeamManagerPermission(organization,project,role.skill)" #slidingItem>
       <ion-item-options side="start" (ionSwipe)="acceptCandidate(role,slidingItem)">
         <ion-item-option expandable (click)="acceptCandidate(role,slidingItem)">
           <ion-icon slot="icon-only" name="thumbs-up"></ion-icon>
@@ -135,7 +135,7 @@
     </ion-item-sliding>
   </ion-list>
 
-  <ion-button *ngIf="!loading && dataService.getUser().mail != project.creatorMail" expand="block" (click)="submit()">
+  <ion-button *ngIf="!loading && dataService.getUser().mail != project.creatorMail" expand="block" (click)="submit()" [disabled]="userAvailableSkillsInput.length<=0">
     Submit
     <ion-icon slot="end" name="checkmark"></ion-icon>
   </ion-button>

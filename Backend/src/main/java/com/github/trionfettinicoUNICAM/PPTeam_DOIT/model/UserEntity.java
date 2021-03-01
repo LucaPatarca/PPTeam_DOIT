@@ -122,6 +122,10 @@ public class UserEntity {
         this.secret = secret;
     }
 
+    public boolean hasSkill(Skill skill){
+        return skills.stream().anyMatch(it->it.equals(skill) && it.getLevel()>=skill.getLevel());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

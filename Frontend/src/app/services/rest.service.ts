@@ -254,7 +254,6 @@ export class RestService {
       this.http.post(environment.submitApiUrl + id, role, this.config)
         .subscribe(
           res => {
-            this.presentToast('Submit aggiunta');
             resolve(res as unknown as boolean);
           },
           err => {
@@ -266,6 +265,7 @@ export class RestService {
   }
 
   async rejectCandidate(projectId: string, role: Role): Promise<boolean>{
+    this.refreshToken();
     return new Promise((resolve, rejects)=>{
       this.http.post(environment.rejectCandidate + projectId, role, this.config)
         .subscribe(
@@ -281,6 +281,7 @@ export class RestService {
   }
 
   async acceptCandidate(projectId: string, role: Role): Promise<boolean>{
+    this.refreshToken();
     return new Promise((resolve, rejects)=>{
       this.http.post(environment.acceptCandidate + projectId, role, this.config)
         .subscribe(
