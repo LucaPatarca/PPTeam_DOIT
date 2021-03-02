@@ -267,7 +267,7 @@ export class RestService {
   async submit(id: string, role: Role): Promise<boolean>{
     this.refreshToken();
     return new Promise((resolve, rejects) => {
-      this.http.post(environment.submitApiUr + id, role, this.config)
+      this.http.post(environment.submitApiUrl + id, role, this.config)
         .subscribe(
           res => {
             this.presentToast('Submit aggiunta');

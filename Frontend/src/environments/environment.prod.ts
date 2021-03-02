@@ -1,4 +1,4 @@
-const serverUrl = "http://www.lucapatarca.cloud:8200";
+const serverUrl = "http://www.lucapatarca.cloud";
 const projectApiUrl = serverUrl+"/api/projects/";
 const organizationApiUrl = serverUrl+"/api/organizations/";
 const userApiUrl = serverUrl+"/api/users/";
@@ -14,10 +14,12 @@ export const environment = {
   userExistApiUrl: userApiUrl + "exist/",
   userExistSkill: userApiUrl + "existSkill/",
   addCollaborator: organizationApiUrl+"addCollaborator/",
+  addExpert: organizationApiUrl+"addExpert/",
   createProjectApiUrl: projectApiUrl + "createNew",
   listOfProjectsApiUrl: projectApiUrl+"list/",
   modifyProjectApiUrl: projectApiUrl+"update/",
-  existProjectApiUr: projectApiUrl+"exist/",
+  existProjectApiUrl: projectApiUrl+"exist/",
+  submitApiUrl: projectApiUrl+"submit/",
   listOfOrganizationsApiUrl: organizationApiUrl+"list/",
   createOrganizationApiUrl: organizationApiUrl + "createNew",
   existOrganizationApiUrl: organizationApiUrl + "exist/",
@@ -27,6 +29,8 @@ export const environment = {
   modifyOrganizationApiUrl: organizationApiUrl+"update/",
   getUserSubmissions: userApiUrl+"getUserSubmissions/",
   rejectSubmission:projectApiUrl+"rejectCandidate/",
+  listOfUsersApiUrl: userApiUrl+"list/",
+  existUserApiUrl: userApiUrl + "exist/",
   addNewSkill:userApiUrl+"addNewSkill/",
   removeSkill:userApiUrl+"removeSkill/",
   getExpertsPage:userApiUrl+"listExperts/",

@@ -15,7 +15,7 @@ export class HomePage {
   constructor(
     private menuCtrl: MenuController,
     private platform: Platform,
-    private dataService:DataService
+    public dataService:DataService
   ) {
   }
 
