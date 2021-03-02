@@ -42,7 +42,7 @@ Un Creatore di un progetto possiede tutti i permessi che concerne la gestione de
 
 Un Fondatore di un'organizzazione tutti i permessi che concerne la gestione dell'organizzazione tra cui la cancellazione, modifica e gestione dei membri, collaboratori ed esperti. Inoltre, possiede tutti i diritti di creatore riguardo i progetti associati alla sua organizzazione.
 
-# 🛠⚙ Processo di Sviluppo<a name = "processo"></a>
+# ⚙ Processo di Sviluppo<a name = "processo"></a>
 
 Per sviluppare l'applicativo è stato scelto di seguire il processo standardizzato **Unified Process (UP)**, processo iterativo incrementale, utilizzando come strumento di lavoro **Visual Paradigm** basato sul **Unified Modeling Language (UML)**.
 
