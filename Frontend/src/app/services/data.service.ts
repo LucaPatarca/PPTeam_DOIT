@@ -53,6 +53,11 @@ export class DataService {
     return this.user;
   }
 
+  public refreshUser(user: User){
+    this.user = user;
+    this.storage.set(this.key_user, user);
+  }
+
   public getUserMail(): string {
     return this.user.mail;
   }

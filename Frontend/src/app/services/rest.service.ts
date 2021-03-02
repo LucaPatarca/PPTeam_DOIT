@@ -466,8 +466,9 @@ export class RestService {
     return new Promise((resolve, rejects)=>{
       this.http.post(environment.addNewSkill+skill,this.dataService.getUserMail(), this.config)
       .subscribe(
-        res => {
+        async res => {
           resolve(res as unknown as boolean);
+          this.dataService.refreshUser(await this.getUser(this.dataService.getUserMail()));
         },
         async err => {
           this.defaultErrorHandler(err);
@@ -482,8 +483,9 @@ export class RestService {
     return new Promise((resolve, rejects)=>{
       this.http.post(environment.removeSkill+this.dataService.getUserMail(),skill, this.config)
       .subscribe(
-        res => {
+        async res => {
           resolve(res as unknown as boolean);
+          this.dataService.refreshUser(await this.getUser(this.dataService.getUserMail()));
         },
         async err => {
           this.defaultErrorHandler(err);
