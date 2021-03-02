@@ -10,5 +10,9 @@
     }
   },
   "cordova": {},
-  "windowsAndroidStudioPath": "C:\\Program Files\\Android\\Android Studio\\bin\\studio64.exe"
+  "windowsAndroidStudioPath": "C:\\Program Files\\Android\\Android Studio\\bin\\studio64.exe",
+  "server": {
+    "url": "http://10.0.11.116:8100",
+    "cleartext": true
+  }
 }
