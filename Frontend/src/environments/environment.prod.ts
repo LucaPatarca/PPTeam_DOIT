@@ -37,4 +37,5 @@ export const environment = {
   existUserApiUrl: userApiUrl + "exist/",
   rejectCandidate: projectApiUrl+"rejectCandidate/",
   acceptCandidate: projectApiUrl+"acceptCandidate/",
+  removeTeamMember:projectApiUrl+"removeTeamMember/",
 };

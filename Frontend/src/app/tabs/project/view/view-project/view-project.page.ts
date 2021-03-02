@@ -251,6 +251,22 @@ export class ViewProjectPage {
     return this.project.candidates.filter(it => this.dataService.hasTeamManagerPermission(this.organization, this.project, it.skill));
   }
 
+  removeTeamMember(role:Role,slidingItem:any){
+    const index = this.project.team.indexOf(role);
+    this.restService.removeTeamMember(this.project.id,role).then(
+      res=>{
+        if(!res){
+          this.project.team.splice(index,0,role);
+        }
+      }
+    ).catch(err=>{
+      this.project.team.splice(index,0,role);
+    });
+    this.project.team.splice(index, 1);
+    slidingItem.close();
+    this.restService.presentToast("Membro del team rimosso con successo");
+  }
+
 }
 
 

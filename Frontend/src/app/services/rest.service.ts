@@ -28,6 +28,22 @@ export class RestService {
   ) { 
   }
 
+  validate(){
+    this.refreshToken();
+    return new Promise((resolve, rejects) => {
+      this.http.post(environment.createOrganizationApiUrl, this.config).subscribe(
+        res => {
+          this.presentToast("Organizzatione creata");
+          resolve(res as unknown as Organization);
+        },
+        err => {
+          this.defaultErrorHandler(err);
+          rejects(err);
+        }
+      );
+    });
+  }
+
 
   refreshToken(){
     this.config = {
@@ -268,6 +284,21 @@ export class RestService {
     this.refreshToken();
     return new Promise((resolve, rejects)=>{
       this.http.post(environment.rejectCandidate + projectId, role, this.config)
+        .subscribe(
+          res => {
+            resolve(res as unknown as boolean);
+          },
+          err => {
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
+        );
+    });
+  }
+
+  async removeTeamMember(projectId: string, role: Role): Promise<boolean>{
+    return new Promise((resolve, rejects)=>{
+      this.http.post(environment.removeTeamMember + projectId, role, this.config)
         .subscribe(
           res => {
             resolve(res as unknown as boolean);

@@ -173,8 +173,6 @@ public class Project {
     /**
      * Adds the {@link UserEntity} to the list of candidates of this project. A user can submit
      * to the same project more than once but only for different {@link Skill}s.
-     * @param user the user who wants to apply to this project
-     * @param skill the skill of the user
      * @return true if the user was added to candidates, false instead.
      * @throws IllegalArgumentException if the user does not have this {@link Skill} or if
      * the skill is not needed for this project
@@ -186,6 +184,10 @@ public class Project {
             candidates.add(role);
             return true;
         } else return false;
+    }
+
+    public boolean removeTeamMember(Role userRole){
+        return team.remove(userRole);
     }
 
     @Override

@@ -149,4 +149,14 @@ public class SimpleProjectsManager implements ProjectsManager{
                     userSubmissions.add(r);
         return userSubmissions;
     }
+
+    @Override
+    public boolean removeTeamMember(String projectId , Role userRole) throws EntityNotFoundException {
+        if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");
+        checkRole(userRole);
+        Project project = projectRepository.findById(projectId).orElseThrow(()->
+                new EntityNotFoundException("Nessun progetto trovato con l'id: "+projectId));
+        project.removeTeamMember(userRole);
+        return !projectRepository.save(project).getCandidates().contains(userRole);
+    }
 }

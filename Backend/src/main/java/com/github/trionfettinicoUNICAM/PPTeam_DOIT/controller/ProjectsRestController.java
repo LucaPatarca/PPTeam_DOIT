@@ -83,9 +83,15 @@ public class ProjectsRestController implements ProjectsController {
     }
 
     @Override
-    @PreAuthorize("permitAll")
+    @PreAuthorize("permitAll()")
     @GetMapping("/getSubmissions/{userMail}")
     public List<Role> getUserSubmissions(@PathVariable String userMail) throws EntityNotFoundException{
         return manager.getUserSubmissions(userMail);
+    }
+
+    @PreAuthorize("permitAll()")
+    @PostMapping("/removeTeamMember/{projectId}")
+    public boolean removeTeamMember(@PathVariable String projectId, @RequestBody Role userRole) throws EntityNotFoundException{
+        return manager.removeTeamMember(projectId, userRole);
     }
 }

@@ -1,3 +1,4 @@
+import { RestService } from './../services/rest.service';
 import { DataService } from 'src/app/services/data.service';
 import { MenuController, Platform } from '@ionic/angular';
 import { Component } from '@angular/core';
@@ -15,13 +16,15 @@ export class HomePage {
   constructor(
     private menuCtrl: MenuController,
     private platform: Platform,
-    public dataService:DataService
+    public dataService:DataService,
+    private restService:RestService
   ) {
   }
 
   ionViewDidEnter() {
     this.menuCtrl.enable(true);
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
+      this.restService.validate();
       navigator['app'].exitApp();
     });
     

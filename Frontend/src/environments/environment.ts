@@ -42,6 +42,7 @@ export const environment = {
   addMember: organizationApiUrl+"addMember/",
   rejectCandidate: projectApiUrl+"rejectCandidate/",
   acceptCandidate: projectApiUrl+"acceptCandidate/",
+  removeTeamMember:projectApiUrl+"removeTeamMember/",
 };
 
 //TODO spostare qui il globals service
