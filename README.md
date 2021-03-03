@@ -70,7 +70,7 @@ Il frontend è interamente scritto utilizzando il framework **Ionic** e sceglien
 L'applicativo sarà installabile su Android o IOS tramite l'utilizzo di **Capacitor** che permette di effettuare chiamate rest più specifiche per la piattaforma scelta. 
 Inoltre, è usufruibile come PWA tramite Web e come applicazione Desktop tramite l'utilizzo del framework **Electron**.
 
-Inoltre abbiamo utilizzato la funzionalita enviroment, messa a disposizione da ionic, che permette di andare ad utillizare due diverse "classi" per le variabili d'ambiente, una dove abbiamo le variabili per il testing , dove si richiama un database locale, uno (--prod) per la produzione, dove abbiamo un collegamento ad un server, dove gira il backend, pronto per il release ed in attesa del rilascio del prodotto.
+Inoltre abbiamo utilizzato la funzionalita enviroment, messa a disposizione da ionic, che permette di andare ad utillizare due diverse "classi" per le variabili d'ambiente, una dove abbiamo le variabili per il testing , dove si richiama un database locale ed uno (--prod) per la produzione , che permette di ottimizzare la compilazione andando a rendere il typescript più efficente, dove abbiamo un collegamento ad un server, dove gira il backend pronto per il release ed in attesa del rilascio del prodotto.
 
 Per quanto concerne le informazioni di autenticazione tra client e server si è deciso di sfruttare lo standard **JSON Web Token (JWT)**. 
 Si è deciso di implementare un authorization server sfruttando le librerie messe a disposizione dal cloud provider **Auth0**, quest'ultime sono state utilizzate soltanto per la generazione e validazione del token in locale.
