@@ -119,6 +119,14 @@ public class SimpleProjectsManager implements ProjectsManager{
         return projectRepository.save(project).getCandidates().contains(role);
     }
 
+    private void checkRole(Role role){
+        Objects.requireNonNull(role, "Il campo role è nullo");
+        if(role.getUserMail().isBlank()) throw new IllegalStateException("Il campo userMail di role è vuoto");
+        Objects.requireNonNull(role.getSkill(), "Il campo Skill di role è nullo");
+        if(role.getSkill().getName().isBlank()) throw new IllegalStateException("Il campo name del campo skill  di role è vuoto");
+        if(role.getSkill().getLevel() > 10 || role.getSkill().getLevel() <= 0) throw new IllegalStateException("Il campo name del campo skill  di role è vuoto");
+    }
+
     @Override
     public boolean acceptCandidate(String projectId, Role userRole) throws EntityNotFoundException {
         if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");

@@ -92,12 +92,6 @@ public class UsersRestController implements UsersController {
     @Override
     @PreAuthorize("@permissionComponent.sameMail(authentication, #userID)")
     @PostMapping(value = "/removeSkill/{userID}",consumes = MediaType.APPLICATION_JSON_VALUE)
-<<<<<<< Updated upstream
-    public boolean removeSkill(@PathVariable String userID,@RequestBody Skill skill) throws EntityNotFoundException {
-        return manager.removeSkill(skill,userID);
-    }
-
-=======
     public boolean removeSkill(@PathVariable String userID,@RequestBody Skill skill) throws EntityNotFoundException { return manager.removeSkill(skill,userID); }
->>>>>>> Stashed changes
+
 }
