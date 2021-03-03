@@ -106,7 +106,7 @@ export class DataService {
   public hasMemberPermission(organization: Organization): boolean {
     var result = false;
     organization.membersMails.forEach(element => {
-      if (element = this.user.mail)
+      if (element == this.user.mail)
         result = true;
     });
     return result;
