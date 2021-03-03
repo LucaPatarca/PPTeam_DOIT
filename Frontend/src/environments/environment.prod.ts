@@ -1,4 +1,4 @@
-const serverUrl = "http://www.lucapatarca.cloud:8200";
+const serverUrl = "http://www.lucapatarca.cloud";
 const projectApiUrl = serverUrl+"/api/projects/";
 const organizationApiUrl = serverUrl+"/api/organizations/";
 const userApiUrl = serverUrl+"/api/users/";

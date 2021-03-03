@@ -63,6 +63,6 @@ export class ListOfProjectsPage {
   }
 
   viewProject(id: string) {
-    this.navCtrl.navigateForward(['/view-project', { "id": id }]);
+    this.navCtrl.navigateForward(['/tabs/list-of-projects/view-project', { "id": id }]);
   }
 }

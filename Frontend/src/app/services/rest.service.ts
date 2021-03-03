@@ -334,7 +334,6 @@ export class RestService {
       this.http.post(environment.createUserApiUrl, user, { headers: new HttpHeaders(), responseType: 'json' }).subscribe(
         res => {
           const returnedUser = res as User;
-          this.presentToast("Utente " + returnedUser.name + " creato con successo");
           resolve(returnedUser);
         },
         err => {
@@ -462,8 +461,9 @@ export class RestService {
 
   async getUserSubmissions():Promise<UserSubmissionInformation[]>{
     this.refreshToken();
+    const url = environment.getUserSubmissions+this.dataService.getUserMail();
     return new Promise((resolve, rejects)=>{
-      this.http.get(environment.getUserSubmissions+this.dataService.getUserMail(), this.config)
+      this.http.get(url, this.config)
       .subscribe(
         res => {
           resolve(res as unknown as UserSubmissionInformation[]);

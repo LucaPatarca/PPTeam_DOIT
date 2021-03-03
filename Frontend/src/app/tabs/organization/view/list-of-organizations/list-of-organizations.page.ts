@@ -68,6 +68,6 @@ export class ListOfOrganizationsPage {
 
   // metodo per aprire la visualizzazione di una pagina (gli si passa un organization)
   viewOrganization(organizationId: String) {
-    this.navCtrl.navigateForward(['/view-organization', { "id": organizationId }], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateForward(['/tabs/list-of-organizations/view-organization', { "id": organizationId }]);
   }
 }

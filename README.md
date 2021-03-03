@@ -42,15 +42,16 @@ Un Creatore di un progetto possiede tutti i permessi che concerne la gestione de
 
 Un Fondatore di un'organizzazione tutti i permessi che concerne la gestione dell'organizzazione tra cui la cancellazione, modifica e gestione dei membri, collaboratori ed esperti. Inoltre, possiede tutti i diritti di creatore riguardo i progetti associati alla sua organizzazione.
 
-# 🛠 Processo di Sviluppo<a name = "processo"></a>
+# ⚙ Processo di Sviluppo<a name = "processo"></a>
 
 Per sviluppare l'applicativo è stato scelto di seguire il processo standardizzato **Unified Process (UP)**, processo iterativo incrementale, utilizzando come strumento di lavoro **Visual Paradigm** basato sul **Unified Modeling Language (UML)**.
 
 Attualmente sono state svolte 3 iterazioni dove è stato possibile effettuare l'analisi dei requisiti, la progettazione del sistema, l'implementazione e la fase di testing.
 
-Come strumento di versioning è stato utilizzato **Git** attraverso il quale sono stati distinti due brach per sviluppo.
+Come strumento di versioning è stato utilizzato **Git** attraverso il quale sono stati distinti tre brach per sviluppo.
 - master: utilizzato per pubblicare la baseline (artefatti) sviluppati a fine iterazione.
-- develop: utilizzato per sviluppo dell'iterazione corrente.
+- develop: utilizzato per lo sviluppo fino alla terza iterazione in corrispondenza alla consegna per Ingegneria del Software.
+- pawm: utilizzato per lo sviluppo dell'iterazione corrente in concomitanza alla consegna per Progettazione di Applicazioni Web e Mobili.
 
 Le varie iterazioni hanno dato origine ai seguenti artefatti:
 - Diagramma dei casi d'uso: raccolta e specifica dei requisiti e funzionalità del sistema.
@@ -66,7 +67,8 @@ Il lato back end si basa sul linguaggio **Java** e rende disponibile per l'inter
 Per quanto concerne la persistenza delle informazioni processate a livello di back end si è deciso di sfruttare i servizi offerti dal DBMS non relazionale **MongoDB** e dal relativo framework per linguaggio Java.
 
 Il frontend è interamente scritto utilizzando il framework **Ionic** e scegliendo come user interface il framework **Angular** basato su **TypeScript**. L'applicativo si sostanzia in un app mobile Ibrida, utilizzando la metodologia Single Page Application, che interagisce con il back end tramite chiamate HTTP alle Api Rest rese disponibili. 
-L'applicativo sarà installabile su Android o IOS tramite l'utilizzo di **Capacitor** che permette di effettuare chiamate rest più specifiche per la piattaforma scelta.
+L'applicativo sarà installabile su Android o IOS tramite l'utilizzo di **Capacitor** che permette di effettuare chiamate rest più specifiche per la piattaforma scelta. 
+Inoltre, è usufruibile come PWA tramite Web e come applicazione Desktop tramite l'utilizzo del framework **Electron**.
 
 Per quanto concerne le informazioni di autenticazione tra client e server si è deciso di sfruttare lo standard **JSON Web Token (JWT)**. 
 Si è deciso di implementare un authorization server sfruttando le librerie messe a disposizione dal cloud provider **Auth0**, quest'ultime sono state utilizzate soltanto per la generazione e validazione del token in locale.
