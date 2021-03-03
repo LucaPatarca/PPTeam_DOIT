@@ -21,6 +21,8 @@ export class EditProjectPage implements OnInit{
   validations_form: FormGroup;
   project: Project;
   organizationName: string;
+  createNew: boolean;
+  userOrganizations: Organization[];
   validation_messages = {
     'title': [
       { type: 'required', message: 'Name is required.' }
@@ -51,6 +53,7 @@ export class EditProjectPage implements OnInit{
     this.project = new Project("","","",this.dataService.getUser().mail,new Array());
     this.organizationName = "";
     if(id){
+      this.createNew = false;
       this.restService.getProject(id)
         .then(p=> {
           this.project = p;
@@ -59,8 +62,10 @@ export class EditProjectPage implements OnInit{
           });
         });
     } else{
-      this.project.organizationId = this.dataService.getOrganization().id;
-      this.organizationName = this.dataService.getOrganizationName();
+      this.createNew = true;
+      this.restService.getUserOrganizations(this.dataService.getUser().mail).then(
+        res=>this.userOrganizations = res
+      );
     }
   }
 
@@ -173,6 +178,11 @@ export class EditProjectPage implements OnInit{
     await add.present();
   }
 
+  organizationSelected(organization: Organization){
+    this.organizationName = organization.name;
+    this.project.organizationId = organization.id;
+  }
+
   createProject() {
     this.restService.createProject(this.project).then(
       value=>{
@@ -182,6 +192,6 @@ export class EditProjectPage implements OnInit{
   }
 
   goToProjectsList() {
-    this.navCtrl.navigateRoot(['/list-of-projects'], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateRoot(['/tabs/list-of-projects'], { queryParams: { 'refresh': 1 } });
   }
 }

@@ -49,7 +49,7 @@ export class CreateOrganizationPage {
 
     this.restService.createOrganization(newOrganization);
 
-    this.navCtrl.navigateRoot(["/home"], { queryParams: { 'refresh': 1 } });
+    this.navCtrl.navigateRoot(["/tabs/list-of-organizations"], { queryParams: { 'refresh': 1 } });
   }
 
 }

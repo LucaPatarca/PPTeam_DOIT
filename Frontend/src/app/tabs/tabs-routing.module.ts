@@ -14,7 +14,20 @@ const routes: Routes = [
       },
       {
         path: 'home',
-        loadChildren: () => import('../home/home.module').then(m => m.HomePageModule)
+        children:[
+          {
+            path:'',
+            loadChildren: () => import('../home/home.module').then(m => m.HomePageModule)
+          },
+          {
+            path:'create-project',
+            loadChildren: () => import('../tabs/project/edit-project/edit-project.module').then(m => m.EditProjectPageModule)
+          },
+          {
+            path:'create-organization',
+            loadChildren: () => import('../tabs/organization/create-organization/create-organization.module').then(m => m.CreateOrganizationPageModule)
+          }
+        ]
       },
       {
         path: 'list-of-projects',
@@ -25,7 +38,16 @@ const routes: Routes = [
           },
           {
             path: 'view-project',
-            loadChildren: () => import('./project/view/view-project/view-project.module').then(m => m.ViewProjectPageModule)
+            children: [
+              {
+                path: '',
+                loadChildren: () => import('./project/view/view-project/view-project.module').then(m => m.ViewProjectPageModule)
+              },
+              {
+                path: 'edit-project',
+                loadChildren: () => import('./project/edit-project/edit-project.module').then(m => m.EditProjectPageModule)
+              }
+            ]
           }
         ]
       },
@@ -38,7 +60,16 @@ const routes: Routes = [
           },
           {
             path: 'view-organization',
-            loadChildren: () => import('./organization/view/view-organization/view-organization.module').then(m => m.ViewOrganizationPageModule)
+            children: [
+              {
+                path: '',
+                loadChildren: () => import('./organization/view/view-organization/view-organization.module').then(m => m.ViewOrganizationPageModule)
+              },
+              {
+                path: 'edit-organization',
+                loadChildren: () => import('./organization/edit-organization/edit-organization.module').then(m => m.EditOrganizationPageModule)
+              }
+            ]
           }
         ]
       },
@@ -58,4 +89,4 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
 })
-export class TabsPageRoutingModule {}
+export class TabsPageRoutingModule { }

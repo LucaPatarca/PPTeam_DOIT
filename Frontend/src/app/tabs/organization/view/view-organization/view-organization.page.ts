@@ -151,8 +151,9 @@ export class ViewOrganizationPage {
         {
           text: "Yes",
           handler: () => {
-            this.restService.deleteOrganization(this.organization);
-            this.nav.navigateBack(["/list-of-organizations"], { queryParams: { 'refresh': 1 } });
+            this.restService.deleteOrganization(this.organization).then(
+              ()=>this.nav.navigateBack(["/tabs/list-of-organizations"], { queryParams: { 'refresh': 1 } })
+            );
           }
         }
       ]
@@ -170,7 +171,7 @@ export class ViewOrganizationPage {
           text: 'Edit',
           icon: 'create-outline',
           handler: () => {
-            this.nav.navigateForward(['/modify-organization', { "id": this.organization.id }]);
+            this.nav.navigateForward(['/tabs/list-of-organizations/view-organization/edit-organization', { "id": this.organization.id }]);
           }
         }
       ]);

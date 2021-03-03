@@ -23,20 +23,15 @@ export class DataService {
   private guestUser: User = new User();
 
   private user: User;
-  private organization: Organization;
   private token: string;
 
   private darkModeEnabled: boolean;
 
   constructor(private storage: Storage) {
-    this.organization = null;
     this.user = this.guestUser;
     this.token = "";
     this.darkModeEnabled = false;
 
-    storage.get(this.key_organization).then((val) => {
-      this.organization = val as Organization;
-    });
     storage.get(this.key_token).then((val) => {
       if (val != null)
         this.token = val as string;
@@ -84,38 +79,10 @@ export class DataService {
     this.storage.remove(this.key_token);
     this.user = this.guestUser;
     this.token = "";
-    this.logoutOrganization();
-  }
-
-  public loginOrganization(organization: Organization) {
-    this.storage.set(this.key_organization, organization);
-    this.organization = organization;
-  }
-
-  public getOrganization(): Organization {
-    return this.organization;
-  }
-
-  public getOrganizationName(): string {
-    if (this.organization != null)
-      return this.organization.name;
-    return "";
-  }
-
-  public updateOrganization(organization: Organization) {
-    this.organization = organization;
-  }
-
-  public isOrganizationSelected(): boolean {
-    return this.organization != null;
-  }
-
-  public logoutOrganization() {
-    this.storage.remove(this.key_organization);
-    this.organization = null;
   }
 
   public hasProjectCreatorPermission(project: Project): boolean {
+    if(!project) return false;
     if (this.user.mail == project.creatorMail)
       return true;
     else

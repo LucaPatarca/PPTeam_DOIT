@@ -117,7 +117,6 @@ export class RestService {
       this.http.put(environment.modifyOrganizationApiUrl, organization, this.config)
         .subscribe(
           res => {
-            this.dataService.updateOrganization(res as unknown as Organization  ); 
             resolve(res as unknown as Organization);
           },
           this.defaultErrorHandler
@@ -130,9 +129,6 @@ export class RestService {
     return new Promise((resolve, rejects) => {
       this.http.delete(environment.organizationApiUrl + organization.id,this.config).subscribe(
         res => {
-          if(this.dataService.getOrganizationName() == organization.name) {
-            this.dataService.logoutOrganization();
-          }
           this.presentToast((res as unknown as boolean) == true ? 'Organizzazione Cancellata.' : 'Organizzazione Non Cancellata');
           resolve(res  as unknown as boolean);
         },
@@ -164,8 +160,6 @@ export class RestService {
     return new Promise((resolve, rejects) => {
       this.http.post(environment.addMember+organizationId +"/"+ userMail, "", this.config).subscribe(
         res => {
-          if(this.dataService.getOrganization() && this.dataService.getOrganization().id == organizationId)
-            this.refresOrganization();
           resolve(res as unknown as Boolean);
         },
         err => {
@@ -181,8 +175,6 @@ export class RestService {
     return new Promise((resolve, rejects) => {
       this.http.post(environment.removeMember+organizationId +"/"+ userMail + "/" + removeProjects as string, "", this.config).subscribe(
         res => {
-          if(this.dataService.getOrganization() && this.dataService.getOrganization().id == organizationId)
-            this.refresOrganization();
           resolve(res as unknown as boolean);
         },
         err => {
@@ -415,7 +407,7 @@ export class RestService {
 
   async getUserOrganizations(mail: string): Promise<Organization[]> {
     return new Promise((resolve, rejects) => {
-      this.http.get(environment.getOrganizationUserCreatorApiUrl + mail)
+      this.http.get(environment.getOrganizationByUserApiUrl + mail)
         .subscribe(
           res => {
             resolve(res as Organization[]);
@@ -499,7 +491,7 @@ export class RestService {
       .subscribe(
         async res => {
           resolve(res as unknown as boolean);
-          this.dataService.refreshUser(await this.getUser(this.dataService.getUserMail()));
+          this.refreshUser();
         },
         async err => {
           this.defaultErrorHandler(err);
@@ -516,7 +508,7 @@ export class RestService {
       .subscribe(
         async res => {
           resolve(res as unknown as boolean);
-          this.dataService.refreshUser(await this.getUser(this.dataService.getUserMail()));
+          this.refreshUser();
         },
         async err => {
           this.defaultErrorHandler(err);
@@ -541,15 +533,10 @@ export class RestService {
     this.presentToast(err.error);
   }
 
-  async refresOrganization(){
-      this.http.get(environment.organizationApiUrl + this.dataService.getOrganization().id).subscribe(
-        res => {
-          this.dataService.updateOrganization(res as Organization);
-        },
-        err => {
-          this.defaultErrorHandler(err);
-        }
-      );
+  refreshUser(){
+    this.getUser(this.dataService.getUserMail()).then(
+      val=>this.dataService.refreshUser(val)
+    );
   }
 
 }

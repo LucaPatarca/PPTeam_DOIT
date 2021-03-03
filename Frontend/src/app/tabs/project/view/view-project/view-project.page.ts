@@ -63,7 +63,7 @@ export class ViewProjectPage {
   }
 
   modify() {
-    this.nav.navigateForward(['/edit-project', { "id": this.project.id }]);
+    this.nav.navigateForward(['/tabs/list-of-projects/view-project/edit-project', { "id": this.project.id }]);
   }
 
   delete() {
@@ -170,7 +170,7 @@ export class ViewProjectPage {
           role: 'destructive',
           icon: 'trash',
           handler: () => {
-            this.restService.deleteProject(this.project.id);
+            this.delete();
           }
         }, {
           text: 'Close',
@@ -183,19 +183,6 @@ export class ViewProjectPage {
           icon: 'create-outline',
           handler: () => {
             this.modify();
-          }
-        }
-      ]);
-    }
-
-    // azioni per user non creatore del progetto o creatore dell'organizzazione
-    if (this.dataService.isUserLogged && !this.dataService.hasProjectCreatorPermission(this.project)) {
-      buttons = buttons.concat([
-        {
-          text: 'Submit',
-          icon: 'chevron-down-outline',
-          handler: () => {
-            this.submit();
           }
         }
       ]);

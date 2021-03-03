@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>Create Project</ion-title>
+    <ion-title>{{createNew?'Create Project':'Edit Project'}}</ion-title>
     <ion-buttons slot="end">
       <ion-button icon-end color="primary" [disabled]="!validations_form.valid" (click)="createProject()">
       done
@@ -37,6 +37,9 @@
     </ng-container>
     <ion-item>
       <ion-label color="primary">Organization: {{organizationName}}</ion-label>
+      <ion-select *ngIf="createNew" (ionChange)="organizationSelected(orgSelect.value)" #orgSelect>
+        <ion-select-option *ngFor="let organization of userOrganizations" [value]="organization">{{organization.name}}</ion-select-option>
+      </ion-select>
     </ion-item>
   </form>
 

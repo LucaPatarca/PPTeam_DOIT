@@ -1,16 +1,17 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button auto-hide="true"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Home</ion-title>
+    <ion-title style="text-align: center;">Home</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
 
   <p *ngIf="dataService.isUserLogged()">{{dataService.getUserMail()}}</p>
-  <p *ngIf="dataService.isOrganizationSelected()">{{dataService.getOrganizationName()}}</p>
-
+  <ion-button expand="block" (click)="createOrganization()">
+    Crea organizzazione (temporaneo)
+  </ion-button>
+  <ion-button expand="block" (click)="createProject()">
+    Crea progetto (temporaneo)
+  </ion-button>
 
 </ion-content>

@@ -72,13 +72,13 @@ export class ViewUserPage implements OnInit {
     this.getUserSubmissions();
   }
 
-  ionViewDidEnter(){
+  ionViewDidEnter() {
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
   }
 
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     this.HWBackSubscription.unsubscribe();
   }
 
@@ -96,7 +96,6 @@ export class ViewUserPage implements OnInit {
     user.secret = this.secret;
     this.restService.login(user).then(
       user => {
-        this.restService.presentToast("Accesso eseguito come " + (user as unknown as User).name);
         this.secret = "";
         this.mail = "";
         this.validations_form.reset();
@@ -114,6 +113,7 @@ export class ViewUserPage implements OnInit {
         res => {
           if (res) {
             this.restService.presentToast("Utente " + res.name + " creato con successo");
+            this.selection = this.Selection.Login;
             this.secret = "";
             this.mail = "";
             this.name = "";
@@ -146,16 +146,7 @@ export class ViewUserPage implements OnInit {
   }
 
   async deleteUserSkill(skill: Skill, slidingItem: any) {
-    const index = this.dataService.getUser().skills.indexOf(skill);
-    this.dataService.getUser().skills.splice(index, 1);
-    const res = await this.restService.removeSkill(skill).catch(
-      err => {
-        this.dataService.getUser().skills.splice(index, 0, skill);
-      }
-    );
-    if (!res) {
-      this.dataService.getUser().skills.splice(index, 0, skill);
-    }
+    const res = await this.restService.removeSkill(skill);
     slidingItem.close();
   }
 
@@ -179,22 +170,21 @@ export class ViewUserPage implements OnInit {
             if (data.skill == null || (data.skill as string).trim() == "") {
               this.restService.presentToast("Il campo skill non puo essere vuoto");
             } else {
-              await this.restService.addNewSkill(data.skill)
-                .then(
-                  res => {
-                    if (res) {
-                      this.restService.getUser(this.dataService.getUser().mail)
-                        .then(
-                          user=>this.dataService.refreshUser(user)
-                        );
-                    }
-                  }
-                )
+              this.restService.addNewSkill(data.skill);
             }
           }
         }
       ]
     });
     await add.present();
+  }
+
+  toggleLoginRegister() {
+    this.selection = this.selection==this.Selection.Login?this.Selection.Register:this.Selection.Login;
+    this.secret = "";
+    this.mail = "";
+    this.name = "";
+    this.confirm = "";
+    this.validations_form.reset();
   }
 }

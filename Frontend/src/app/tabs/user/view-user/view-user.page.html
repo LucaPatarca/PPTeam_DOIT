@@ -139,7 +139,7 @@
       </ion-button>
     </form>
     <ion-button expand="block" fill="clear" color="medium"
-      (click)="selection==Selection.Login?selection=Selection.Register:selection=Selection.Login">
+      (click)="toggleLoginRegister()">
       {{selection==Selection.Login?'Non ho un account':'Ho gia un account'}}
     </ion-button>
   </div>

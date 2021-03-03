@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title *ngIf="!loading">{{project.title}}</ion-title>
     <ion-skeleton-text *ngIf="loading" animated style="width: 60%;"></ion-skeleton-text>
-    <ion-buttons slot="end">
+    <ion-buttons slot="end" *ngIf="dataService.hasProjectCreatorPermission(project)">
       <ion-button (click)="showActionSheet()">
         <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
       </ion-button>

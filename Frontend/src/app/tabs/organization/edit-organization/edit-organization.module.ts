@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule, } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { ModifyOrganizationPageRoutingModule } from './modify-organization-routing.module';
+import { EditOrganizationPageRoutingModule } from './edit-organization-routing.module';
 
-import { ModifyOrganizationPage } from './modify-organization.page';
+import { EditOrganizationPage } from './edit-organization.page';
 
 @NgModule({
   imports: [
@@ -14,8 +14,8 @@ import { ModifyOrganizationPage } from './modify-organization.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    ModifyOrganizationPageRoutingModule
+    EditOrganizationPageRoutingModule
   ],
-  declarations: [ModifyOrganizationPage]
+  declarations: [EditOrganizationPage]
 })
-export class ModifyOrganizationPageModule {}
+export class EditOrganizationPageModule {}

@@ -22,7 +22,7 @@ export const environment = {
   listOfOrganizationsApiUrl: organizationApiUrl+"list/",
   createOrganizationApiUrl: organizationApiUrl + "createNew",
   existOrganizationApiUrl: organizationApiUrl + "exist/",
-  getOrganizationUserCreatorApiUrl: organizationApiUrl+"byUser/",
+  getOrganizationByUserApiUrl: organizationApiUrl+"byUser/",
   getOrganizationMember: organizationApiUrl+"getUsers/",
   getUserSkills: userApiUrl+"getUserSkills/",
   modifyOrganizationApiUrl: organizationApiUrl+"update/",

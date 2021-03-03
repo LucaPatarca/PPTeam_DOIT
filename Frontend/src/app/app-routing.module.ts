@@ -11,20 +11,7 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
-  },
-  {
-    path: 'edit-project',
-    loadChildren: () => import('./tabs/project/edit-project/edit-project.module').then(m => m.EditProjectPageModule)
-  },
-  {
-    path: 'select-organization',
-    loadChildren: () => import('./tabs/user/select-organization/select-organization.module').then(m => m.SelectOrganizationPageModule)
-  },
-  {
-    path: 'modify-organization',
-    loadChildren: () => import('./tabs/organization/modify-organization/modify-organization.module').then(m => m.ModifyOrganizationPageModule)
   }
-
 ];
 
 @NgModule({

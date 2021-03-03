@@ -6,11 +6,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestService } from 'src/app/services/rest.service';
 
 @Component({
-  selector: 'app-modify-organization',
-  templateUrl: './modify-organization.page.html',
-  styleUrls: ['./modify-organization.page.scss'],
+  selector: 'app-edit-organization',
+  templateUrl: './edit-organization.page.html',
+  styleUrls: ['./edit-organization.page.scss'],
 })
-export class ModifyOrganizationPage implements OnInit {
+export class EditOrganizationPage implements OnInit {
 
   organization: Organization;
   id: string;
