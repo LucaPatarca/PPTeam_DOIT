@@ -35,12 +35,4 @@ export class HomePage {
     this.HWBackSubscription.unsubscribe();
   }
 
-  createOrganization(){
-    this.nav.navigateForward(["/tabs/home/create-organization"]);
-  }
-
-  createProject(){
-    this.nav.navigateForward(["/tabs/home/create-project"]);
-  }
-
 }

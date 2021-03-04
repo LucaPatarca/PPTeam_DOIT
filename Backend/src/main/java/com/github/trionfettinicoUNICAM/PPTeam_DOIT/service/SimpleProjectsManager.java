@@ -159,6 +159,11 @@ public class SimpleProjectsManager implements ProjectsManager{
     }
 
     @Override
+    public List<Project> getByUser(String userMail) throws EntityNotFoundException {
+        return projectRepository.findByCreatorMail(userMail);
+    }
+
+    @Override
     public boolean removeTeamMember(String projectId , Role userRole) throws EntityNotFoundException {
         if(projectId.isBlank()) throw new IllegalArgumentException("Il campo 'projectId' è vuoto");
         checkRole(userRole);

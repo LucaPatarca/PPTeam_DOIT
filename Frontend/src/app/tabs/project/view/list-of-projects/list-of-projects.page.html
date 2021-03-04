@@ -10,7 +10,16 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div *ngIf="projects.length==0&&!loading" class="row">
+  <ion-segment (ionChange)="segmentChanged($event)" value="all">
+    <ion-segment-button value="all">
+      <ion-label>All</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="yours">
+      <ion-label>Yours</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div *ngIf="!loading && isProjectsEmpty()" class="row">
     <div class="col">
       <div class="text-center">
         <h5 style="text-align: center;">Nessun progetto disponibile</h5>
@@ -19,7 +28,7 @@
   </div>
   <!-- per ogni elemento presente in projects creo una ion-card-->
   <div *ngIf="!loading">
-    <ion-card *ngFor="let project of projects">
+    <ion-card *ngFor="let project of getProjects()">
       <ion-item (click)="viewProject(project.id)" routerDirection="forward">
         <ion-label>
           <h2 text-capitalize>{{project.title}}</h2>
@@ -45,5 +54,11 @@
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more users ...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="dataService.isUserLogged()">
+    <ion-fab-button (click)="createProject()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

@@ -2,7 +2,7 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-const serverUrl = "http://www.lucapatarca.cloud";
+const serverUrl = "http://localhost:8080";
 const projectApiUrl = serverUrl+"/api/projects/";
 const organizationApiUrl = serverUrl+"/api/organizations/";
 const userApiUrl = serverUrl+"/api/users/";
@@ -42,7 +42,8 @@ export const environment = {
   addMember: organizationApiUrl+"addMember/",
   rejectCandidate: projectApiUrl+"rejectCandidate/",
   acceptCandidate: projectApiUrl+"acceptCandidate/",
-  removeTeamMember:projectApiUrl+"removeTeamMember/",
+  removeTeamMember: projectApiUrl+"removeTeamMember/",
+  getUserProjects: projectApiUrl+"byUser/"
 };
 
 //TODO spostare qui il globals service

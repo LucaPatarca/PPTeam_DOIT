@@ -6,6 +6,7 @@ import { Component } from '@angular/core';
 import { Platform } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
+import { Network } from '@ionic-native/network/ngx';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class AppComponent {
     private statusBar: StatusBar,
     public dataService: DataService,
     private restService: RestService,
+    private network: Network,
   ) {
     this.initializeApp();
   }
@@ -29,6 +31,19 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      if(this.platform.is("mobile")){
+        this.network.onConnect().subscribe(
+          ()=>this.dataService.isInternetConnected == true
+        );
+        this.network.onDisconnect().subscribe(
+          ()=>this.dataService.isInternetConnected == false
+        );
+        this.dataService.isInternetConnected = this.network.type != "none";
+      } else{
+        window.addEventListener("online", ()=>this.dataService.isInternetConnected=true);
+        window.addEventListener("offline", ()=>this.dataService.isInternetConnected=false);
+        this.dataService.isInternetConnected = window.navigator.onLine;
+      }
     });
   }
 }

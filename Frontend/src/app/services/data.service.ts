@@ -27,6 +27,8 @@ export class DataService {
 
   private darkModeEnabled: boolean;
 
+  public isInternetConnected: boolean;
+
   constructor(private storage: Storage) {
     this.user = this.guestUser;
     this.token = "";

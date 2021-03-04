@@ -94,4 +94,10 @@ public class ProjectsRestController implements ProjectsController {
     public boolean removeTeamMember(@PathVariable String projectId, @RequestBody Role userRole) throws EntityNotFoundException{
         return manager.removeTeamMember(projectId, userRole);
     }
+
+    @PreAuthorize("permitAll()")
+    @GetMapping("/byUser/{userMail}")
+    public List<Project> getByUser(@PathVariable String userMail) throws EntityNotFoundException{
+        return manager.getByUser(userMail);
+    }
 }

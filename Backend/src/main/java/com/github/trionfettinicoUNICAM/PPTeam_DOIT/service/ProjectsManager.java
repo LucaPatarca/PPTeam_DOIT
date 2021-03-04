@@ -36,4 +36,6 @@ public interface ProjectsManager extends EntityManager<Project, String> {
     boolean removeTeamMember(String projectId, Role userRole) throws EntityNotFoundException;
 
     List<Role> getUserSubmissions(String userMail) throws EntityNotFoundException;
+
+    List<Project> getByUser(String userMail) throws EntityNotFoundException;
 }

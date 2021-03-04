@@ -119,7 +119,10 @@ export class RestService {
           res => {
             resolve(res as unknown as Organization);
           },
-          this.defaultErrorHandler
+          err=>{
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
         );
     });
   }
@@ -312,6 +315,21 @@ export class RestService {
             resolve(res as unknown as boolean);
           },
           err => {
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
+        );
+    });
+  }
+
+  async getUserProjects(userMail: string): Promise<Project[]>{
+    return new Promise((resolve, rejects)=>{
+      this.http.get(environment.getUserProjects + userMail)
+        .subscribe(
+          res=>{
+            resolve(res as Project[]);
+          },
+          err=>{
             this.defaultErrorHandler(err);
             rejects(err);
           }

@@ -7,11 +7,8 @@
 <ion-content fullscreen>
 
   <p *ngIf="dataService.isUserLogged()">{{dataService.getUserMail()}}</p>
-  <ion-button expand="block" (click)="createOrganization()">
-    Crea organizzazione (temporaneo)
-  </ion-button>
-  <ion-button expand="block" (click)="createProject()">
-    Crea progetto (temporaneo)
-  </ion-button>
+
+  <ion-label *ngIf="dataService.isInternetConnected">Internet Connected</ion-label>
+  <ion-label *ngIf="!dataService.isInternetConnected">Internet Disconnected</ion-label>
 
 </ion-content>

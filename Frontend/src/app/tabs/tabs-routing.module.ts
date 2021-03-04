@@ -18,14 +18,6 @@ const routes: Routes = [
           {
             path:'',
             loadChildren: () => import('../home/home.module').then(m => m.HomePageModule)
-          },
-          {
-            path:'create-project',
-            loadChildren: () => import('../tabs/project/edit-project/edit-project.module').then(m => m.EditProjectPageModule)
-          },
-          {
-            path:'create-organization',
-            loadChildren: () => import('../tabs/organization/create-organization/create-organization.module').then(m => m.CreateOrganizationPageModule)
           }
         ]
       },
@@ -48,6 +40,10 @@ const routes: Routes = [
                 loadChildren: () => import('./project/edit-project/edit-project.module').then(m => m.EditProjectPageModule)
               }
             ]
+          },
+          {
+            path:'create-project',
+            loadChildren: () => import('../tabs/project/edit-project/edit-project.module').then(m => m.EditProjectPageModule)
           }
         ]
       },
@@ -70,6 +66,10 @@ const routes: Routes = [
                 loadChildren: () => import('./organization/edit-organization/edit-organization.module').then(m => m.EditOrganizationPageModule)
               }
             ]
+          },
+          {
+            path:'create-organization',
+            loadChildren: () => import('../tabs/organization/create-organization/create-organization.module').then(m => m.CreateOrganizationPageModule)
           }
         ]
       },

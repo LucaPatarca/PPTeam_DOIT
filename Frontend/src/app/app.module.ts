@@ -16,7 +16,7 @@ import {HttpClientModule} from "@angular/common/http";
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { SelectUserComponent } from './components/select-user/select-user.component';
-
+import { Network } from '@ionic-native/network/ngx';
 
 
 @NgModule({
@@ -36,6 +36,7 @@ import { SelectUserComponent } from './components/select-user/select-user.compon
     FormBuilder,
     StatusBar,
     SplashScreen,
+    Network,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
   ],
   bootstrap: [AppComponent]
