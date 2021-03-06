@@ -13,7 +13,6 @@ import { environment } from 'src/environments/environment';
 import { Role } from '../model/role';
 import { Page } from '../model/page';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -198,7 +197,6 @@ export class RestService {
             resolve(res['content'] as ProjectInformation[]);
           },
           err => {
-            this.defaultErrorHandler(err);
             rejects(err);
           }
         );
@@ -330,7 +328,6 @@ export class RestService {
             resolve(res as Project[]);
           },
           err=>{
-            this.defaultErrorHandler(err);
             rejects(err);
           }
         );

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Organization } from 'src/app/model/organization';
-import { Router, ActivatedRoute } from "@angular/router";
-import { LoadingController, MenuController, NavController } from '@ionic/angular';
+import { ActivatedRoute } from "@angular/router";
+import {  NavController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestService } from 'src/app/services/rest.service';
 
@@ -27,7 +27,6 @@ export class EditOrganizationPage implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private menuCtrl: MenuController,
     public formBuilder: FormBuilder,
     private restService: RestService,
     private navCtrl: NavController,
@@ -45,10 +44,6 @@ export class EditOrganizationPage implements OnInit {
     this.loadOrganization().then(value => {
       this.loading = false;
     });
-  }
-
-  async ionViewDidEnter() {
-    this.menuCtrl.enable(false);
   }
 
   async loadOrganization() {

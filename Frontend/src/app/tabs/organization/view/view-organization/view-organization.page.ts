@@ -1,7 +1,7 @@
 import { Organization } from './../../../../model/organization';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MenuController, NavController, ActionSheetController, AlertController, ToastController, ModalController } from '@ionic/angular';
+import { NavController, ActionSheetController, AlertController, ToastController, ModalController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { RestService } from 'src/app/services/rest.service';
 import { User } from 'src/app/model/user';
@@ -27,7 +27,6 @@ export class ViewOrganizationPage {
     private route: ActivatedRoute,
     private nav: NavController,
     public dataService: DataService,
-    private menuCtrl: MenuController,
     private restService: RestService,
     private actionSheetCtrl: ActionSheetController,
     private alertController: AlertController,
@@ -42,7 +41,6 @@ export class ViewOrganizationPage {
   }
 
   ionViewDidEnter() {
-    this.menuCtrl.enable(false);
     this.loadOrganization().then(v => this.loadingMembers = false);
   }
 

@@ -1,7 +1,6 @@
-import { CreateOrganizationPage } from './../tabs/organization/create-organization/create-organization.page';
 import { RestService } from './../services/rest.service';
 import { DataService } from 'src/app/services/data.service';
-import { MenuController, Platform, NavController } from '@ionic/angular';
+import { Platform, NavController } from '@ionic/angular';
 import { Component } from '@angular/core';
 
 
@@ -15,7 +14,6 @@ export class HomePage {
   HWBackSubscription: any;
 
   constructor(
-    private menuCtrl: MenuController,
     private platform: Platform,
     public dataService:DataService,
     private restService:RestService,
@@ -24,7 +22,6 @@ export class HomePage {
   }
 
   ionViewDidEnter() {
-    this.menuCtrl.enable(true);
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });

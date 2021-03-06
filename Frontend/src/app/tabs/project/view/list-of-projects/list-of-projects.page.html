@@ -19,15 +19,15 @@
     </ion-segment-button>
   </ion-segment>
 
-  <div *ngIf="!loading && isProjectsEmpty()" class="row">
+  <div class="row">
     <div class="col">
       <div class="text-center">
-        <h5 style="text-align: center;">Nessun progetto disponibile</h5>
+        <h5 style="text-align: center;">{{getMessage()}}</h5>
       </div>
     </div>
   </div>
   <!-- per ogni elemento presente in projects creo una ion-card-->
-  <div *ngIf="!loading">
+  <div *ngIf="!isLoading()">
     <ion-card *ngFor="let project of getProjects()">
       <ion-item (click)="viewProject(project.id)" routerDirection="forward">
         <ion-label>
@@ -38,7 +38,7 @@
     </ion-card>
   </div>
 
-  <div *ngIf="loading">
+  <div *ngIf="isLoading()">
     <ion-card *ngFor="let item of [].constructor(10)">
       <ion-item>
         <ion-label>

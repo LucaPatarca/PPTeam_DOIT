@@ -1,6 +1,6 @@
 import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
-import { MenuController, NavController, Platform } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { RestService } from 'src/app/services/rest.service';
 import { ProjectInformation } from 'src/app/model/project-information';
 import { Project } from 'src/app/model/project';
@@ -16,27 +16,31 @@ export class ListOfProjectsPage {
   allProjects: ProjectInformation[];
   yourProjects: Project[];
   selection: string;
-  loading: boolean;
+  yourLoading: boolean;
+  allLoading: boolean;
+  yourMessage: string;
+  allMessage: string;
   HWBackSubscription: any;
+  private readonly emptyMessage = "Nessun progetto disponibile";
+  private readonly errorMessage = "Impossibile caricare i progetti";
 
   constructor(
-    public menuCtrl: MenuController,
     private navCtrl: NavController,
     private restService: RestService,
     private platform: Platform,
     public dataService: DataService
   ) {
-    this.loading = true;
+    this.yourLoading = true;
+    this.allLoading = true;
     this.allProjects = new Array();
     this.yourProjects = new Array();
     this.selection = "all";
-    this.loadProjects().then(() => {
-      this.loading = false;
-    });
+    this.allMessage = "";
+    this.yourMessage = "";
+    this.loadProjects();
   }
 
   ionViewDidEnter() {
-    this.menuCtrl.enable(true);
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
@@ -50,10 +54,33 @@ export class ListOfProjectsPage {
   // metodo per richiedere una pagina di elementi
   async loadProjects() {
     if (this.selection == "all") {
-      const newProjects = await this.restService.getProjectsPage(this.page);
-      this.allProjects = this.allProjects.concat(newProjects);
+      this.restService.getProjectsPage(this.page)
+        .then(res => {
+          this.allProjects = this.allProjects.concat(res);
+          if (this.allProjects.length == 0)
+            this.allMessage = this.emptyMessage;
+          else
+            this.allMessage = "";
+          this.allLoading = false;
+        }).catch(err => {
+          this.allProjects = new Array();
+          this.allMessage = this.errorMessage;
+          this.allLoading = false;
+        });
     } else {
-      this.yourProjects = await this.restService.getUserProjects(this.dataService.getUser().mail);
+      this.restService.getUserProjects(this.dataService.getUser().mail)
+        .then(res => {
+          this.yourProjects = this.yourProjects.concat(res);
+          if (this.yourProjects.length == 0)
+            this.yourMessage = this.emptyMessage;
+          else
+            this.yourMessage = "";
+          this.yourLoading = false;
+        }).catch(err => {
+          this.yourProjects = new Array();
+          this.yourMessage = this.errorMessage;
+          this.yourLoading = false;
+        });
     }
   }
 
@@ -71,13 +98,38 @@ export class ListOfProjectsPage {
   async reload(event?) {
     if (this.selection == "all") {
       this.page = 0;
-      const newProjects = await this.restService.getProjectsPage(this.page);
-      this.allProjects = newProjects;
+      this.restService.getProjectsPage(this.page)
+        .then(res => {
+          this.allProjects = res;
+          if (event)
+            event.target.complete();
+          if (this.allProjects.length == 0)
+            this.allMessage = this.emptyMessage;
+          else
+            this.allMessage = "";
+        }).catch(err => {
+          this.allProjects = new Array();
+          this.allMessage = this.errorMessage;
+          if (event)
+            event.target.complete();
+        });
     } else {
-      this.yourProjects = await this.restService.getUserProjects(this.dataService.getUser().mail);
+      this.restService.getUserProjects(this.dataService.getUser().mail)
+        .then(res => {
+          this.yourProjects = res;
+          if (event)
+            event.target.complete();
+          if (this.yourProjects.length == 0)
+            this.yourMessage = this.emptyMessage;
+          else
+            this.yourMessage = "";
+        }).catch(err => {
+          this.yourProjects = new Array();
+          this.yourMessage = this.errorMessage;
+          if (event)
+            event.target.complete();
+        });
     }
-    if (event)
-      event.target.complete();
   }
 
   viewProject(id: string) {
@@ -98,7 +150,7 @@ export class ListOfProjectsPage {
 
   segmentChanged(event: any) {
     this.selection = event.detail.value;
-    if (this.isProjectsEmpty()) {
+    if (this.isLoading()) {
       this.loadProjects();
     }
   }
@@ -108,6 +160,22 @@ export class ListOfProjectsPage {
       return this.allProjects;
     } else {
       return this.yourProjects;
+    }
+  }
+
+  getMessage() {
+    if (this.selection == "all") {
+      return this.allMessage;
+    } else {
+      return this.yourMessage;
+    }
+  }
+
+  isLoading() {
+    if (this.selection == "all") {
+      return this.allLoading;
+    } else {
+      return this.yourLoading;
     }
   }
 }

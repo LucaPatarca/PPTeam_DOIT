@@ -20,16 +20,16 @@
   </ion-segment>
 
   <!-- quando il caricamento è completato ma non ci sono organizzazioni disponibili -->
-  <div class="row" *ngIf="!loading && isOrganizationsEmpty()">
+  <div class="row">
     <div class="col">
       <div class="text-center">
-        <h5 style="text-align: center;">Nessuna Organizzazione disponibile</h5>
+        <h5 style="text-align: center;">{{getMessage()}}</h5>
       </div>
     </div>
   </div>
 
   <!-- per ogni elemento presente in organizations creo una ion-card-->
-  <div *ngIf="!loading">
+  <div *ngIf="!isLoading()">
     <ion-card *ngFor="let organization of getOrganizations()">
       <ion-item (click)="viewOrganization(organization.id)" routerDirection="forward">
         <ion-label>
@@ -41,7 +41,7 @@
   </div>
 
   <!-- mentre sta caricando le prime organizzazioni -->
-  <div *ngIf="loading">
+  <div *ngIf="isLoading()">
     <ion-card *ngFor="let item of [].constructor(10)">
       <ion-item>
         <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>

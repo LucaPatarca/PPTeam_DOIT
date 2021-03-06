@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MenuController, NavController } from '@ionic/angular';
+import {  NavController } from '@ionic/angular';
 import { Organization } from 'src/app/model/organization';
 import { DataService } from 'src/app/services/data.service';
 import { RestService } from 'src/app/services/rest.service';
@@ -24,7 +24,7 @@ export class CreateOrganizationPage {
     ]
   };
 
-  constructor(private menuCtrl: MenuController,
+  constructor(
     public formBuilder: FormBuilder,
     private dataService: DataService,
     private restService: RestService,
@@ -34,10 +34,6 @@ export class CreateOrganizationPage {
       name: ['', Validators.required],
       description: ['', Validators.required],
     });
-  }
-
-  ionViewDidEnter() {
-    this.menuCtrl.enable(false);
   }
 
   async createOrganization() {

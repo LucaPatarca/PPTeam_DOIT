@@ -1,14 +1,13 @@
 import { Organization } from './../../../../model/organization';
 import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
-import { ActionSheetController, AlertController, MenuController, NavController, ToastController } from '@ionic/angular';
+import { ActionSheetController, AlertController, NavController, ToastController } from '@ionic/angular';
 import { Project } from 'src/app/model/project';
 import { DataService } from 'src/app/services/data.service';
 import { RestService } from 'src/app/services/rest.service';
 import { Role } from 'src/app/model/role';
 import { Skill } from 'src/app/model/skill';
 import { User } from 'src/app/model/user';
-import { tick } from '@angular/core/testing';
 
 
 @Component({
@@ -27,7 +26,6 @@ export class ViewProjectPage {
 
   constructor(
     private route: ActivatedRoute,
-    private menuCtrl: MenuController,
     public nav: NavController,
     private restService: RestService,
     public dataService: DataService,
@@ -46,10 +44,6 @@ export class ViewProjectPage {
       }
     )
     this.userAvailableSkillsInput = new Array();
-  }
-
-  ionViewDidEnter() {
-    this.menuCtrl.enable(false);
   }
 
   async load() {

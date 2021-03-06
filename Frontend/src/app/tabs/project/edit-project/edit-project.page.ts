@@ -1,14 +1,12 @@
 import { Skill } from '../../../model/skill';
 import { Organization } from '../../../model/organization';
 import { Component, OnInit } from '@angular/core';
-import { MenuController, NavController, AlertController, ToastController } from '@ionic/angular';
+import { NavController, AlertController, ToastController } from '@ionic/angular';
 import { DataService } from 'src/app/services/data.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Project } from 'src/app/model/project';
 import { RestService } from 'src/app/services/rest.service';
-import { User } from 'src/app/model/user';
 import { ActivatedRoute } from '@angular/router';
-import { proxyOutputs } from '@ionic/angular/directives/proxies-utils';
 
 
 
@@ -33,7 +31,7 @@ export class EditProjectPage implements OnInit{
     ],
   };
 
-  constructor(private menuCtrl: MenuController,
+  constructor(
     public formBuilder: FormBuilder,
     private navCtrl: NavController,
     private alertController:AlertController,
@@ -67,10 +65,6 @@ export class EditProjectPage implements OnInit{
         res=>this.userOrganizations = res
       );
     }
-  }
-
-  ionViewDidEnter() {
-    this.menuCtrl.enable(false);
   }
 
   async addSkill(){

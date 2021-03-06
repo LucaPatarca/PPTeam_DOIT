@@ -1,7 +1,7 @@
 import { Organization } from './../../../../model/organization';
 import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
-import { MenuController, NavController, Platform } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { OrganizationInformation } from 'src/app/model/organization-information';
 import { RestService } from 'src/app/services/rest.service';
 
@@ -15,11 +15,15 @@ export class ListOfOrganizationsPage {
   allOrganizations: Array<OrganizationInformation>;
   yourOrganizations: Array<Organization>;
   selection: string;
-  loading: boolean;
+  yourLoading: boolean;
+  allLoading: boolean;
   HWBackSubscription: any;
+  allMessage: string;
+  yourMessage: string;
+  private readonly errorMessage = "Impossibile caricare le organizzazioni";
+  private readonly emptyMessage = "Nessuna organizzazione disponibile";
 
   constructor(
-    public menuCtrl: MenuController,
     private navCtrl: NavController,
     private restService: RestService,
     private platform: Platform,
@@ -27,57 +31,105 @@ export class ListOfOrganizationsPage {
   ) {
     this.allOrganizations = new Array();
     this.yourOrganizations = new Array();
-    this.loading = true;
+    this.yourLoading = true;
+    this.allLoading = true;
     this.selection = 'all';
-    this.loadOrganizations().then(
-      ()=>{
-        this.loading = false;
-      }
-    );
+    this.allMessage = "";
+    this.yourMessage = "";
+    this.loadOrganizations();
   }
 
   ionViewDidEnter() {
-    this.menuCtrl.enable(true);
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
     this.reloadOrganizations();
   }
 
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     this.HWBackSubscription.unsubscribe();
   }
 
   // metodo per richiedere una pagina di elementi
   async loadOrganizations(event?) {
-    if(this.selection == "all"){
-      const newOrganizations = await this.restService.getOrganizationPage(this.page);
-      this.allOrganizations = this.allOrganizations.concat(newOrganizations);
-    } else{
-      const newOrganizations = await this.restService.getUserOrganizations(this.dataService.getUser().mail);
-      this.yourOrganizations = this.yourOrganizations.concat(newOrganizations);
-    }
-    if (event) {
-      event.target.complete();
+    if (this.selection == "all") {
+      this.restService.getOrganizationPage(this.page)
+        .then(res => {
+          this.allOrganizations = this.allOrganizations.concat(res);
+          if (event)
+            event.target.complete();
+          if (this.allOrganizations.length == 0)
+            this.allMessage = this.emptyMessage;
+          else
+            this.allMessage = "";
+          this.allLoading = false;
+        }).catch(err => {
+          this.allOrganizations = new Array();
+          this.allMessage = this.errorMessage;
+          if (event)
+            event.target.complete();
+          this.allLoading = false;
+        });
+    } else {
+      this.restService.getUserOrganizations(this.dataService.getUser().mail)
+        .then(res => {
+          this.yourOrganizations = this.yourOrganizations.concat(res);
+          if (event)
+            event.target.complete();
+          if (this.yourOrganizations.length == 0)
+            this.yourMessage = this.emptyMessage;
+          else
+            this.yourMessage = "";
+          this.yourLoading = false;
+        }).catch(err => {
+          this.yourOrganizations = new Array();
+          this.yourMessage = this.errorMessage;
+          if (event)
+            event.target.complete();
+          this.yourLoading = false;
+        });
     }
   }
 
-  async reloadOrganizations(event?){
-    if(this.selection == "all"){
+  reloadOrganizations(event?) {
+    if (this.selection == "all") {
       this.page = 0;
-      const newOrganizations = await this.restService.getOrganizationPage(this.page);
-      this.allOrganizations = newOrganizations;
+      this.restService.getOrganizationPage(this.page)
+        .then(res => {
+          this.allOrganizations = res;
+          if (event)
+            event.target.complete();
+          if (this.allOrganizations.length == 0)
+            this.allMessage = this.emptyMessage;
+          else
+            this.allMessage = "";
+        }).catch(err => {
+          this.allOrganizations = new Array();
+          this.allMessage = this.errorMessage;
+          if (event)
+            event.target.complete();
+        });
     } else {
-      const newOrganizations = await this.restService.getUserOrganizations(this.dataService.getUser().mail);
-      this.yourOrganizations = newOrganizations;
+      this.restService.getUserOrganizations(this.dataService.getUser().mail)
+        .then(res => {
+          this.yourOrganizations = res;
+          if (event)
+            event.target.complete();
+          if (this.yourOrganizations.length == 0)
+            this.yourMessage = this.emptyMessage
+          else
+            this.yourMessage = "";
+        }).catch(err => {
+          this.yourOrganizations = new Array();
+          this.yourMessage = this.errorMessage;
+          if (event)
+            event.target.complete();
+        });
     }
-    if(event)
-      event.target.complete();
-    
   }
 
   loadMore(event: any) {
-    if(this.selection == "all"){
+    if (this.selection == "all") {
       this.page++;
       this.loadOrganizations(event);
     }
@@ -89,30 +141,46 @@ export class ListOfOrganizationsPage {
     this.navCtrl.navigateForward(['/tabs/list-of-organizations/view-organization', { "id": organizationId }]);
   }
 
-  createOrganization(){
+  createOrganization() {
     this.navCtrl.navigateForward(["/tabs/list-of-organizations/create-organization"]);
   }
 
-  segmentChanged(event:any){
+  segmentChanged(event: any) {
     this.selection = event.detail.value;
-    if(this.isOrganizationsEmpty()){
+    if (this.isLoading()) {
       this.loadOrganizations();
     }
   }
 
-  isOrganizationsEmpty(): boolean{
-    if(this.selection == "all"){
-      return this.allOrganizations.length==0;
-    } else{
-      return this.yourOrganizations.length==0;
+  isOrganizationsEmpty(): boolean {
+    if (this.selection == "all") {
+      return this.allOrganizations.length == 0;
+    } else {
+      return this.yourOrganizations.length == 0;
     }
   }
 
-  getOrganizations(){
-    if(this.selection == "all"){
+  getOrganizations() {
+    if (this.selection == "all") {
       return this.allOrganizations;
-    } else{
+    } else {
       return this.yourOrganizations;
+    }
+  }
+
+  getMessage() {
+    if (this.selection == "all") {
+      return this.allMessage;
+    } else {
+      return this.yourMessage;
+    }
+  }
+
+  isLoading() {
+    if (this.selection == "all") {
+      return this.allLoading;
+    } else {
+      return this.yourLoading;
     }
   }
 }
