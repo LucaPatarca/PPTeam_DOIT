@@ -41,23 +41,25 @@ export class EditOrganizationPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadOrganization().then(value => {
-      this.loading = false;
-    });
+    this.loadOrganization();
   }
 
   async loadOrganization() {
-    try {
-      this.organization = await this.restService.getOrganization(this.id);
-    } catch (e) {
-      console.log(e);
-      //todo gestire
-    }
+    this.restService.getOrganization(this.id).then(org=>{
+      this.organization = org;
+      this.loading = false;
+    }).catch(err=>{
+      this.restService.presentToast("Impossibile caricare l'organizzazione");
+      this.loading = false;
+    });
 
   }
 
   async save() {
-    const newOrganization = await this.restService.modifyOrganization(this.organization);
-    this.navCtrl.navigateBack(["/view-organization", { 'id': newOrganization.id }])
+    this.restService.modifyOrganization(this.organization).then(org=>{
+      this.navCtrl.navigateBack(["/view-organization", { 'id': org.id }]);
+    }).catch(err=>{
+      this.restService.presentToast("impossibile modificare l'organizzazione");
+    });
   }
 }

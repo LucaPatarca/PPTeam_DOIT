@@ -1,5 +1,3 @@
-import { RestService } from './rest.service';
-import { UserSubmissionInformation } from './../model/UserSubmissionInformation';
 import { Skill } from './../model/skill';
 import { Organization } from '../model/organization';
 import { Injectable } from '@angular/core';
@@ -7,12 +5,9 @@ import { User } from '../model/user';
 import { Project } from '../model/project';
 import { Storage } from '@ionic/storage';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
-
 export class DataService {
 
   private key_user: string = 'user';

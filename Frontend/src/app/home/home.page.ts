@@ -1,8 +1,6 @@
-import { RestService } from './../services/rest.service';
 import { DataService } from 'src/app/services/data.service';
 import { Platform, NavController } from '@ionic/angular';
 import { Component } from '@angular/core';
-
 
 @Component({
   selector: 'app-home',
@@ -16,7 +14,6 @@ export class HomePage {
   constructor(
     private platform: Platform,
     public dataService:DataService,
-    private restService:RestService,
     private nav: NavController
   ) {
   }

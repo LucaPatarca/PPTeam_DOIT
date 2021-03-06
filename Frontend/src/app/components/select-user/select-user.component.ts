@@ -33,9 +33,13 @@ export class SelectUserComponent implements OnInit {
   }
 
   async load() {
-    const usersPage = await this.restService.getUserPage(this.page);
-    this.users = this.users.concat(usersPage.content);
-    this.last = usersPage.last;
+    await this.restService.getUserPage(this.page)
+      .then(usersPage => {
+        this.users = this.users.concat(usersPage.content);
+        this.last = usersPage.last;
+      }).catch(err => {
+        this.restService.presentToast("Errore di connessione");
+      });
   }
 
   dismiss() {
@@ -46,7 +50,7 @@ export class SelectUserComponent implements OnInit {
 
   async segmentChanged(event?) {
     this.selected = event.detail.value;
-    while(this.getUsers().length<10 && !this.last){
+    while (this.getUsers().length < 10 && !this.last) {
       await this.loadMore();
     }
   }
@@ -57,9 +61,9 @@ export class SelectUserComponent implements OnInit {
 
   getUsers(): User[] {
     if (this.selected == "all")
-      return this.users.filter(u=>u.mail.includes(this.search));
+      return this.users.filter(u => u.mail.includes(this.search));
     else if (this.selected == "experts") {
-      return this.users.filter(it => it.skills.find(skill => skill.level >= 10)).filter(u=>u.mail.includes(this.search));
+      return this.users.filter(it => it.skills.find(skill => skill.level >= 10)).filter(u => u.mail.includes(this.search));
     }
   }
 
@@ -69,14 +73,14 @@ export class SelectUserComponent implements OnInit {
     });
   }
 
-  getExpertSkills(user: User): Skill[]{
-    return user.skills.filter(it=>it.level>=10);
+  getExpertSkills(user: User): Skill[] {
+    return user.skills.filter(it => it.level >= 10);
   }
 
-  async inputChanged(event){
+  async inputChanged(event) {
     const newValue = event.target.value;
-    this.search=newValue;
-    while(this.getUsers().length<10 && !this.last){
+    this.search = newValue;
+    while (this.getUsers().length < 10 && !this.last) {
       await this.loadMore();
     }
   }
@@ -84,7 +88,7 @@ export class SelectUserComponent implements OnInit {
   async loadMore(event?) {
     this.page++;
     await this.load();
-    if (event){
+    if (event) {
       event.target.complete();
     }
   }

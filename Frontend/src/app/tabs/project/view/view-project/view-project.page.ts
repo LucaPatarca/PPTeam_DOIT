@@ -23,6 +23,7 @@ export class ViewProjectPage {
   creator: User;
   loading: boolean;
   userAvailableSkillsInput: any;
+  errorLoading: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -37,12 +38,14 @@ export class ViewProjectPage {
     this.loading = true;
     this.organization = null;
     this.creator = null;
-    this.load().then(
-      () => {
+    this.errorLoading = false;
+    this.load().then(() => {
         this.createSkillInput();
         this.loading = false;
-      }
-    )
+      }).catch(err=>{
+        this.errorLoading = true;
+        this.loading = false;
+      });
     this.userAvailableSkillsInput = new Array();
   }
 
@@ -66,11 +69,16 @@ export class ViewProjectPage {
   }
 
   public async reload(event?) {
-    const newProject = await this.restService.getProject(this.id);
-    this.project = newProject;
-    this.createSkillInput();
-    if (event)
-      event.target.complete();
+    this.restService.getProject(this.id).then(project=>{
+      this.project = project;
+      this.errorLoading = false;
+      this.createSkillInput();
+    }).catch(err=>{
+      this.errorLoading = true;
+    }).finally(()=>{
+      if (event)
+        event.target.complete();
+    });
   }
 
   async showActionSheet() {

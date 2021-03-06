@@ -13,7 +13,7 @@ import { Role } from 'src/app/model/role';
   templateUrl: './view-user.page.html',
   styleUrls: ['./view-user.page.scss'],
 })
-export class ViewUserPage implements OnInit {
+export class ViewUserPage {
   validations_form: FormGroup;
   name: string;
   mail: string;
@@ -68,14 +68,12 @@ export class ViewUserPage implements OnInit {
     this.userSubmissions = null;
   }
 
-  ngOnInit(): void {
-    this.getUserSubmissions();
-  }
-
   ionViewDidEnter() {
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
+    if(this.dataService.isUserLogged())
+      this.getUserSubmissions();
   }
 
   ionViewDidLeave() {
@@ -83,11 +81,16 @@ export class ViewUserPage implements OnInit {
   }
 
   async reload(event?) {
-    const newUser = await this.restService.getUser(this.dataService.getUser().mail);
-    this.dataService.refreshUser(newUser);
-    await this.getUserSubmissions();
-    if (event)
-      event.target.complete();
+    const getUserPromise = this.restService.getUser(this.dataService.getUser().mail).then(user=>{
+      this.dataService.refreshUser(user);
+    }).catch(err=>{
+      this.restService.presentToast("Impossibile aggiornare l'utente");
+    });
+    const getUserSubmissionPromise = this.getUserSubmissions();
+    Promise.all([getUserPromise,getUserSubmissionPromise]).finally(()=>{
+      if(event)
+        event.target.complete();
+    });
   }
 
   login() {
@@ -99,8 +102,11 @@ export class ViewUserPage implements OnInit {
         this.secret = "";
         this.mail = "";
         this.validations_form.reset();
+        this.getUserSubmissions();
       }
-    );
+    ).catch(err=>{
+      this.restService.presentToast("Impossibile eseguire il login");
+    });
   }
 
   async register() {
@@ -121,7 +127,9 @@ export class ViewUserPage implements OnInit {
             this.validations_form.reset();
           }
         }
-      );
+      ).catch(err=>{
+        this.restService.presentToast("Impossibile registrare l'utente");
+      });
     } else {
       this.restService.presentToast("Password and confirm password dont match.");
     }
@@ -146,7 +154,7 @@ export class ViewUserPage implements OnInit {
   }
 
   async deleteUserSkill(skill: Skill, slidingItem: any) {
-    const res = await this.restService.removeSkill(skill);
+    await this.restService.removeSkill(skill);
     slidingItem.close();
   }
 

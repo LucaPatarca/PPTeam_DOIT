@@ -1,4 +1,3 @@
-import { RestService } from 'src/app/services/rest.service';
 import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
 
@@ -23,7 +22,6 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     public dataService: DataService,
-    private restService: RestService,
     private network: Network,
     private toastCtrl: ToastController,
   ) {
@@ -47,32 +45,33 @@ export class AppComponent {
         this.network.onDisconnect().subscribe(
           ()=>{
             this.dataService.isInternetConnected=false;
-            this.toastCtrl.create({
-              message: "Non sei connesso a internet!",
-              position: "bottom",
-              cssClass: "toastAboveTabs"
-            }).then(toast=>{
-              this.toast = toast;
-              toast.present();
-            });
+            this.presentToast();
           }
         );
         this.dataService.isInternetConnected = this.network.type != "none";
       } else{
         window.addEventListener("online", ()=>{
-          console.log("online");
           this.dataService.isInternetConnected=true;
           if(this.toast)
               this.toast.dismiss();
         });
         window.addEventListener("offline", ()=>{
-          console.log("offline");
           this.dataService.isInternetConnected=false;
-          this.toast.present();
+          this.presentToast();
         });
         this.dataService.isInternetConnected = window.navigator.onLine;
-        console.log(window.navigator.onLine);
       }
+    });
+  }
+
+  presentToast(){
+    this.toastCtrl.create({
+      message: "Non sei connesso a internet :(",
+      position: "bottom",
+      cssClass: "toastAboveTabs"
+    }).then(toast=>{
+      this.toast = toast;
+      toast.present();
     });
   }
 }

@@ -43,9 +43,11 @@ export class CreateOrganizationPage {
       this.dataService.getUser().mail,
     );
 
-    this.restService.createOrganization(newOrganization);
-
-    this.navCtrl.navigateRoot(["/tabs/list-of-organizations"], { queryParams: { 'refresh': 1 } });
+    this.restService.createOrganization(newOrganization).then(res=>{
+      this.navCtrl.navigateRoot(["/tabs/list-of-organizations"], { queryParams: { 'refresh': 1 } });
+    }).catch(err=>{
+      this.restService.presentToast("Impossibile creare l'organizzazione");
+    });
   }
 
 }

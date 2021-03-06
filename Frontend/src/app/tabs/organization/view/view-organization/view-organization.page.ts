@@ -22,6 +22,7 @@ export class ViewOrganizationPage {
   loadingMembers: boolean;
   members: User[];
   creator: User;
+  errorLoading: boolean;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,16 +39,26 @@ export class ViewOrganizationPage {
     this.creator = null;
     this.loadingMembers = true;
     this.members = new Array();
+    this.errorLoading = false;
   }
 
   ionViewDidEnter() {
-    this.loadOrganization().then(v => this.loadingMembers = false);
+    this.loadOrganization()
+      .then(v => {
+        this.errorLoading = false;
+        this.loadingMembers = false;
+      })
+      .catch(err=>{
+        this.loadingMembers = false;
+        this.errorLoading = true;
+      });
   }
 
   async loadOrganization() {
     this.organization = await this.restService.getOrganization(this.id);
     const newMembers = await this.restService.getOrganizationMembers(this.id);
     this.creator = await this.restService.getUser(this.organization.creatorMail);
+    //carica i membri escludendo il creatore
     var i = 0;
     newMembers.forEach(() => {
       const member = newMembers[i];
@@ -55,13 +66,19 @@ export class ViewOrganizationPage {
         newMembers.splice(i, 1);
       }
       i++;
-    })
+    });
     this.members = newMembers;
   }
 
   async reload(event?) {
-    await this.loadOrganization();
-    event.target.complete();
+    this.loadOrganization()
+      .then(res=>{
+        this.errorLoading = false;
+      }).catch(err=>{
+        this.errorLoading = true;
+      }).finally(()=>{
+        event.target.complete();
+      });
   }
 
   getExpertSkill(user: User): Skill[] {
@@ -122,7 +139,8 @@ export class ViewOrganizationPage {
               this.skill.expertInOrganization.push(this.id);
               this.skill.level = 1;
               this.restService.addCollaborator(this.id, user.mail, this.skill)
-                .then(_val => this.members[this.members.indexOf(user)].skills.push(this.skill));
+                .then(_val => this.members[this.members.indexOf(user)].skills.push(this.skill))
+                .catch(err=>this.restService.presentToast("impossibile comunicare con il server"));
             }
           }
         }

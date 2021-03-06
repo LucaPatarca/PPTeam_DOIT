@@ -545,7 +545,6 @@ export class RestService {
 
   async defaultErrorHandler(err: any) {
     console.log(err);
-    this.presentToast(err.error);
   }
 
   refreshUser(){
