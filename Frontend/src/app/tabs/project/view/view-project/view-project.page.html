@@ -53,14 +53,14 @@
       </ion-label>
     </ion-item>
   
-    <ion-item-divider>
+    <ion-item-divider *ngIf="!loading && project.closed == false">
       <ion-label>
         Needed skills
       </ion-label>
     </ion-item-divider>
   
     <!-- quando il caricamento è completato ma non ci sono skill disponibili -->
-    <div class="row" *ngIf="!loading && (project.neededSkills.length == 0)">
+    <div class="row" *ngIf="!loading && (project.neededSkills.length == 0) && project.closed == false">
       <div class="col">
         <div class="text-center">
           <h6 style="text-align: center;">Non c'è ancora nessuna skill necessaria</h6>
@@ -68,7 +68,7 @@
       </div>
     </div>
   
-    <ion-list *ngIf="!loading && (project.neededSkills.length>0)">
+    <ion-list *ngIf="!loading && (project.neededSkills.length>0) && project.closed==false">
       <ion-item *ngFor="let skill of project.neededSkills">
         <ion-note color="secondary" slot="start">{{skill.level}}</ion-note>
         <ion-label text-capitalize>{{skill.name}}</ion-label>
@@ -98,7 +98,7 @@
             <p>{{role.skill.name}}</p>
           </ion-label>
         </ion-item>
-        <ion-item-options side="end" (ionSwipe)="removeTeamMember(role, slidingItem)">
+        <ion-item-options side="end" *ngIf="project.closed==false" (ionSwipe)="removeTeamMember(role, slidingItem)">
           <ion-item-option expandable color="danger" (click)="removeTeamMember(role, slidingItem)">
             <ion-icon slot="icon-only" name="thumbs-down"></ion-icon>
           </ion-item-option>
@@ -106,14 +106,22 @@
       </ion-item-sliding>
     </ion-list>
   
-    <ion-item-divider>
+    <ion-item-divider *ngIf="!loading && project.closed==false">
       <ion-label>
         Candidates
       </ion-label>
     </ion-item-divider>
+
+    <div class="row" *ngIf="!loading && project.closed==true">
+      <div class="col">
+        <div class="text-center">
+          <h6 style="text-align: center;">Progetto concluso con successo</h6>
+        </div>
+      </div>
+    </div>
   
     <!-- quando il caricamento è completato ma non ci sono candidati disponibili -->
-    <div class="row" *ngIf="!loading && (project.candidates.length == 0)">
+    <div class="row" *ngIf="!loading && (project.candidates.length == 0) && project.closed==false">
       <div class="col">
         <div class="text-center">
           <h6 style="text-align: center;">Non ci sono ancora candidati</h6>

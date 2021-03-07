@@ -150,6 +150,7 @@ public class Project {
         if(!candidates.contains(role)) throw new IllegalArgumentException("Role is not in the candidates list");
         if(!team.add(Objects.requireNonNull(role, "role is null"))) throw new RuntimeException("unable to add role to team");
         candidates.remove(role);
+        neededSkills.remove(role.getSkill());
     }
 
     /**
@@ -186,6 +187,7 @@ public class Project {
     }
 
     public boolean removeTeamMember(Role userRole){
+        neededSkills.add(userRole.getSkill());
         return team.remove(userRole);
     }
 

@@ -174,20 +174,34 @@ export class ViewProjectPage {
           handler: () => {
             this.delete();
           }
-        }, {
-          text: 'Close',
-          icon: 'close-outline',
-          handler: () => {
-            this.restService.closeProject(this.project.id);
-          }
-        }, {
-          text: 'Edit',
-          icon: 'create-outline',
-          handler: () => {
-            this.modify();
-          }
         }
       ]);
+      if(this.project.closed==false){
+        if(this.project.neededSkills.length==0){
+          buttons = buttons.concat([
+            {
+              text: 'Close',
+              icon: 'close-outline',
+              handler: () => {
+                if(this.restService.closeProject(this.project.id)){
+                  this.restService.presentToast("progetto chiuso");
+                  this.project.closed = true;
+                }
+              }
+            }
+          ]);
+        }
+        buttons = buttons.concat([
+          {
+            text: 'Edit',
+            icon: 'create-outline',
+            handler: () => {
+              this.modify();
+            }
+          } 
+        ])
+
+      }
     }
 
     // azioni per tutti

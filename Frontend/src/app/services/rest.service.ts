@@ -158,7 +158,6 @@ export class RestService {
 
   async addMember(organizationId: string, userMail:string): Promise<Boolean>{
     this.refreshToken();
-    console.log(this.config);
     return new Promise((resolve, rejects) => {
       this.http.post(environment.addMember+organizationId +"/"+ userMail, "", this.config).subscribe(
         res => {
@@ -254,8 +253,6 @@ export class RestService {
   async closeProject(id: string): Promise<boolean>{
     this.refreshToken();
     return new Promise((resolve, rejects) => {
-      console.log(this.config);
-      
       this.http.put(environment.closeProject + id,"", this.config)
         .subscribe(
           res => {

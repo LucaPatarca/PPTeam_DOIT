@@ -57,9 +57,11 @@ public class SimpleProjectsManager implements ProjectsManager{
         toClose.close();
         toClose.getTeam().forEach(role ->{
             UserEntity user = userRepository.findById(role.getUserMail()).get();
-            Skill skill = user.getSkills().stream().filter(it -> role.getSkill().equals(it)).findAny().get();
-            skill.levelUp();
-            userRepository.save(user);
+            try {
+                Skill skill = user.getSkills().stream().filter(it -> role.getSkill().equals(it)).findAny().get();
+                skill.levelUp();
+                userRepository.save(user);
+            }catch (Exception e){}
         });
         projectRepository.save(toClose);
         
