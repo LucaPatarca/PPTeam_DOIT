@@ -252,8 +252,20 @@ export class RestService {
   }
 
   async closeProject(id: string): Promise<boolean>{
-    return new Promise((resolve,rejects)=>{
-      //TODO implementare
+    this.refreshToken();
+    return new Promise((resolve, rejects) => {
+      console.log(this.config);
+      
+      this.http.put(environment.closeProject + id,"", this.config)
+        .subscribe(
+          res => {
+            resolve(res as unknown as boolean);
+          },
+          err => {
+            this.defaultErrorHandler(err);
+            rejects(err);
+          }
+        );
     });
   }
 

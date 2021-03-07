@@ -54,7 +54,7 @@ public class ProjectsRestController implements ProjectsController {
     public Page<BasicProjectInformation> getPage(@PathVariable int page) throws EntityNotFoundException { return manager.getPage(page, 10); }
 
     @Override
-    @PreAuthorize("@permissionComponent.isProjectManager(authentication, #project.id)")
+    @PreAuthorize("@permissionComponent.isProjectManager(authentication, #projectID)")
     @PutMapping(value = "/close/{projectID}")
     public boolean closeProject(@PathVariable String projectID) throws EntityNotFoundException {
         return manager.closeProject(projectID);

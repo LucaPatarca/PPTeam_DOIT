@@ -166,7 +166,6 @@ public class Project {
      */
     public void close() {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        for(Role role: team) role.getSkill().levelUp();
         isClosed=true;
     }
 

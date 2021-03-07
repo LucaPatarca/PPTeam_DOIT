@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class SimpleProjectsManager implements ProjectsManager{
@@ -54,6 +55,12 @@ public class SimpleProjectsManager implements ProjectsManager{
         Project toClose = getInstance(projectID);
         if(toClose.isClosed() ) return false;
         toClose.close();
+        toClose.getTeam().forEach(role ->{
+            UserEntity user = userRepository.findById(role.getUserMail()).get();
+            Skill skill = user.getSkills().stream().filter(it -> role.getSkill().equals(it)).findAny().get();
+            skill.levelUp();
+            userRepository.save(user);
+        });
         projectRepository.save(toClose);
         
         return getInstance(projectID).isClosed();
