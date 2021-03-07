@@ -137,6 +137,7 @@ export class ListOfProjectsPage {
   }
 
   createProject() {
+    this.dataService.modify = null;
     this.navCtrl.navigateForward(["/tabs/list-of-projects/create-project"]);
   }
 

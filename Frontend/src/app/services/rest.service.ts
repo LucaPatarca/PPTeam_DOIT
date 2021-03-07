@@ -430,7 +430,7 @@ export class RestService {
   }
 
   async getUserOrganizations(mail: string): Promise<Organization[]> {
-    return new Promise((resolve, rejects) => {
+    return await new Promise((resolve, rejects) => {
       this.http.get(environment.getOrganizationByUserApiUrl + mail)
         .subscribe(
           res => {

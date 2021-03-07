@@ -1,3 +1,4 @@
+import { DataService } from 'src/app/services/data.service';
 import { Component, OnInit } from '@angular/core';
 import { Organization } from 'src/app/model/organization';
 import { ActivatedRoute } from "@angular/router";
@@ -13,7 +14,6 @@ import { RestService } from 'src/app/services/rest.service';
 export class EditOrganizationPage implements OnInit {
 
   organization: Organization;
-  id: string;
   validations_form: FormGroup;
   loading: boolean;
   validation_messages = {
@@ -26,17 +26,17 @@ export class EditOrganizationPage implements OnInit {
   };
 
   constructor(
-    private route: ActivatedRoute,
     public formBuilder: FormBuilder,
     private restService: RestService,
     private navCtrl: NavController,
+    private dataService:DataService,
   ) {
     this.validations_form = this.formBuilder.group({
 
       title: ['', Validators.required],
       description: [Validators.required],
     });
-    this.id = this.route.snapshot.params['id'];
+    this.organization = this.dataService.modify as Organization;
     this.loading = true;
   }
 
@@ -45,14 +45,8 @@ export class EditOrganizationPage implements OnInit {
   }
 
   async loadOrganization() {
-    this.restService.getOrganization(this.id).then(org=>{
-      this.organization = org;
-      this.loading = false;
-    }).catch(err=>{
-      this.restService.presentToast("Impossibile caricare l'organizzazione");
-      this.loading = false;
-    });
-
+    this.organization = this.dataService.modify as Organization;
+    this.loading = false;
   }
 
   async save() {

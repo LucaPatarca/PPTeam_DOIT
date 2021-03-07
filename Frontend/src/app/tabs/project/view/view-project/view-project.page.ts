@@ -60,7 +60,8 @@ export class ViewProjectPage {
   }
 
   modify() {
-    this.nav.navigateForward(['/tabs/list-of-projects/view-project/edit-project', { "id": this.project.id }]);
+    this.dataService.modify = this.project;
+    this.nav.navigateForward(['/tabs/list-of-projects/view-project/edit-project']);
   }
 
   delete() {
@@ -177,30 +178,25 @@ export class ViewProjectPage {
         }
       ]);
       if(this.project.closed==false){
-        if(this.project.neededSkills.length==0){
-          buttons = buttons.concat([
-            {
-              text: 'Close',
-              icon: 'close-outline',
-              handler: () => {
-                if(this.restService.closeProject(this.project.id)){
-                  this.restService.presentToast("progetto chiuso");
-                  this.project.closed = true;
-                }
-              }
-            }
-          ]);
-        }
+        if(this.project.neededSkills)
         buttons = buttons.concat([
           {
+            text: 'Close',
+            icon: 'close-outline',
+            handler: () => {
+              if(this.restService.closeProject(this.project.id)){
+                this.restService.presentToast("progetto chiuso");
+                this.project.closed = true;
+              }
+            }
+          }, {
             text: 'Edit',
             icon: 'create-outline',
             handler: () => {
               this.modify();
             }
           } 
-        ])
-
+      ])
       }
     }
 

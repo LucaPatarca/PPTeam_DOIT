@@ -187,7 +187,8 @@ export class ViewOrganizationPage {
           text: 'Edit',
           icon: 'create-outline',
           handler: () => {
-            this.nav.navigateForward(['/tabs/list-of-organizations/view-organization/edit-organization', { "id": this.organization.id }]);
+            this.dataService.modify = this.organization;
+            this.nav.navigateForward(['/tabs/list-of-organizations/view-organization/edit-organization']);
           }
         }
       ]);

@@ -24,6 +24,8 @@ export class DataService {
 
   public isInternetConnected: boolean;
 
+  public modify:any = null;
+
   constructor(private storage: Storage) {
     this.user = this.guestUser;
     this.token = "";

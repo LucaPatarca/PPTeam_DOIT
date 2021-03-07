@@ -38,7 +38,6 @@ export class EditProjectPage implements OnInit{
     public dataService: DataService,
     private restService: RestService,
     private toastController:ToastController,
-    private route: ActivatedRoute
     ) {
     this.validations_form = this.formBuilder.group({
       title: ['', Validators.required],
@@ -46,24 +45,20 @@ export class EditProjectPage implements OnInit{
     });
   }
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.params['id'];
+  ngOnInit(){
     this.project = new Project("","","",this.dataService.getUser().mail,new Array());
     this.organizationName = "";
-    if(id){
+    if(this.dataService.modify != null){
       this.createNew = false;
-      this.restService.getProject(id)
-        .then(p=> {
-          this.project = p;
-          this.restService.getOrganization(this.project.organizationId).then(org=>{
-            this.organizationName = org.name;
-          });
-        });
+      this.project = this.dataService.modify as Project;
+      this.restService.getOrganization(this.project.organizationId).then(org=>{
+        this.organizationName = org.name;
+      });
     } else{
-      this.createNew = true;
-      this.restService.getUserOrganizations(this.dataService.getUser().mail).then(
+      this.restService.getUserOrganizations(this.dataService.getUserMail()).then(
         res=>this.userOrganizations = res
       );
+      this.createNew = true;
     }
   }
 

@@ -142,6 +142,7 @@ export class ListOfOrganizationsPage {
   }
 
   createOrganization() {
+    this.dataService.modify = null;
     this.navCtrl.navigateForward(["/tabs/list-of-organizations/create-organization"]);
   }
 
