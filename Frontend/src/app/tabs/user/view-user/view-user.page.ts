@@ -105,7 +105,7 @@ export class ViewUserPage {
         this.getUserSubmissions();
       }
     ).catch(err=>{
-      this.restService.presentToast("Impossibile eseguire il login");
+      this.restService.presentToast("Mail o password non corretta");
     });
   }
 
