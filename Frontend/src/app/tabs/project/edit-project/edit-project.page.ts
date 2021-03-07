@@ -56,7 +56,13 @@ export class EditProjectPage implements OnInit{
       });
     } else{
       this.restService.getUserOrganizations(this.dataService.getUserMail()).then(
-        res=>this.userOrganizations = res
+        res=>{
+          this.userOrganizations = res;
+          if(this.userOrganizations.length==0){
+            this.restService.presentToast("non puoi creare un progetto\nnon fai parte di una organizzazione");
+            this.navCtrl.navigateBack(['/tabs/list-of-projects']);
+          }
+        }
       );
       this.createNew = true;
     }
