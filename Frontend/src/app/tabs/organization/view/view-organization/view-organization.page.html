@@ -6,7 +6,7 @@
     <ion-title *ngIf="organization!=null">{{organization.name}}</ion-title>
     <ion-title *ngIf="errorLoading && organization==null">Organization</ion-title>
     <ion-skeleton-text *ngIf="!errorLoading && organization==null" animated style="width: 60%;"></ion-skeleton-text>
-    <ion-buttons slot="end">
+    <ion-buttons slot="end" *ngIf="dataService.hasMemberPermission(organization)">
       <ion-button (click)="showActionSheet()">
         <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
       </ion-button>
