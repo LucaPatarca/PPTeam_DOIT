@@ -31,9 +31,7 @@ export class HomePage {
   ) {
     this.organizations = new Array();
     this.projects = new Array();
-    this.loadOrganizations();    
-    console.log(this.organizations);
-    
+    this.loadOrganizations();        
   }
 
   ionViewDidEnter() {
