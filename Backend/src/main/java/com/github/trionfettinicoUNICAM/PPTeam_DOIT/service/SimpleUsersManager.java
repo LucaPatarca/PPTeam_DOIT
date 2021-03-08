@@ -1,11 +1,13 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
+import com.auth0.jwt.JWT;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.ProjectRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -30,6 +32,8 @@ public class SimpleUsersManager implements UsersManager {
     private ProjectRepository projectRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     public UserEntity getInstance(String mail) throws EntityNotFoundException {
@@ -169,5 +173,13 @@ public class SimpleUsersManager implements UsersManager {
         user.removeSkill(skill);
         userRepository.save(user);
         return true;
+    }
+
+    public String refreshToken(String token){
+        return tokenService.refresh(token);
+    }
+
+    public boolean validateToken(String token){
+        return tokenService.isValid(token);
     }
 }

@@ -1,15 +1,10 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,25 +15,19 @@ import java.util.ArrayList;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private final String secret;
-    private final String headerName;
-    private final String tokenPrefix;
+    private final TokenService tokenService;
 
     public JWTAuthorizationFilter(AuthenticationManager authenticationManager,
-                                  String secret,
-                                  String headerName,
-                                  String tokenPrefix
+                                  TokenService tokenService
     ) {
         super(authenticationManager);
-        this.secret = secret;
-        this.headerName = headerName;
-        this.tokenPrefix = tokenPrefix;
+        this.tokenService = tokenService;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String header = request.getHeader(headerName);
-        if(header == null || !header.startsWith(tokenPrefix)){
+        String header = request.getHeader(tokenService.getHeaderName());
+        if(header == null || !header.startsWith(tokenService.getTokenPrefix())){
             chain.doFilter(request,response);
             return;
         }
@@ -50,13 +39,15 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request){
-        String token = request.getHeader(headerName);
+        String token = request.getHeader(tokenService.getHeaderName());
 
         if(token != null){
-            String user = JWT.require(Algorithm.HMAC512(secret.getBytes()))
-                    .build()
-                    .verify(token.replace(tokenPrefix,""))
-                    .getSubject();
+            String user;
+            try{
+                user = tokenService.getSubject(token);
+            }catch (JWTVerificationException e){
+                return null;
+            }
             if(user != null){
                 return new UsernamePasswordAuthenticationToken(user,null,new ArrayList<>());
             }

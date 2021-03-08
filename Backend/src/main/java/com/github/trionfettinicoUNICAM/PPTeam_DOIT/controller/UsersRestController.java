@@ -94,4 +94,15 @@ public class UsersRestController implements UsersController {
     @PostMapping(value = "/removeSkill/{userID}",consumes = MediaType.APPLICATION_JSON_VALUE)
     public boolean removeSkill(@PathVariable String userID,@RequestBody Skill skill) throws EntityNotFoundException { return manager.removeSkill(skill,userID); }
 
+    @PreAuthorize("permitAll")
+    @GetMapping("/refreshToken")
+    public String refreshToken(@RequestHeader String Authorization){
+        return manager.refreshToken(Authorization);
+    }
+
+    @PreAuthorize("permitAll")
+    @GetMapping("/validateToken")
+    public boolean validateToken(@RequestHeader String Authorization){
+        return manager.validateToken(Authorization);
+    }
 }
