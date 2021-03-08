@@ -50,7 +50,7 @@
             <ion-item lines="none">
               <ion-label>
                 <h2 text-capitalize>Role: {{role.skill.name}}</h2>
-                <p>Level: {{role.skill.level}}</p>
+                <ion-badge color="secondary" slot="start">{{role.skill.level}}</ion-badge>
               </ion-label>
             </ion-item>
           </ion-item-sliding>
@@ -85,7 +85,7 @@
             <ion-label *ngFor="let org of skill.expertInOrganization">
               <p>{{org}}</p>
             </ion-label>
-            <p>level : {{skill.level}}</p>
+            <ion-badge color="secondary" slot="start">{{skill.level}}</ion-badge>
           </ion-label>
         </ion-item>
       </ion-item-sliding>

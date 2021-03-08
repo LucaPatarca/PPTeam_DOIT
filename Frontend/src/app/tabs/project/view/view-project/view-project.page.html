@@ -70,7 +70,7 @@
   
     <ion-list *ngIf="!loading && (project.neededSkills.length>0) && project.closed==false">
       <ion-item *ngFor="let skill of project.neededSkills">
-        <ion-note color="secondary" slot="start">{{skill.level}}</ion-note>
+        <ion-badge color="secondary" slot="start">{{skill.level}}</ion-badge>
         <ion-label text-capitalize>{{skill.name}}</ion-label>
       </ion-item>
     </ion-list>

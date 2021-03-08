@@ -1,5 +1,5 @@
 import { DataService } from 'src/app/services/data.service';
-import { Platform, NavController } from '@ionic/angular';
+import { Platform, ModalController } from '@ionic/angular';
 import { Component } from '@angular/core';
 
 @Component({
@@ -14,15 +14,14 @@ export class HomePage {
   constructor(
     private platform: Platform,
     public dataService:DataService,
-    private nav: NavController
   ) {
+    
   }
 
   ionViewDidEnter() {
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
-    
   }
 
   ionViewDidLeave(){
