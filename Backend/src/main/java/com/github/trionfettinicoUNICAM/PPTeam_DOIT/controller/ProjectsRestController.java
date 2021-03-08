@@ -100,4 +100,8 @@ public class ProjectsRestController implements ProjectsController {
     public List<Project> getByUser(@PathVariable String userMail) throws EntityNotFoundException{
         return manager.getByUser(userMail);
     }
+
+    @PreAuthorize("permitAll")
+    @GetMapping("/getProjectsOfOrganization/{organizationID}")
+    public List<Project> getProjectPageOfOrganization(@PathVariable String organizationID ) { return manager.findByOrganizationId(organizationID); }
 }

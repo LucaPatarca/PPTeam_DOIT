@@ -45,6 +45,7 @@ export const environment = {
   removeTeamMember: projectApiUrl+"removeTeamMember/",
   getUserProjects: projectApiUrl+"byUser/",
   closeProject:projectApiUrl+"close/",
+  getProjectsByOrganization:projectApiUrl+"getProjectsOfOrganization/"
 };
 
 //TODO spostare qui il globals service

@@ -5,6 +5,7 @@ import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.BasicProjectInformation
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Project;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Role;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 

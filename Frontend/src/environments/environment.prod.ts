@@ -40,4 +40,5 @@ export const environment = {
   removeTeamMember:projectApiUrl+"removeTeamMember/",
   getUserProjects: projectApiUrl+"byUser/",
   closeProject:projectApiUrl+"close/",
+  getProjectsByOrganization:projectApiUrl+"getProjectsOfOrganization/"
 };

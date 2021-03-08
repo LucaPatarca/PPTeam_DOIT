@@ -97,6 +97,19 @@ export class RestService {
     });
   }
 
+  async getProjectsByOrganization(organizationId: string): Promise<Project[]>{
+    return new Promise((resolve, rejects) => {
+      this.http.get(environment.getProjectsByOrganization + organizationId).subscribe(
+        res => {
+          resolve(res as Project[]);
+        },
+        err => {
+          rejects(err);
+        }
+      )
+    });
+  }
+
   async getOrganizationPage(page: number): Promise<OrganizationInformation[]> {
     return new Promise((resolve, rejects) => {
       this.http.get(environment.listOfOrganizationsApiUrl + page).subscribe(

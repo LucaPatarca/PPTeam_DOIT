@@ -1,3 +1,4 @@
+import { Project } from './../../../../model/project';
 import { Organization } from './../../../../model/organization';
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -21,6 +22,7 @@ export class ViewOrganizationPage {
   user: User;
   loadingMembers: boolean;
   members: User[];
+  projects:Project[];
   creator: User;
   errorLoading: boolean;
 
@@ -32,12 +34,14 @@ export class ViewOrganizationPage {
     private actionSheetCtrl: ActionSheetController,
     private alertController: AlertController,
     private toastController: ToastController,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private navCtrl:NavController
   ) {
     this.id = this.route.snapshot.params["id"];
     this.organization = null;
     this.creator = null;
     this.loadingMembers = true;
+    this.projects = new Array();
     this.members = new Array();
     this.errorLoading = false;
   }
@@ -68,6 +72,12 @@ export class ViewOrganizationPage {
       i++;
     });
     this.members = newMembers;
+    this.loadProjects();
+  }
+
+  async loadProjects() {
+    this.projects = await this.restService.getProjectsByOrganization(this.id);
+    console.log(this.projects);
   }
 
   async reload(event?) {
@@ -238,6 +248,9 @@ export class ViewOrganizationPage {
     return await modal.present();
   }
 
+  viewProject(id: string) {
+    this.navCtrl.navigateForward(['/tabs/list-of-projects/view-project', { "id": id }]);
+  }
 }
 
 

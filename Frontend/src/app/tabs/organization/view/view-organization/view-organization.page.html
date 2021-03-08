@@ -104,7 +104,29 @@
         </ion-label>
       </ion-item>
     </ion-list>
-  
+    <!-- progetti organizzazione-->
+    <ion-item-divider>
+      <ion-label>
+        Projects
+      </ion-label>
+    </ion-item-divider>
+
+    <ion-list >
+      <!-- quando il caricamento è completato ma non ci sono membri disponibili -->
+      <div class="row" *ngIf="(projects.length == 0)">
+        <div class="col">
+          <div class="text-center">
+            <h5 style="text-align: center;">Non ci sono progetti associati</h5>
+          </div>
+        </div>
+      </div>        
+        <ion-item *ngFor="let project of projects" (click)="viewProject(project.id)">
+          <ion-label>
+            <h2 text-capitalize>{{project.title}}</h2>
+            <p>{{project.description}}</p>
+          </ion-label>
+        </ion-item>
+    </ion-list>
   </div>
   
   <div *ngIf="errorLoading">
