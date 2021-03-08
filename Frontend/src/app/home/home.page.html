@@ -11,11 +11,11 @@
   <ion-label *ngIf="dataService.isInternetConnected">Internet Connected</ion-label>
   <ion-label *ngIf="!dataService.isInternetConnected">Internet Disconnected</ion-label>
 
-  <ion-refresher slot="fixed" (ionRefresh)="reload($event)">
+  <ion-refresher slot="fixed" (ionRefresh)="loadOrganizations($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-segment (ionChange)="segmentChanged($event)" value="all" *ngIf="dataService.isUserLogged()">
+  <ion-segment (ionChange)="segmentChanged($event)" value="organizations" *ngIf="dataService.isUserLogged()">
     <ion-segment-button value="organizations">
       <ion-label>Organizations</ion-label>
     </ion-segment-button>
@@ -24,8 +24,12 @@
     </ion-segment-button>
   </ion-segment>
 
+   
+
   <!-- per ogni elemento presente in organizations creo una ion-card-->
   <div *ngIf="isOrganizations()">
+  <p align="center" *ngIf="getOrganizations().length!=0"><ion-label>your organizations</ion-label></p>
+  <p align="center" *ngIf="getOrganizations().length==0">non appartiene a nessuna organizzazione</p>
     <ion-card *ngFor="let organization of getOrganizations()">
       <ion-item (click)="viewOrganization(organization.id)" routerDirection="forward">
         <ion-label>
@@ -37,6 +41,8 @@
   </div>
 
   <div *ngIf="!isOrganizations()">
+  <p align="center" *ngIf="getProjects().length!=0"><ion-label>your projects</ion-label></p>
+  <p align="center" *ngIf="getProjects().length==0">non hai creato nessun progetto</p>
     <ion-card *ngFor="let project of getProjects()">
       <ion-item (click)="viewProject(project.id)" routerDirection="forward">
         <ion-label>

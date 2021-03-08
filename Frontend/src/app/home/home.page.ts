@@ -18,7 +18,7 @@ export class HomePage {
 
   page:number;
 
-  selection:string;
+  selection:string = "organizations";
 
   organizations:Organization[];
   projects:Project[];
@@ -29,11 +29,14 @@ export class HomePage {
     private restService:RestService,
     private navCtrl:NavController
   ) {
+    this.organizations = new Array();
+    this.projects = new Array();
+    this.loadOrganizations();    
+    console.log(this.organizations);
+    
   }
 
   ionViewDidEnter() {
-    this.organizations = new Array();
-    this.projects = new Array();
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
@@ -44,10 +47,10 @@ export class HomePage {
   }
 
   // metodo per richiedere una pagina di elementi
-  async loadOrganizations(event?) {
+  loadOrganizations(event?) {
     this.restService.getUserOrganizations(this.dataService.getUser().mail)
-      .then(res => {
-        this.organizations = this.organizations.concat(res);
+      .then(res => {        
+        this.organizations = res;
         if (event)
           event.target.complete();
       }).catch(err => {
@@ -57,10 +60,10 @@ export class HomePage {
       });
   }
 
-  async loadProjects(event?) {
+  loadProjects(event?) {
     this.restService.getUserProjects(this.dataService.getUser().mail)
       .then(res => {
-        this.projects = this.projects.concat(res);
+        this.projects = res;
         if (event)
           event.target.complete();
       }).catch(err => {
