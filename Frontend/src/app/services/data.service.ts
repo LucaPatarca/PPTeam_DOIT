@@ -26,10 +26,13 @@ export class DataService {
 
   public modify:any = null;
 
+  private whenUserLoaded: Function[];
+
   constructor(private storage: Storage) {
     this.user = this.guestUser;
     this.token = "";
     this.darkModeEnabled = false;
+    this.whenUserLoaded = new Array();
 
     storage.get(this.key_token).then((val) => {
       if (val != null)
@@ -38,6 +41,7 @@ export class DataService {
     storage.get(this.key_user).then((val) => {
       if (val != null) {
         this.user = val as User;
+        this.whenUserLoaded.forEach(it=>it());
       }
     });
     storage.get(this.key_darkMode).then(val => {
@@ -63,6 +67,11 @@ export class DataService {
   public refreshUser(user: User) {
     this.user = user;
     this.storage.set(this.key_user, user);
+  }
+
+  public refreshToken(token: string){
+    this.token = token;
+    this.storage.set(this.key_token, token);
   }
 
   public getUserMail(): string {
@@ -125,5 +134,13 @@ export class DataService {
     this.darkModeEnabled = !this.darkModeEnabled;
     this.storage.set(this.key_darkMode, this.darkModeEnabled);
     document.body.classList.toggle('dark');
+  }
+
+  public executeWhenUserLoaded(fun: Function){
+    if(this.isUserLogged()){
+      fun();
+    }else{
+      this.whenUserLoaded.push(fun);
+    }
   }
 }

@@ -45,12 +45,7 @@ public class TokenService {
     }
 
     public String refresh(String token){
-        String subject;
-        try{
-            subject = getSubject(token);
-        }catch (JWTVerificationException e){
-            return "ERROR: " + e.getLocalizedMessage();
-        }
+        String subject = getSubject(token);
         return create(subject);
     }
 

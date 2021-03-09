@@ -1,3 +1,4 @@
+import { RestService } from 'src/app/services/rest.service';
 import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
 
@@ -24,6 +25,7 @@ export class AppComponent {
     public dataService: DataService,
     private network: Network,
     private toastCtrl: ToastController,
+    private restService: RestService
   ) {
     this.initializeApp();
   }
@@ -32,6 +34,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      this.refreshToken();
 
       //gestione connessione internet
       if(this.platform.is("mobile")){
@@ -73,5 +76,9 @@ export class AppComponent {
       this.toast = toast;
       toast.present();
     });
+  }
+
+  refreshToken(){
+    this.dataService.executeWhenUserLoaded(()=>this.restService.refreshToken());
   }
 }

@@ -150,7 +150,7 @@
       </ion-item-sliding>
     </ion-list>
   
-    <ion-button *ngIf="!loading && dataService.getUser().mail != project.creatorMail" expand="block" (click)="submit()" [disabled]="userAvailableSkillsInput.length<=0">
+    <ion-button *ngIf="!loading && dataService.isUserLogged() && dataService.getUser().mail != project.creatorMail" expand="block" (click)="submit()" [disabled]="userAvailableSkillsInput.length<=0">
       Submit
       <ion-icon slot="end" name="checkmark"></ion-icon>
     </ion-button>

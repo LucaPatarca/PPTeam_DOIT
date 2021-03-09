@@ -1,5 +1,7 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.Skill;
@@ -13,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
 import java.util.List;
 import java.util.Set;
 
@@ -96,8 +100,10 @@ public class UsersRestController implements UsersController {
 
     @PreAuthorize("permitAll")
     @GetMapping("/refreshToken")
-    public String refreshToken(@RequestHeader String Authorization){
-        return manager.refreshToken(Authorization);
+    public ObjectNode refreshToken(@RequestHeader String Authorization){
+        ObjectNode node = new ObjectMapper().createObjectNode();
+        node.put("token",manager.refreshToken(Authorization));
+        return node;
     }
 
     @PreAuthorize("permitAll")

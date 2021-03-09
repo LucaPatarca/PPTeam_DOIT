@@ -8,9 +8,6 @@
 
   <p *ngIf="dataService.isUserLogged()">{{dataService.getUserMail()}}</p>
 
-  <ion-label *ngIf="dataService.isInternetConnected">Internet Connected</ion-label>
-  <ion-label *ngIf="!dataService.isInternetConnected">Internet Disconnected</ion-label>
-
   <ion-refresher slot="fixed" (ionRefresh)="loadOrganizations($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>

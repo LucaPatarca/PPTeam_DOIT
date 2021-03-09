@@ -40,5 +40,7 @@ export const environment = {
   removeTeamMember:projectApiUrl+"removeTeamMember/",
   getUserProjects: projectApiUrl+"byUser/",
   closeProject:projectApiUrl+"close/",
-  getProjectsByOrganization:projectApiUrl+"getProjectsOfOrganization/"
+  getProjectsByOrganization:projectApiUrl+"getProjectsOfOrganization/",
+  validateToken:userApiUrl+"validateToken",
+  refreshToken:userApiUrl+"refreshToken",
 };

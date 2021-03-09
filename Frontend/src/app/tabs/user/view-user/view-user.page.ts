@@ -136,7 +136,12 @@ export class ViewUserPage {
   }
 
   async getUserSubmissions() {
-    this.userSubmissions = await this.restService.getUserSubmissions();
+    this.restService.getUserSubmissions()
+      .then(res=>{
+        this.userSubmissions = res;
+      }).catch(err=>{
+        this.restService.presentToast("Errore di connessione");
+      });
   }
 
   async removeSubmission(userSubmission: UserSubmissionInformation, role: Role, slidingItem: any) {
