@@ -219,10 +219,12 @@ export class ViewProjectPage {
 
   acceptCandidate(role: Role, slidingItem: any) {
     const index = this.project.candidates.indexOf(role);
+    const indexNeededSkill = this.project.neededSkills.indexOf(role.skill);
     this.restService.acceptCandidate(this.project.id, role).then(
       res => {
         if (res) {
           this.project.team.push(role);
+          this.project.neededSkills.splice(indexNeededSkill,1);
         } else {
           this.project.candidates.splice(index, 0, role);
         }
@@ -266,6 +268,7 @@ export class ViewProjectPage {
       this.project.team.splice(index,0,role);
     });
     this.project.team.splice(index, 1);
+    this.project.neededSkills.push(role.skill);
     slidingItem.close();
     this.restService.presentToast("Membro del team rimosso con successo");
   }

@@ -10,15 +10,6 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <ion-segment (ionChange)="segmentChanged($event)" value="all" *ngIf="dataService.isUserLogged()">
-    <ion-segment-button value="all">
-      <ion-label>All</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="yours">
-      <ion-label>Yours</ion-label>
-    </ion-segment-button>
-  </ion-segment>
-
   <div class="row">
     <div class="col">
       <div class="text-center">
