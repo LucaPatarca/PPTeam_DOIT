@@ -6,7 +6,6 @@ import { DataService } from 'src/app/services/data.service';
 import { Validators, FormBuilder, FormGroup } from '@angular/forms';
 import { Project } from 'src/app/model/project';
 import { RestService } from 'src/app/services/rest.service';
-import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -19,16 +18,17 @@ export class EditProjectPage implements OnInit{
   validations_form: FormGroup;
   project: Project;
   organizationName: string;
-  createNew: boolean;
+  createNew: boolean = false;
   userOrganizations: Organization[];
   validation_messages = {
     'title': [
-      { type: 'required', message: 'Name is required.' }
+      { type: 'required', message: 'Title is required.' }
     ],
     'description': [
-      { type: 'required', message: 'Email is required.' },
-      { type: 'pattern', message: 'Please enter a valid email.' }
+      { type: 'required', message: 'Description is required.' }
     ],
+    'organization':[{ type: 'required', message: 'Organization is required.' }
+  ]
   };
 
   constructor(
@@ -39,10 +39,6 @@ export class EditProjectPage implements OnInit{
     private restService: RestService,
     private toastController:ToastController,
     ) {
-    this.validations_form = this.formBuilder.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
-    });
   }
 
   ngOnInit(){
@@ -50,6 +46,10 @@ export class EditProjectPage implements OnInit{
     this.organizationName = "";
     if(this.dataService.modify != null){
       this.createNew = false;
+      this.validations_form = this.formBuilder.group({
+        title: ['', Validators.required],
+        description: ['', Validators.required],
+      });
       this.project = this.dataService.modify as Project;
       this.restService.getOrganization(this.project.organizationId).then(org=>{
         this.organizationName = org.name;
@@ -65,6 +65,11 @@ export class EditProjectPage implements OnInit{
         }
       );
       this.createNew = true;
+      this.validations_form = this.formBuilder.group({
+        title: ['', Validators.required],
+        description: ['', Validators.required],
+        organizationName: ['', Validators.required],
+      });
     }
   }
 

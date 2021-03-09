@@ -77,7 +77,6 @@ export class ViewOrganizationPage {
 
   async loadProjects() {
     this.projects = await this.restService.getProjectsByOrganization(this.id);
-    console.log(this.projects);
   }
 
   async reload(event?) {

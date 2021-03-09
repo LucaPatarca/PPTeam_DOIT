@@ -26,7 +26,8 @@
   <!-- per ogni elemento presente in organizations creo una ion-card-->
   <div *ngIf="isOrganizations()">
   <p align="center" *ngIf="getOrganizations().length!=0"><ion-label>your organizations</ion-label></p>
-  <p align="center" *ngIf="getOrganizations().length==0">non appartiene a nessuna organizzazione</p>
+  <p align="center" *ngIf="getOrganizations().length==0 && dataService.isUserLogged()">non appartieni a nessuna organizzazione</p>
+  <p align="center" *ngIf="!dataService.isUserLogged()">esegui il login per vedere<br>più informazioni</p>
     <ion-card *ngFor="let organization of getOrganizations()">
       <ion-item (click)="viewOrganization(organization.id)" routerDirection="forward">
         <ion-label>

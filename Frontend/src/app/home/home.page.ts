@@ -35,6 +35,7 @@ export class HomePage {
   }
 
   ionViewDidEnter() {
+    this.loadOrganizations();        
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });

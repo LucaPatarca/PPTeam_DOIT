@@ -37,7 +37,7 @@
     </ng-container>
     <ion-item>
       <ion-label color="primary">Organization: {{organizationName}}</ion-label>
-      <ion-select *ngIf="createNew" (ionChange)="organizationSelected(orgSelect.value)" #orgSelect>
+      <ion-select *ngIf="createNew" formControlName="organizationName" (ionChange)="organizationSelected(orgSelect.value)" #orgSelect>
         <ion-select-option *ngFor="let organization of userOrganizations" [value]="organization">{{organization.name}}</ion-select-option>
       </ion-select>
     </ion-item>
