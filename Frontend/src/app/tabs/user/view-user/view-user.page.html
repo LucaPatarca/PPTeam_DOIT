@@ -30,6 +30,14 @@
         </div>
       </div>
     </div>
+    <ion-list *ngIf="loadingSubmissions">
+      <ion-item *ngFor="let userSubmission of [].constructor(5)">
+        <ion-label>
+          <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+        </ion-label>
+      </ion-item>
+    </ion-list>
     <ion-card *ngFor="let userSubmission of userSubmissions">
       <ion-card-header>
         <ion-card-title>
@@ -58,6 +66,14 @@
       </ion-card-content>
     </ion-card>
 
+    <ion-list *ngIf="loadingSkills">
+      <ion-item *ngFor="let skill of [].constructor(5)">
+        <ion-label>
+          <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+        </ion-label>
+      </ion-item>
+    </ion-list>
     <ion-list>
       <ion-list-header lines="inset">
         <ion-label color="medium">Your Skills</ion-label>
