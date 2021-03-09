@@ -184,10 +184,13 @@ export class ViewProjectPage {
             text: 'Close',
             icon: 'close-outline',
             handler: () => {
-              if(this.restService.closeProject(this.project.id)){
-                this.restService.presentToast("progetto chiuso");
-                this.project.closed = true;
-              }
+              this.restService.closeProject(this.project.id)
+                  .then(val => {
+                    this.restService.presentToast("Progetto chiuso");
+                    this.load();
+                  }).catch(err => {
+                this.restService.presentToast("C'è stato un errore durante la chiusura");
+              });
             }
           }, {
             text: 'Edit',
