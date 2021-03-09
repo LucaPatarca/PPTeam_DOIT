@@ -1,7 +1,5 @@
-import { LocationStrategy } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
-import { Page } from 'src/app/model/page';
+import { ModalController } from '@ionic/angular';
 import { Skill } from 'src/app/model/skill';
 import { User } from 'src/app/model/user';
 import { RestService } from 'src/app/services/rest.service';

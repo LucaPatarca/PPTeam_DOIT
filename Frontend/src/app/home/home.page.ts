@@ -1,5 +1,3 @@
-import { ProjectInformation } from 'src/app/model/project-information';
-import { OrganizationInformation } from 'src/app/model/organization-information';
 import { Project } from 'src/app/model/project';
 import { Organization } from 'src/app/model/organization';
 import { RestService } from 'src/app/services/rest.service';

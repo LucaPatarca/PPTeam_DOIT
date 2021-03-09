@@ -1,7 +1,6 @@
 import { DataService } from 'src/app/services/data.service';
 import { Component, OnInit } from '@angular/core';
 import { Organization } from 'src/app/model/organization';
-import { ActivatedRoute } from "@angular/router";
 import {  NavController } from '@ionic/angular';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RestService } from 'src/app/services/rest.service';

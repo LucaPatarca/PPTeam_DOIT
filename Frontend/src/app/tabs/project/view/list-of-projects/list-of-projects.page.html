@@ -55,7 +55,7 @@
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="dataService.isUserLogged()">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="dataService.isUserLogged() && dataService.isInternetConnected">
     <ion-fab-button (click)="createProject()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>

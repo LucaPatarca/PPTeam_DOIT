@@ -61,7 +61,7 @@
     <ion-list>
       <ion-list-header lines="inset">
         <ion-label color="medium">Your Skills</ion-label>
-        <ion-button (click)="addNewSkill()">
+        <ion-button (click)="addNewSkill()" *ngIf="dataService.isInternetConnected">
           <ion-icon slot="icon-only" name="add"></ion-icon>
         </ion-button>
       </ion-list-header>
@@ -134,7 +134,7 @@
           {{ validation.message }}
         </div>
       </ng-container>
-      <ion-button color="primary" class="submit-btn" expand="block" type="submit" [disabled]="false">
+      <ion-button color="primary" class="submit-btn" expand="block" type="submit" [disabled]="false || dataService.isInternetConnected">
         {{selection==Selection.Login?'Login':'Register'}}
       </ion-button>
     </form>
