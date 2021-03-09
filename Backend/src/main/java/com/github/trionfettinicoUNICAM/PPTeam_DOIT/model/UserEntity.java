@@ -1,6 +1,5 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -9,7 +8,6 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * Represents a registered user inside the application. It has the ability to join a project's team
@@ -19,8 +17,6 @@ import java.util.stream.Collectors;
 public class UserEntity {
 
     // TODO: 10/12/20 scrivere il javadoc di questi metodi (lasciati indietro perche comunque si spiegano gia bene da soli)
-
-    // TODO: 09/01/21 rimuovere roles e submissions (e metodi associati)
 
     @Id
     private String mail;
@@ -60,7 +56,6 @@ public class UserEntity {
     public void addSkills(Set<Skill> skills) {
         Objects.requireNonNull(skills, "Skills is Null");
         for(Skill s: skills) Objects.requireNonNull(s, "Skills contain a null skill");
-        //TODO aggiungere controllo se una delle skill è già presente
         this.skills.addAll(skills);
     }
 
@@ -125,6 +120,10 @@ public class UserEntity {
 
     public void setSecret(String secret) {
         this.secret = secret;
+    }
+
+    public boolean hasSkill(Skill skill){
+        return skills.stream().anyMatch(it->it.equals(skill) && it.getLevel()>=skill.getLevel());
     }
 
     @Override

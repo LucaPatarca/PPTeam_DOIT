@@ -40,7 +40,7 @@ public class OrganizationsRestController implements OrganizationsController {
     @Override
     @PreAuthorize("@permissionComponent.isFounder(authentication, #organization.id)")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Organization update(@RequestBody Organization organization) throws EntityNotFoundException { return manager.update(organization); }
+    public Organization update(@RequestBody Organization organization) throws EntityNotFoundException, IdConflictException { return manager.update(organization); }
 
     @Override
     @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationID)")
@@ -78,13 +78,6 @@ public class OrganizationsRestController implements OrganizationsController {
     @PostMapping("/addCollaborator/{organizationId}/{userMail}")
     public void addCollaborator(@PathVariable String organizationId,@PathVariable String userMail, @RequestBody Skill skill) throws EntityNotFoundException {
         manager.addCollaborator(organizationId, userMail, skill);
-    }
-
-    @Override
-    @PreAuthorize("@permissionComponent.isFounder(authentication, #organizationId)")
-    @PostMapping("/addExpert/{organizationId}/{userMail}")
-    public void addExpert(@PathVariable String organizationId, @PathVariable String userMail, @RequestBody Skill skill) throws EntityNotFoundException {
-        manager.addExpert(organizationId, userMail, skill);
     }
 
     @Override

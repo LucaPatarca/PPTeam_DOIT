@@ -1,16 +1,36 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button auto-hide="true"></ion-menu-button>
-    </ion-buttons>
-    <ion-title>Home</ion-title>
+    <ion-title style="text-align: center;">Home</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
 
-  <p *ngIf="dataService.isUserLogged()">{{dataService.getUserMail()}}</p>
-  <p *ngIf="dataService.isOrganizationSelected()">{{dataService.getOrganizationName()}}</p>
 
+  <ion-refresher slot="fixed" (ionRefresh)="loadOrganizations($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <p align="center" *ngIf="dataService.isUserLogged()" style="font-size: large;">{{dataService.getUserMail()}}</p>
+
+  <ion-card *ngIf="dataService.isUserLogged()" (click)="openOrganizations()" style="height: 35%; margin-top: 32px;" button="true">
+    <ion-card-header style="padding-top: 5%;">
+      <ion-card-title align="center">Your organizations</ion-card-title>
+    </ion-card-header>
+    <ion-card-content align="center">
+      {{getLengthOrganizations()}} organizations
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="dataService.isUserLogged()" (click)="openProjects()" style="height: 35%;" button="true">
+    <ion-card-header style="padding-top: 5%;">
+      <ion-card-title align="center">Your projects</ion-card-title>
+    </ion-card-header>
+    <ion-card-content align="center">
+      {{getLengthProjects()}} projects
+    </ion-card-content>
+  </ion-card>
+
+  <p align="center" *ngIf="!dataService.isUserLogged()">esegui il login per vedere più informazioni</p>
 
 </ion-content>

@@ -1,0 +1,19 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title align="center">Your Projects</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <p style="text-align: center;" *ngIf="projects.length==0">non hai ancora creato nessun progetto</p>
+  <ion-card *ngFor="let project of projects">
+    <ion-item (click)="viewProject(project.id)">
+      <ion-label>
+        <h2 text-capitalize>{{project.title}}</h2>
+        <p>{{project.description}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+</ion-content>

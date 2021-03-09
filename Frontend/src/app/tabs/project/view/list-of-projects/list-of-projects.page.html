@@ -1,14 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button auto-hide="true"></ion-menu-button>
-    </ion-buttons>
-    <ion-buttons slot="primary">
-      <ion-button>
-        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>List Of Projects</ion-title>
+    <ion-title style="text-align: center;">List Of Projects</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -18,16 +10,16 @@
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <div *ngIf="projects.length==0&&!loading" class="row">
+  <div class="row">
     <div class="col">
       <div class="text-center">
-        <h5 style="text-align: center;">Nessun progetto disponibile</h5>
+        <h5 style="text-align: center;">{{getMessage()}}</h5>
       </div>
     </div>
   </div>
   <!-- per ogni elemento presente in projects creo una ion-card-->
-  <div *ngIf="!loading">
-    <ion-card *ngFor="let project of projects">
+  <div *ngIf="!isLoading()">
+    <ion-card *ngFor="let project of getProjects()">
       <ion-item (click)="viewProject(project.id)" routerDirection="forward">
         <ion-label>
           <h2 text-capitalize>{{project.title}}</h2>
@@ -37,12 +29,12 @@
     </ion-card>
   </div>
 
-  <div *ngIf="loading">
+  <div *ngIf="isLoading()">
     <ion-card *ngFor="let item of [].constructor(10)">
       <ion-item>
         <ion-label>
-          <ion-skeleton-text animate style="width: 40%;"></ion-skeleton-text>
-          <ion-skeleton-text animate style="width: 80%;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 40%;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
         </ion-label>
       </ion-item>
     </ion-card>
@@ -53,5 +45,11 @@
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more users ...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="dataService.isUserLogged() && dataService.isInternetConnected">
+    <ion-fab-button (click)="createProject()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

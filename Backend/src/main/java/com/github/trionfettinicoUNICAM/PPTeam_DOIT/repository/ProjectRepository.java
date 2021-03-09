@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface ProjectRepository extends MongoRepository<Project, String> {
     List<Project> findByOrganizationId(String organizationId);
+    List<Project> findByCreatorMail(String creatorMail);
 }

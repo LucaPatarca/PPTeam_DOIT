@@ -4,11 +4,17 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>Create Organization</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" [disabled]="!validations_form.valid" (click)="createOrganization()">
+        done
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding class="form-content">
-  <form [formGroup]="validations_form" (ngSubmit)="createOrganization()">
+  <form [formGroup]="validations_form">
   <ion-item>
       <ion-label position="floating" color="primary">Name</ion-label>
       <ion-input type="text" formControlName="name" [(ngModel)]="name"></ion-input>
@@ -20,14 +26,13 @@
   </ng-container>
   <ion-item>
     <ion-label position="floating" color="primary">Description</ion-label>
-    <ion-input type="text" formControlName="description" [(ngModel)]="description"></ion-input>
+    <ion-textarea type="text" formControlName="description" [(ngModel)]="description" rows="10"></ion-textarea>
   </ion-item>
   <ng-container *ngFor="let validation of validation_messages.description">
     <div class="error-message" *ngIf="validations_form.get('description').hasError(validation.type) && (validations_form.get('description').dirty || validations_form.get('description').touched)">
       {{ validation.message }}
     </div>
   </ng-container>
-    <ion-button color="primary" class="submit-btn" expand="block" type="submit" [disabled]="!validations_form.valid">Submit data</ion-button>
   </form>
  
 </ion-content>

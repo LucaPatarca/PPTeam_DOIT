@@ -1,0 +1,158 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title (click)="easterEgg()">{{dataService.getUser().name}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button *ngIf="dataService.isUserLogged()" (click)="dataService.logoutUser()" color="primary">
+        <ion-icon slot="icon-only" name="exit-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+
+  <ion-refresher slot="fixed" (ionRefresh)="reload($event)" [disabled]="!dataService.isUserLogged()">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  <div *ngIf="dataService.isUserLogged()">
+
+    <ion-item-divider>
+      <ion-label>
+        Your Submissions
+      </ion-label>
+    </ion-item-divider>
+
+    <div *ngIf="userSubmissions!=null && userSubmissions.length==0" class="row">
+      <div class="col">
+        <div class="text-center">
+          <h5 style="text-align: center;">Non ti sei iscritto ancora a nessun progetto</h5>
+        </div>
+      </div>
+    </div>
+    <ion-item *ngIf="loadingSubmissions">
+      <ion-label>
+        <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+    <ion-card *ngFor="let userSubmission of userSubmissions">
+      <ion-card-header>
+        <ion-card-title>
+          Project : {{userSubmission.projectName}}
+        </ion-card-title>
+        <ion-card-subtitle>
+          Organization : {{userSubmission.organizationName}}
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list>
+          <ion-item-sliding *ngFor="let role of userSubmission.role" #slidingItem>
+            <ion-item-options side="end" (ionSwipe)="removeSubmission(userSubmission,role,slidingItem)">
+              <ion-item-option expandable color="danger">
+                <ion-icon slot="icon-only" name="trash"></ion-icon>
+              </ion-item-option>
+            </ion-item-options>
+            <ion-item lines="none">
+              <ion-label>
+                <h2 text-capitalize>Role: {{role.skill.name}}</h2>
+                <ion-badge color="secondary" slot="start">{{role.skill.level}}</ion-badge>
+              </ion-label>
+            </ion-item>
+          </ion-item-sliding>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-list>
+      <ion-list-header lines="inset">
+        <ion-label color="medium">Your Skills</ion-label>
+        <ion-button (click)="addNewSkill()" *ngIf="dataService.isInternetConnected">
+          <ion-icon slot="icon-only" name="add"></ion-icon>
+        </ion-button>
+      </ion-list-header>
+      <div *ngIf="dataService.isUserLogged() && dataService.getUser().skills.length==0" class="row">
+        <div class="col">
+          <div class="text-center">
+            <h5 style="text-align: center;">Non hai aggiunto ancora nessuna skill</h5>
+          </div>
+        </div>
+      </div>
+      <ion-item-sliding *ngFor="let skill of dataService.getUser().skills" #slidingItem>
+        <ion-item-options side="end" (ionSwipe)="deleteUserSkill(skill,slidingItem)">
+          <ion-item-option expandable color="danger">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+        <ion-item lines="none">
+          <ion-label>
+            <h2 text-capitalize>{{skill.name}}</h2>
+            <p *ngIf="skill.isGloballyExpert">globallyExpert</p>
+            <ion-label *ngFor="let org of skill.expertInOrganization">
+              <p>{{org}}</p>
+            </ion-label>
+            <ion-badge color="secondary" slot="start">{{skill.level}}</ion-badge>
+          </ion-label>
+        </ion-item>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
+
+  <div *ngIf="!dataService.isUserLogged()">
+    <form [formGroup]="validations_form" (ngSubmit)="selection==Selection.Login?login():register()">
+      <ion-item *ngIf="selection==Selection.Register">
+        <ion-label position="floating" color="primary">Name</ion-label>
+        <ion-input type="text" formControlName="name" [(ngModel)]="name"></ion-input>
+      </ion-item>
+      <ng-container *ngFor="let validation of validation_messages.name">
+        <div class="error-message"
+          *ngIf="validations_form.get('name').hasError(validation.type) && (validations_form.get('name').dirty || validations_form.get('name').touched)">
+          {{ validation.message }}
+        </div>
+      </ng-container>
+      <ion-item>
+        <ion-label position="floating" color="primary">Email</ion-label>
+        <ion-input type="text" formControlName="mail" [(ngModel)]="mail"></ion-input>
+      </ion-item>
+      <ng-container *ngFor="let validation of validation_messages.mail">
+        <div class="error-message"
+          *ngIf="validations_form.get('mail').hasError(validation.type) && (validations_form.get('mail').dirty || validations_form.get('mail').touched)">
+          {{ validation.message }}
+        </div>
+      </ng-container>
+      <ion-item>
+        <ion-label position="floating" color="primary">Password</ion-label>
+        <ion-input type="password" formControlName="secret" [(ngModel)]="secret"></ion-input>
+      </ion-item>
+      <ng-container *ngFor="let validation of validation_messages.secret">
+        <div class="error-message"
+          *ngIf="validations_form.get('secret').hasError(validation.type) && (validations_form.get('secret').dirty || validations_form.get('secret').touched)">
+          {{ validation.message }}
+        </div>
+      </ng-container>
+      <ion-item *ngIf="selection==Selection.Register">
+        <ion-label position="floating" color="primary">Repeat Password</ion-label>
+        <ion-input type="password" formControlName="confirm" [(ngModel)]="confirm"></ion-input>
+      </ion-item>
+      <ng-container *ngFor="let validation of validation_messages.confirm">
+        <div class="error-message"
+          *ngIf="validations_form.get('confirm').hasError(validation.type) && (validations_form.get('confirm').dirty || validations_form.get('confirm').touched)">
+          {{ validation.message }}
+        </div>
+      </ng-container>
+      <ion-button color="primary" class="submit-btn" expand="block" type="submit"
+        [disabled]="false || !dataService.isInternetConnected">
+        {{selection==Selection.Login?'Login':'Register'}}
+      </ion-button>
+    </form>
+    <ion-button expand="block" fill="clear" color="medium" (click)="toggleLoginRegister()">
+      {{selection==Selection.Login?'Non ho un account':'Ho gia un account'}}
+    </ion-button>
+  </div>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="dataService.toggleDarkMode()">
+      <ion-icon *ngIf="dataService.isDarkMode()" name="sunny-outline"></ion-icon>
+      <ion-icon *ngIf="!dataService.isDarkMode()" name="moon-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

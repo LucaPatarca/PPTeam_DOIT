@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Modify Organization</ion-title>
+    <ion-buttons slot="end">
+      <ion-button icon-end color="primary" [disabled]="!validations_form.valid || loading" (click)="save()">
+        done
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="form-content">
+  <form [formGroup]="validations_form" *ngIf="!loading">
+    <ion-item>
+      <ion-label position="floating" color="primary">Title</ion-label>
+      <ion-input type="text" formControlName="title" [(ngModel)]="organization.name"
+        placeholder="{{organization.name}}"></ion-input>
+    </ion-item>
+    <ng-container *ngFor="let validation of validation_messages.title">
+      <div class="error-message"
+        *ngIf="validations_form.get('title').hasError(validation.type) && (validations_form.get('title').dirty || validations_form.get('title').touched)">
+        {{ validation.message }}
+      </div>
+    </ng-container>
+    <ion-item>
+      <ion-label position="floating" color="primary">Description</ion-label>
+      <ion-textarea rows="10" type="text" formControlName="description" [(ngModel)]="organization.description"
+        placeholder="{{organization.description}}"></ion-textarea>
+    </ion-item>
+    <ng-container *ngFor="let validation of validation_messages.description">
+      <div class="error-message"
+        *ngIf="validations_form.get('description').hasError(validation.type) && (validations_form.get('description').dirty || validations_form.get('description').touched)">
+        {{ validation.message }}
+      </div>
+    </ng-container>
+  </form>
+
+</ion-content>

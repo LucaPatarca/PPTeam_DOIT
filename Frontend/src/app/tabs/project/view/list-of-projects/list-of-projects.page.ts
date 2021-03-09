@@ -1,7 +1,9 @@
+import { DataService } from 'src/app/services/data.service';
 import { Component } from '@angular/core';
-import { MenuController, NavController, Platform } from '@ionic/angular';
+import { NavController, Platform } from '@ionic/angular';
 import { RestService } from 'src/app/services/rest.service';
 import { ProjectInformation } from 'src/app/model/project-information';
+import { Project } from 'src/app/model/project';
 
 
 @Component({
@@ -11,39 +13,51 @@ import { ProjectInformation } from 'src/app/model/project-information';
 })
 export class ListOfProjectsPage {
   page = 0;
-  projects: ProjectInformation[];
-  loading: boolean;
+  allProjects: ProjectInformation[];
+  allLoading: boolean;
+  allMessage: string;
   HWBackSubscription: any;
+  private readonly emptyMessage = "Nessun progetto disponibile";
+  private readonly errorMessage = "Impossibile caricare i progetti";
 
   constructor(
-    public menuCtrl: MenuController,
     private navCtrl: NavController,
     private restService: RestService,
     private platform: Platform,
+    public dataService: DataService
   ) {
-    this.loading = true;
-    this.projects = new Array();
-    this.loadProjects().then(()=>{
-      this.loading = false;
-    });
+    this.allLoading = true;
+    this.allProjects = new Array();
+    this.allMessage = "";
+    this.loadProjects();
   }
 
   ionViewDidEnter() {
-    this.menuCtrl.enable(true);
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
     this.reload();
   }
 
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     this.HWBackSubscription.unsubscribe();
   }
 
   // metodo per richiedere una pagina di elementi
   async loadProjects() {
-    const newProjects = await this.restService.getProjectsPage(this.page);
-    this.projects = this.projects.concat(newProjects);
+    this.restService.getProjectsPage(this.page)
+      .then(res => {
+        this.allProjects = this.allProjects.concat(res);
+        if (this.allProjects.length == 0)
+          this.allMessage = this.emptyMessage;
+        else
+          this.allMessage = "";
+        this.allLoading = false;
+      }).catch(err => {
+        this.allProjects = new Array();
+        this.allMessage = this.errorMessage;
+        this.allLoading = false;
+      });
   }
 
   async loadMore(event) {
@@ -54,15 +68,53 @@ export class ListOfProjectsPage {
     }
   }
 
-  async reload(event?){
+  async reload(event?) {
     this.page = 0;
-    const newProjects = await this.restService.getProjectsPage(this.page);
-    this.projects = newProjects;
-    if(event)
-      event.target.complete();
+    this.restService.getProjectsPage(this.page)
+      .then(res => {
+        this.allProjects = res;
+        if (event)
+          event.target.complete();
+        if (this.allProjects.length == 0)
+          this.allMessage = this.emptyMessage;
+        else
+          this.allMessage = "";
+      }).catch(err => {
+        this.allProjects = new Array();
+        this.allMessage = this.errorMessage;
+        if (event)
+          event.target.complete();
+      });
   }
 
   viewProject(id: string) {
-    this.navCtrl.navigateForward(['/view-project', { "id": id }]);
+    this.navCtrl.navigateForward(['/tabs/list-of-projects/view-project', { "id": id }]);
+  }
+
+  createProject() {
+    this.dataService.modify = null;
+    this.navCtrl.navigateForward(["/tabs/list-of-projects/create-project"]);
+  }
+
+  isProjectsEmpty(): boolean {
+      return this.allProjects.length == 0;
+  }
+
+  segmentChanged(event: any) {
+    if (this.isLoading()) {
+      this.loadProjects();
+    }
+  }
+
+  getProjects() {
+    return this.allProjects;
+  }
+
+  getMessage() {
+    return this.allMessage;
+  }
+
+  isLoading() {
+    return this.allLoading;
   }
 }

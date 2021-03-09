@@ -20,6 +20,12 @@ public class Role{
         setAsExpert(asExpert);
     }
 
+    public Role(){
+        this.skill = null;
+        this.userMail = "";
+        this.asExpert = false;
+    }
+
     public Skill getSkill() {
         return skill;
     }
@@ -33,7 +39,7 @@ public class Role{
     }
 
     public void setUserMail(String userMail) throws IllegalArgumentException {
-        if(userMail.length() == 0) throw new IllegalArgumentException("UserMail is empty");
+        if(userMail.isBlank()) throw new IllegalArgumentException("UserMail is empty");
         this.userMail=userMail;
     }
 

@@ -23,4 +23,8 @@ public interface UsersManager extends EntityManager<UserEntity, String> {
     boolean addNewSkill(String skillName, String userMail) throws EntityNotFoundException;
 
     boolean removeSkill(Skill skill, String userMail) throws EntityNotFoundException;
+
+    String refreshToken(String token);
+
+    boolean validateToken(String token);
 }

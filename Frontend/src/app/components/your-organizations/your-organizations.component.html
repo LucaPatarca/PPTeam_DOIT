@@ -1,0 +1,19 @@
+<ion-header translucent>
+  <ion-toolbar>
+    <ion-title align="center">Your Organizations</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="dismiss()">Close</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <p style="text-align: center;" *ngIf="organizations.length==0">non appartieni a nessuna organizzazione</p>
+  <ion-card *ngFor="let organization of organizations">
+    <ion-item (click)="viewOrganziation(organization.id)">
+      <ion-label>
+        <h2 text-capitalize>{{organization.name}}</h2>
+        <p>{{organization.description}}</p>
+      </ion-label>
+    </ion-item>
+  </ion-card>
+</ion-content>

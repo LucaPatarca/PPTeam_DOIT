@@ -1,14 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button auto-hide="true"></ion-menu-button>
-    </ion-buttons>
-    <ion-buttons slot="primary">
-      <ion-button>
-        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-    <ion-title>Organizations</ion-title>
+    <ion-title style="text-align: center;">Organizations</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -19,17 +11,17 @@
   </ion-refresher>
 
   <!-- quando il caricamento è completato ma non ci sono organizzazioni disponibili -->
-  <div class="row" *ngIf="(organizations.length == 0) && !loading">
+  <div class="row">
     <div class="col">
       <div class="text-center">
-        <h5 style="text-align: center;">{{textNoOrganizations}}</h5>
+        <h5 style="text-align: center;">{{getMessage()}}</h5>
       </div>
     </div>
   </div>
 
   <!-- per ogni elemento presente in organizations creo una ion-card-->
-  <div *ngIf="!loading">
-    <ion-card *ngFor="let organization of organizations">
+  <div *ngIf="!isLoading()">
+    <ion-card *ngFor="let organization of getOrganizations()">
       <ion-item (click)="viewOrganization(organization.id)" routerDirection="forward">
         <ion-label>
           <h2 text-capitalize>{{organization.name}}</h2>
@@ -40,15 +32,13 @@
   </div>
 
   <!-- mentre sta caricando le prime organizzazioni -->
-  <div *ngIf="loading">
+  <div *ngIf="isLoading()">
     <ion-card *ngFor="let item of [].constructor(10)">
-    <ion-item>
-      <ion-label>
+      <ion-item>
         <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
         <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
-      </ion-label>
-    </ion-item>
-  </ion-card>
+      </ion-item>
+    </ion-card>
   </div>
 
   <!-- per creare uno scroll infinito-->
@@ -56,5 +46,11 @@
     <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more organizations ...">
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="dataService.isUserLogged() && dataService.isInternetConnected">
+    <ion-fab-button (click)="createOrganization()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

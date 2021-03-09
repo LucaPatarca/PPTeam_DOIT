@@ -150,6 +150,7 @@ public class Project {
         if(!candidates.contains(role)) throw new IllegalArgumentException("Role is not in the candidates list");
         if(!team.add(Objects.requireNonNull(role, "role is null"))) throw new RuntimeException("unable to add role to team");
         candidates.remove(role);
+        neededSkills.remove(role.getSkill());
     }
 
     /**
@@ -166,15 +167,12 @@ public class Project {
      */
     public void close() {
         if(isClosed) throw new IllegalStateException("Project is closed");
-        // TODO: 24/02/2021 aumentare le skill dei progettisti
         isClosed=true;
     }
 
     /**
      * Adds the {@link UserEntity} to the list of candidates of this project. A user can submit
      * to the same project more than once but only for different {@link Skill}s.
-     * @param user the user who wants to apply to this project
-     * @param skill the skill of the user
      * @return true if the user was added to candidates, false instead.
      * @throws IllegalArgumentException if the user does not have this {@link Skill} or if
      * the skill is not needed for this project
@@ -186,6 +184,11 @@ public class Project {
             candidates.add(role);
             return true;
         } else return false;
+    }
+
+    public boolean removeTeamMember(Role userRole){
+        neededSkills.add(userRole.getSkill());
+        return team.remove(userRole);
     }
 
     @Override

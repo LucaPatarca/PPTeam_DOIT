@@ -23,21 +23,21 @@ public class Skill {
     public Skill(String name){
         setName(name);
         this.expertInOrganization = new HashSet<>();
-        this.level = 0;
+        this.level = 1;
     }
 
     public Skill(String name, String organizationId) {
         this.name = name;
         this.expertInOrganization = new HashSet<>();
         this.expertInOrganization.add(organizationId);
-        this.level = 0;
+        this.level = 1;
     }
 
     //per spring boot
     public Skill(){
         this.name = "";
         this.expertInOrganization = new HashSet<>();
-        this.level = 0;
+        this.level = 1;
     }
 
     public void setName(String name){
@@ -54,7 +54,7 @@ public class Skill {
     }
 
     public void setExpertInOrganization(Set<String> expertInOrganization) {
-        this.expertInOrganization = expertInOrganization;
+        this.expertInOrganization = Objects.requireNonNull(expertInOrganization,"expertInOrganization nullo");
     }
 
     @JsonIgnore
@@ -67,11 +67,12 @@ public class Skill {
     }
 
     public void levelUp(){
-        level++;
+        if(level < EXPERT_LEVEL_THRESHOLD) level++;
     }
 
     public void levelDown(){
-        level--;
+        if(level > 0)
+            level--;
     }
 
     public int getLevel() {
@@ -79,6 +80,7 @@ public class Skill {
     }
 
     public void setLevel(int level) {
+        if(level < 1 || level > 10 ) throw new IllegalArgumentException("il livello della skill deve essere compreso tra 1 e 10. valore trovato: "+level);
         this.level = level;
     }
 

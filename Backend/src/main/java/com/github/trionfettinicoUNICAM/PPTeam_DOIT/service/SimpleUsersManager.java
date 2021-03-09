@@ -1,25 +1,28 @@
 package com.github.trionfettinicoUNICAM.PPTeam_DOIT.service;
 
+import com.auth0.jwt.JWT;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.EntityNotFoundException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.exception.IdConflictException;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.model.*;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.OrganizationRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.ProjectRepository;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.repository.UserRepository;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class SimpleUsersManager implements UsersManager {
-    //TODO applicare controlli e condizioni sui metodi
 
     @Autowired
     private UserRepository userRepository;
@@ -29,6 +32,8 @@ public class SimpleUsersManager implements UsersManager {
     private ProjectRepository projectRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TokenService tokenService;
 
     @Override
     public UserEntity getInstance(String mail) throws EntityNotFoundException {
@@ -39,23 +44,29 @@ public class SimpleUsersManager implements UsersManager {
 
     @Override
     public UserEntity create(UserEntity user) throws IdConflictException {
+        checkUser(user);
         if(userRepository.existsById(user.getMail()))
             throw new IdConflictException("Esiste già un utente con questa mail");
         user.setSecret(passwordEncoder.encode(user.getSecret()));
         return userRepository.save(user);
     }
 
+    private void checkUser(UserEntity user){
+        if(user.getMail().isBlank()) throw new IllegalStateException("Il campo mail è vuoto");
+        if(user.getName().isBlank()) throw new IllegalStateException("Il campo name è vuoto");
+    }
+
     @Override
     public boolean delete(String mail) {
         if(mail.isBlank()) throw new IllegalArgumentException("Il campo 'mail' è vuoto");
-        if(!exists(mail))
-            return false;
+        if(!exists(mail)) return false;
         userRepository.deleteById(mail);
         return !exists(mail);
     }
 
     @Override
     public UserEntity update(UserEntity user) throws EntityNotFoundException {
+        checkUser(user);
         if(!exists(user.getMail()))
             throw new EntityNotFoundException("Nessun utente trovato con la mail: "+user.getMail());
         return userRepository.save(user);
@@ -72,6 +83,7 @@ public class SimpleUsersManager implements UsersManager {
     @Override
     public boolean existSkill(Skill newSkill, String mail) throws EntityNotFoundException {
         if(mail.isBlank()) throw new IllegalArgumentException("Il campo 'mail' è vuoto");
+        checkSkill(newSkill);
         UserEntity user = userRepository.findById(mail).orElseThrow(()->
                 new EntityNotFoundException("Nessun utente trovato con la mail: "+mail));
         for (Skill skill : user.getSkills()) {
@@ -81,9 +93,16 @@ public class SimpleUsersManager implements UsersManager {
         return false;
     }
 
+    private void checkSkill(Skill skill){
+        Objects.requireNonNull(skill, "Il campo skill è nullo");
+        if(skill.getName().isBlank()) throw new IllegalStateException("Il campo name del campo skill è vuoto");
+        if(skill.getLevel() > 10 || skill.getLevel() <= 0) throw new IllegalStateException("Il campo name del campo skill è vuoto");
+    }
+
     @Override
     public boolean hasSkillExpertFor(Skill newSkill, String mail, String organizationId) throws EntityNotFoundException {
         if(mail.isBlank()) throw new IllegalArgumentException("Il campo 'mail' è vuoto");
+        checkSkill(newSkill);
         if(organizationId.isBlank()) throw new IllegalArgumentException("Il campo 'organizationId' è vuoto");
         UserEntity user = userRepository.findById(mail).orElseThrow(()->
                 new EntityNotFoundException("Nessun utente trovato con la mail: "+mail));
@@ -118,10 +137,7 @@ public class SimpleUsersManager implements UsersManager {
 
     @Override
     public Page<UserEntity> getPage(int page, int size) throws EntityNotFoundException {
-        Page<UserEntity> userPage = userRepository.findAll(PageRequest.of(page, size));
-        List<UserEntity> basicUserInformationList = new java.util.ArrayList<>(Collections.emptyList());
-        for(UserEntity user : userPage) basicUserInformationList.add(user);
-        return new PageImpl<>(basicUserInformationList);
+        return userRepository.findAll(PageRequest.of(page, size));
     }
 
     @Override
@@ -139,10 +155,14 @@ public class SimpleUsersManager implements UsersManager {
         return new PageImpl<>(basicUserInformationList);
     }
 
-    public boolean addNewSkill(String skillName,String userMail) throws EntityNotFoundException {
+    public boolean addNewSkill(String skillName,String userMail) throws EntityNotFoundException,IllegalArgumentException {
         if(skillName.isBlank()) throw new IllegalArgumentException("Nome skill non valida");
+        if(userMail.isBlank()) throw new IllegalArgumentException("userMail non valida");
         UserEntity user = userRepository.findById(userMail).orElseThrow(()->
                 new EntityNotFoundException("Nessun utente trovato con la mail: "+userMail));
+        if (user.getSkills().stream().anyMatch(s -> s.getName().equals(skillName))) {
+            return false;
+        }
         user.addSkill(new Skill(skillName));
         userRepository.save(user);
         return true;
@@ -156,5 +176,13 @@ public class SimpleUsersManager implements UsersManager {
         user.removeSkill(skill);
         userRepository.save(user);
         return true;
+    }
+
+    public String refreshToken(String token){
+        return tokenService.refresh(token);
+    }
+
+    public boolean validateToken(String token){
+        return tokenService.isValid(token);
     }
 }
