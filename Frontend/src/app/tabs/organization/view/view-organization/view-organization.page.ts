@@ -21,6 +21,7 @@ export class ViewOrganizationPage {
   skill: Skill;
   user: User;
   loadingMembers: boolean;
+  loadingProjects: boolean;
   members: User[];
   projects:Project[];
   creator: User;
@@ -41,6 +42,7 @@ export class ViewOrganizationPage {
     this.organization = null;
     this.creator = null;
     this.loadingMembers = true;
+    this.loadingProjects = true;
     this.projects = new Array();
     this.members = new Array();
     this.errorLoading = false;
@@ -51,10 +53,12 @@ export class ViewOrganizationPage {
       .then(v => {
         this.errorLoading = false;
         this.loadingMembers = false;
+        this.loadingProjects = false;
       })
       .catch(err=>{
         this.loadingMembers = false;
         this.errorLoading = true;
+        this.loadingProjects = true;
       });
   }
 
