@@ -16,6 +16,9 @@ export class HomePage {
 
   page:number;
 
+  isVisibleProjects=false;
+  isVisibleOrgnizations=false;
+
   selection:string = "organizations";
 
   organizations:Organization[];
@@ -123,6 +126,24 @@ export class HomePage {
 
   isOrganizations():boolean{
     return this.selection=="organizations";
+  }
+
+  getLengthOrganizations():number{
+    return this.organizations.length;
+  }
+
+  getLengthProjects():number{
+    return this.projects.length;
+  }
+
+  setVisibleProjects(){
+    this.isVisibleOrgnizations=false;
+    this.isVisibleProjects = true;
+  }
+
+  setVisibleOrganizations(){
+    this.isVisibleProjects=false;
+    this.isVisibleOrgnizations = true;
   }
 
 }

@@ -1,36 +1,44 @@
 <ion-header>
   <ion-toolbar>
     <ion-title style="text-align: center;">Home</ion-title>
+      <p align="center" *ngIf="dataService.isUserLogged()">{{dataService.getUserMail()}}</p>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
 
-  <p *ngIf="dataService.isUserLogged()">{{dataService.getUserMail()}}</p>
 
   <ion-refresher slot="fixed" (ionRefresh)="loadOrganizations($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
-  <p align="center" *ngIf="dataService.isUserLogged()">Your</p>
+  <br>
 
-  <ion-segment (ionChange)="segmentChanged($event)" value="organizations" *ngIf="dataService.isUserLogged()">
-    <ion-segment-button value="organizations">
-      <ion-label>Organizations</ion-label>
-    </ion-segment-button>
-    <ion-segment-button value="projects">
-      <ion-label>Projects</ion-label>
-    </ion-segment-button>
-  </ion-segment>
+  <ion-card *ngIf="dataService.isUserLogged()" (click)="setVisibleOrganizations()">
+    <ion-card-header>
+      <ion-card-subtitle align="center">Your organizations</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content align="center">
+      {{getLengthOrganizations()}} organizations
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card *ngIf="dataService.isUserLogged()" (click)="setVisibleProjects()">
+    <ion-card-header>
+      <ion-card-subtitle align="center">Your projects</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content align="center">
+      {{getLengthProjects()}} projects
+    </ion-card-content>
+  </ion-card>
 
 
   <p align="center" *ngIf="!dataService.isUserLogged()">esegui il login per vedere<br>più informazioni</p>
 
    
-
   <!-- per ogni elemento presente in organizations creo una ion-card-->
-  <div *ngIf="isOrganizations()">
-  <p align="center" *ngIf="getOrganizations().length!=0"><ion-label>your organizations</ion-label></p>
+  <div *ngIf="isVisibleOrgnizations==true">
+  <p style="color:#3880ff" align="center" *ngIf="getOrganizations().length!=0"><ion-label>Your organizations</ion-label></p>
   <p align="center" *ngIf="getOrganizations().length==0 && dataService.isUserLogged()">non appartieni a nessuna organizzazione</p>
     <ion-card *ngFor="let organization of getOrganizations()">
       <ion-item (click)="viewOrganization(organization.id)" routerDirection="forward">
@@ -42,8 +50,8 @@
     </ion-card>
   </div>
 
-  <div *ngIf="!isOrganizations()">
-  <p align="center" *ngIf="getProjects().length!=0"><ion-label>your projects</ion-label></p>
+  <div *ngIf="isVisibleProjects==true">
+  <p style="color:#3880ff" align="center" color="primary" *ngIf="getProjects().length!=0"><ion-label>Your projects</ion-label></p>
   <p align="center" *ngIf="getProjects().length==0 && dataService.isUserLogged()">non hai creato nessun progetto</p>
     <ion-card *ngFor="let project of getProjects()">
       <ion-item (click)="viewProject(project.id)" routerDirection="forward">
