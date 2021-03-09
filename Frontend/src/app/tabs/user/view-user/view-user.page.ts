@@ -3,7 +3,7 @@ import { UserSubmissionInformation } from './../../../model/UserSubmissionInform
 import { DataService } from 'src/app/services/data.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController, NavController, Platform } from '@ionic/angular';
+import { AlertController, NavController, Platform, ToastController } from '@ionic/angular';
 import { RestService } from 'src/app/services/rest.service';
 import { User } from 'src/app/model/user';
 import { Role } from 'src/app/model/role';
@@ -183,7 +183,11 @@ export class ViewUserPage {
             if (data.skill == null || (data.skill as string).trim() == "") {
               this.restService.presentToast("Il campo skill non puo essere vuoto");
             } else {
-              this.restService.addNewSkill(data.skill);
+              if(await this.restService.addNewSkill(data.skill)){
+                this.restService.presentToast("skill aggiunta")
+              }else{
+                this.restService.presentToast("skill presente")
+              }
             }
           }
         }

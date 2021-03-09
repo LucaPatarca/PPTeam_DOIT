@@ -46,7 +46,7 @@
       </ion-label>
     </ion-item-divider>
   
-    <ion-item *ngIf="organization">
+    <ion-item *ngIf="organization" (click)="viewOrganization(organization.id)">
       <ion-label>
         <h2 text-capitalize>{{organization.name}}</h2>
         <p>{{organization.description}}</p>

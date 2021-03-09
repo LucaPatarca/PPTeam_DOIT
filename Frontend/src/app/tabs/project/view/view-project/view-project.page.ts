@@ -270,6 +270,10 @@ export class ViewProjectPage {
     this.restService.presentToast("Membro del team rimosso con successo");
   }
 
+  viewOrganization(organizationId:string){
+    this.nav.navigateForward(['/tabs/list-of-organizations/view-organization', { "id": organizationId }]);
+  }
+
 }
 
 

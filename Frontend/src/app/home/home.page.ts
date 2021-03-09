@@ -29,11 +29,15 @@ export class HomePage {
   ) {
     this.organizations = new Array();
     this.projects = new Array();
-    this.loadOrganizations();        
+    if(this.dataService.isUserLogged())
+      	this.loadOrganizations();        
   }
 
   ionViewDidEnter() {
-    this.loadOrganizations();        
+    if(this.dataService.isUserLogged()){
+      this.loadOrganizations();        
+      this.loadProjects();
+    }
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
@@ -45,29 +49,35 @@ export class HomePage {
 
   // metodo per richiedere una pagina di elementi
   loadOrganizations(event?) {
-    this.restService.getUserOrganizations(this.dataService.getUser().mail)
-      .then(res => {        
-        this.organizations = res;
-        if (event)
-          event.target.complete();
-      }).catch(err => {
-        this.organizations = new Array();
-        if (event)
-          event.target.complete();
-      });
+    if(this.dataService.isUserLogged())
+      this.restService.getUserOrganizations(this.dataService.getUser().mail)
+        .then(res => {        
+          this.organizations = res;
+          if (event)
+            event.target.complete();
+        }).catch(err => {
+          this.organizations = new Array();
+          if (event)
+            event.target.complete();
+        });
+    else
+      event.target.complete();
   }
 
   loadProjects(event?) {
-    this.restService.getUserProjects(this.dataService.getUser().mail)
-      .then(res => {
-        this.projects = res;
-        if (event)
-          event.target.complete();
-      }).catch(err => {
-        this.projects = new Array();
-        if (event)
-          event.target.complete();
-    });
+    if(this.dataService.isUserLogged())
+      this.restService.getUserProjects(this.dataService.getUser().mail)
+        .then(res => {
+          this.projects = res;
+          if (event)
+            event.target.complete();
+        }).catch(err => {
+          this.projects = new Array();
+          if (event)
+            event.target.complete();
+      });
+    else
+      event.target.complete();
   }
 
 

@@ -548,5 +548,4 @@ export class RestService {
       val=>this.dataService.refreshUser(val)
     );
   }
-
 }

@@ -1,3 +1,4 @@
+import { DataService } from 'src/app/services/data.service';
 import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { Skill } from 'src/app/model/skill';
@@ -19,7 +20,8 @@ export class SelectUserComponent implements OnInit {
 
   constructor(
     private modalCtrl: ModalController,
-    private restService: RestService
+    private restService: RestService,
+    private dataService:DataService
   ) { }
 
   ngOnInit() {
@@ -33,9 +35,11 @@ export class SelectUserComponent implements OnInit {
   async load() {
     await this.restService.getUserPage(this.page)
       .then(usersPage => {
+        this.dataService.isInternetConnected =true;
         this.users = this.users.concat(usersPage.content);
         this.last = usersPage.last;
       }).catch(err => {
+        this.dataService.isInternetConnected =false;
         this.restService.presentToast("Errore di connessione");
       });
   }
