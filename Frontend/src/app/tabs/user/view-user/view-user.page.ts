@@ -204,8 +204,8 @@ export class ViewUserPage {
   async easterEgg() {
     const add = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
-      header: 'CAPRETTI SACRIFICATI',
-      message: '' + Math.floor(Math.random() * (25 - 1 + 1)),
+      header: 'the best project are you',
+      message: '',
       buttons: [
         {
           text: 'ok',

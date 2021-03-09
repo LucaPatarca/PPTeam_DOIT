@@ -56,7 +56,7 @@ export class ViewProjectPage {
   }
 
   goBack() {
-    this.nav.navigateBack(["/list-of-projects"], { queryParams: { 'refresh': 1 } });
+    this.nav.navigateBack(["/tabs/list-of-projects"], { queryParams: { 'refresh': 1 } });
   }
 
   modify() {
@@ -187,6 +187,7 @@ export class ViewProjectPage {
               this.restService.closeProject(this.project.id)
                   .then(val => {
                     this.restService.presentToast("Progetto chiuso");
+                    this.project.closed=true;
                     this.load();
                   }).catch(err => {
                 this.restService.presentToast("C'è stato un errore durante la chiusura");

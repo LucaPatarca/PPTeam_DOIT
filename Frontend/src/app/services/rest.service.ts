@@ -238,7 +238,7 @@ export class RestService {
 
   async closeProject(id: string): Promise<boolean>{
     return new Promise((resolve, rejects) => {
-      this.http.put(environment.closeProject + id, this.getConfig())
+      this.http.put(environment.closeProject + id,"", this.getConfig())
         .subscribe(
           res => {
             resolve(res as unknown as boolean);
