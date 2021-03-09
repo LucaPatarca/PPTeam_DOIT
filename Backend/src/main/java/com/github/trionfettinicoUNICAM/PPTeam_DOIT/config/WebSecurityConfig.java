@@ -2,6 +2,7 @@ package com.github.trionfettinicoUNICAM.PPTeam_DOIT.config;
 
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.JWTAuthenticationFilter;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.JWTAuthorizationFilter;
+import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.TokenService;
 import com.github.trionfettinicoUNICAM.PPTeam_DOIT.security.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,14 +30,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
-    @Value(value = "${oauth.secret}")
-    private String secret;
-    @Value(value = "${oauth.headerName}")
-    private String headerName;
-    @Value(value = "${oauth.tokenPrefix}")
-    private String tokenPrefix;
-    @Value(value = "${oauth.expirationTime}")
-    private long expirationTime;
+    @Autowired
+    TokenService tokenService;
 
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
@@ -48,8 +43,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter implements W
         http.cors().and().csrf().disable().authorizeRequests()
                 .anyRequest().permitAll()
                 .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager(),secret,headerName,tokenPrefix,expirationTime))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager(),secret,headerName,tokenPrefix))
+                .addFilter(new JWTAuthenticationFilter(authenticationManager(),tokenService))
+                .addFilter(new JWTAuthorizationFilter(authenticationManager(),tokenService))
                 // this disables session creation on Spring Security
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
