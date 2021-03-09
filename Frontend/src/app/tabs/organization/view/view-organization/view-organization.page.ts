@@ -76,7 +76,7 @@ export class ViewOrganizationPage {
       i++;
     });
     this.members = newMembers;
-    this.loadProjects();
+    await this.loadProjects();
   }
 
   async loadProjects() {

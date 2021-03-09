@@ -18,6 +18,32 @@ const routes: Routes = [
           {
             path:'',
             loadChildren: () => import('../home/home.module').then(m => m.HomePageModule)
+          },
+          {
+            path: 'view-project',
+            children: [
+              {
+                path: '',
+                loadChildren: () => import('./project/view/view-project/view-project.module').then(m => m.ViewProjectPageModule)
+              },
+              {
+                path: 'edit-project',
+                loadChildren: () => import('./project/edit-project/edit-project.module').then(m => m.EditProjectPageModule)
+              }
+            ]
+          },
+          {
+            path: 'view-organization',
+            children: [
+              {
+                path: '',
+                loadChildren: () => import('./organization/view/view-organization/view-organization.module').then(m => m.ViewOrganizationPageModule)
+              },
+              {
+                path: 'edit-organization',
+                loadChildren: () => import('./organization/edit-organization/edit-organization.module').then(m => m.EditOrganizationPageModule)
+              }
+            ]
           }
         ]
       },

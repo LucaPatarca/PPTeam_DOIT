@@ -27,7 +27,6 @@ export class ViewUserPage {
   userSubmissions: UserSubmissionInformation[];
   HWBackSubscription: any;
   loadingSubmissions: boolean;
-  loadingSkills: boolean;
 
   validation_messages = {
     'name': [
@@ -69,18 +68,14 @@ export class ViewUserPage {
     this.selection = this.Selection.Login;
     this.userSubmissions = null;
     this.loadingSubmissions = true;
-    this.loadingSkills = true;
   }
 
   ionViewDidEnter() {
     this.HWBackSubscription = this.platform.backButton.subscribe(() => {
       navigator['app'].exitApp();
     });
-    if(this.dataService.isUserLogged()){
-      this.getUserSubmissions();
-      this.loadingSubmissions = false;
-      this.loadingSkills = false;
-    }
+    if(this.dataService.isUserLogged())
+      this.dataService.executeWhenUserLoaded(()=>this.getUserSubmissions());
   }
 
   ionViewDidLeave() {
@@ -146,6 +141,7 @@ export class ViewUserPage {
     this.restService.getUserSubmissions()
       .then(res=>{
         this.userSubmissions = res;
+        this.loadingSubmissions = false;
       }).catch(err=>{
         this.restService.presentToast("Errore di connessione");
       });
@@ -215,7 +211,7 @@ export class ViewUserPage {
   async easterEgg() {
     const add = await this.alertCtrl.create({
       cssClass: 'my-custom-class',
-      header: 'the best project are you',
+      header: 'the best project is you',
       message: '',
       buttons: [
         {

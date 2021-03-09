@@ -28,9 +28,9 @@
       </ion-text>
     </ion-item>
     <!-- Caricamento descrizione -->
-    <ion-card *ngIf="organization == null" style="padding: 8px;">
+    <ion-item *ngIf="organization == null" style="padding: 8px;">
       <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
-    </ion-card>
+    </ion-item>
   
     <ion-item-divider>
       <ion-label>
@@ -112,8 +112,8 @@
     </ion-item-divider>
 
     <ion-list >
-      <!-- quando il caricamento è completato ma non ci sono membri disponibili -->
-      <div class="row" *ngIf="(projects.length == 0)">
+      <!-- quando il caricamento è completato ma non ci sono progetti disponibili -->
+      <div class="row" *ngIf="!loadingProjects && (projects.length == 0)">
         <div class="col">
           <div class="text-center">
             <h5 style="text-align: center;">Non ci sono progetti associati</h5>

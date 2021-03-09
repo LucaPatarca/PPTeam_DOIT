@@ -1,3 +1,5 @@
+import { YourOrganizationsComponent } from './components/your-organizations/your-organizations.component';
+import { YourProjectsComponent } from './components/your-projects/your-projects.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
@@ -20,8 +22,8 @@ import { Network } from '@ionic-native/network/ngx';
 
 
 @NgModule({
-  declarations: [AppComponent, SelectUserComponent],
-  entryComponents: [SelectUserComponent],
+  declarations: [AppComponent, SelectUserComponent,YourProjectsComponent,YourOrganizationsComponent],
+  entryComponents: [SelectUserComponent,YourProjectsComponent,YourOrganizationsComponent],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),

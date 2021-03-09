@@ -11,7 +11,6 @@ import { Storage } from '@ionic/storage';
 export class DataService {
 
   private key_user: string = 'user';
-  private key_organization: string = 'organization';
   private key_token: string = 'token';
   private key_darkMode: string = 'darkMode';
 

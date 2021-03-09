@@ -21,10 +21,15 @@
   </ion-refresher>
 
   <div *ngIf="!errorLoading">
+    <!-- descrizione -->
     <ion-item>
       <ion-text *ngIf="!loading">
         <p>{{project.description}}</p>
       </ion-text>
+    </ion-item>
+    <!-- caricamento descrizione -->
+    <ion-item *ngIf="loading" style="padding: 8px;">
+      <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
     </ion-item>
 
     <ion-item-divider>
@@ -32,11 +37,19 @@
         Status
       </ion-label>
     </ion-item-divider>
-
-    <ion-item *ngIf="project">
+    <!-- stato -->
+    <ion-item *ngIf="!loading">
+      <ion-label *ngIf="project.closed" color="warning">
+        Closed
+      </ion-label>
+      <ion-label *ngIf="!project.closed">
+        Open
+      </ion-label>
+    </ion-item>
+    <!-- caricamento stato -->
+    <ion-item *ngIf="loading">
       <ion-label>
-        <h2 text-capitalize *ngIf="project.closed; else conditionFalse">Close</h2>
-        <ng-template #conditionFalse>Open</ng-template>
+        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
       </ion-label>
     </ion-item>
 
@@ -45,33 +58,47 @@
         Organization
       </ion-label>
     </ion-item-divider>
-  
+    <!-- Organizzazione -->
     <ion-item *ngIf="organization" (click)="viewOrganization(organization.id)">
       <ion-label>
         <h2 text-capitalize>{{organization.name}}</h2>
         <p>{{organization.description}}</p>
       </ion-label>
     </ion-item>
-  
+    <!-- caricamento organizzazione -->
+    <ion-item *ngIf="!organization">
+      <ion-label>
+        <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+
     <ion-item-divider>
       <ion-label>
         Creator
       </ion-label>
     </ion-item-divider>
-  
+    <!-- creator -->
     <ion-item *ngIf="creator">
       <ion-label>
         <h2 text-capitalize>{{creator.name}}</h2>
         <p>{{creator.mail}}</p>
       </ion-label>
     </ion-item>
-  
-    <ion-item-divider *ngIf="!loading && project.closed == false">
+    <!-- loading creator -->
+    <ion-item *ngIf="!creator">
+      <ion-label>
+        <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
+      </ion-label>
+    </ion-item>
+
+    <ion-item-divider *ngIf="loading || project.closed == false">
       <ion-label>
         Needed skills
       </ion-label>
     </ion-item-divider>
-  
+
     <!-- quando il caricamento è completato ma non ci sono skill disponibili -->
     <div class="row" *ngIf="!loading && (project.neededSkills.length == 0) && project.closed == false">
       <div class="col">
@@ -80,20 +107,27 @@
         </div>
       </div>
     </div>
-  
+
+    <!-- needed skills -->
     <ion-list *ngIf="!loading && (project.neededSkills.length>0) && project.closed==false">
       <ion-item *ngFor="let skill of project.neededSkills">
         <ion-badge color="secondary" slot="start">{{skill.level}}</ion-badge>
         <ion-label text-capitalize>{{skill.name}}</ion-label>
       </ion-item>
     </ion-list>
-  
+    <!-- loading needed skills -->
+    <ion-list *ngIf="loading">
+      <ion-item>
+        <ion-skeleton-text animated style="width: 40%;"></ion-skeleton-text>
+      </ion-item>
+    </ion-list>
+
     <ion-item-divider>
       <ion-label>
         Team
       </ion-label>
     </ion-item-divider>
-  
+
     <!-- quando il caricamento è completato ma non ci sono progettisti disponibili -->
     <div class="row" *ngIf="!loading && (project.team.length == 0)">
       <div class="col">
@@ -102,7 +136,7 @@
         </div>
       </div>
     </div>
-  
+    <!-- team -->
     <ion-list *ngIf="!loading && (project.team.length>0)">
       <ion-item-sliding *ngFor="let role of project.team" [disabled]="false" #slidingItem>
         <ion-item>
@@ -118,21 +152,20 @@
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
-  
+    <!-- loading team -->
+    <ion-list *ngIf="loading">
+      <ion-item *ngFor="let item of [].constructor(5)">
+        <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+      </ion-item>
+    </ion-list>
+
     <ion-item-divider *ngIf="!loading && project.closed==false">
       <ion-label>
         Candidates
       </ion-label>
     </ion-item-divider>
 
-    <div class="row" *ngIf="!loading && project.closed==true">
-      <div class="col">
-        <div class="text-center">
-          <h6 style="text-align: center;">Progetto concluso con successo</h6>
-        </div>
-      </div>
-    </div>
-  
     <!-- quando il caricamento è completato ma non ci sono candidati disponibili -->
     <div class="row" *ngIf="!loading && (project.candidates.length == 0) && project.closed==false">
       <div class="col">
@@ -141,9 +174,10 @@
         </div>
       </div>
     </div>
-  
+    <!-- candidati -->
     <ion-list *ngIf="!loading && (project.candidates.length>0)">
-      <ion-item-sliding *ngFor="let role of project.candidates" [disabled]="!dataService.hasTeamManagerPermission(organization,project,role.skill)" #slidingItem>
+      <ion-item-sliding *ngFor="let role of project.candidates"
+        [disabled]="!dataService.hasTeamManagerPermission(organization,project,role.skill)" #slidingItem>
         <ion-item-options side="start" (ionSwipe)="acceptCandidate(role,slidingItem)">
           <ion-item-option expandable (click)="acceptCandidate(role,slidingItem)">
             <ion-icon slot="icon-only" name="thumbs-up"></ion-icon>
@@ -162,8 +196,16 @@
         </ion-item-options>
       </ion-item-sliding>
     </ion-list>
-  
-    <ion-button *ngIf="!loading && dataService.isUserLogged() && dataService.getUser().mail != project.creatorMail" expand="block" (click)="submit()" [disabled]="userAvailableSkillsInput.length<=0">
+    <!-- loading candidates -->
+    <ion-list *ngIf="loading">
+      <ion-item *ngFor="let item of [].constructor(5)">
+        <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
+        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
+      </ion-item>
+    </ion-list>
+
+    <ion-button *ngIf="!loading && dataService.isUserLogged() && dataService.getUser().mail != project.creatorMail"
+      expand="block" (click)="submit()" [disabled]="userAvailableSkillsInput.length<=0">
       Submit
       <ion-icon slot="end" name="checkmark"></ion-icon>
     </ion-button>
@@ -178,25 +220,4 @@
       </div>
     </div>
   </div>
-
-
-  <!-- <p>status : {{project.closed}}</p> -->
-
-  <ion-card *ngIf="loading">
-      <ion-label>
-        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 90%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 40%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 80%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 30%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 40%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 70%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 60%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 40%;"></ion-skeleton-text>
-        <ion-skeleton-text animated style="width: 50%;"></ion-skeleton-text>
-      </ion-label>
-  </ion-card>
-
 </ion-content>

@@ -22,7 +22,7 @@ public class TokenService {
     private long expirationTime;
 
     public String create(String subject){
-        return JWT.create()
+        return this.tokenPrefix + JWT.create()
                 .withSubject(subject)
                 .withExpiresAt(getExpirationDate())
                 .sign(HMAC512(secret.getBytes()));
