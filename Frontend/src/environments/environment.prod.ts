@@ -36,8 +36,6 @@ export const environment = {
   getExpertsPage:userApiUrl+"listExperts/",
   removeMember:organizationApiUrl+"removeMember/",
   addMember:organizationApiUrl+"addMember/",
-  listOfUsersApiUrl: userApiUrl+"list/",
-  existUserApiUrl: userApiUrl + "exist/",
   rejectCandidate: projectApiUrl+"rejectCandidate/",
   acceptCandidate: projectApiUrl+"acceptCandidate/",
   removeTeamMember:projectApiUrl+"removeTeamMember/",

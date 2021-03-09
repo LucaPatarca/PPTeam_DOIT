@@ -31,8 +31,7 @@ export class HomePage {
     public dataService:DataService,
     private restService:RestService,
     private navCtrl:NavController,
-    private modalCtrl: ModalController,
-    public dataService:DataService
+    private modalCtrl: ModalController
   ) {
     this.organizations = new Array();
     this.projects = new Array();
