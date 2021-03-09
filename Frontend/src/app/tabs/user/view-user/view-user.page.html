@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>{{dataService.getUser().name}}</ion-title>
+    <ion-title (click)="easterEgg()">{{dataService.getUser().name}}</ion-title>
     <ion-buttons slot="end">
       <ion-button *ngIf="dataService.isUserLogged()" (click)="dataService.logoutUser()" color="primary">
         <ion-icon slot="icon-only" name="exit-outline"></ion-icon>

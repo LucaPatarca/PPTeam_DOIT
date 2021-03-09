@@ -200,4 +200,18 @@ export class ViewUserPage {
     this.confirm = "";
     this.validations_form.reset();
   }
+
+  async easterEgg() {
+    const add = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'CAPRETTI SACRIFICATI',
+      message: '' + Math.floor(Math.random() * (25 - 1 + 1)),
+      buttons: [
+        {
+          text: 'ok',
+        }
+      ]
+    });
+    await add.present();
+  }
 }
